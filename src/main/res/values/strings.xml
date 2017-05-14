@@ -1,0 +1,49 @@
+<resources>
+    <string name="app_name">FindTutor</string>
+    <string name="title_activity_login">Login</string>
+    <string name="title_activity_register">Daftar</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_profile_form">Lengkapi Profil</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="prompt_password_conf">Konfirmasi Password</string>
+    <string name="prompt_fullname">Nama Lengkap</string>
+    <string name="prompt_phone">No Handphone</string>
+    <string name="label_pick_selfie">Ambil Selfie</string>
+    <string name="label_pick_photo">Dari Galeri</string>
+    <string name="label_form_tujuan_bergabung">Tujuan Bergabung</string>
+    <string name="label_opt_is_tutor">Menjadi Tutor</string>
+    <string name="label_opt_is_student">Mencari Tutor</string>
+    <string name="label_opt_is_both">Dua-duanya</string>
+    <string name="action_next">Selanjutnya</string>
+    <string name="action_sign_in">Login</string>
+    <string name="action_register">Daftar</string>
+    <string name="action_sign_in_short">Login</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_email_exist">Email sudah terdaftar</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_invalid_password_conf">Konfirmasi password tidak sama</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="error_choose_user_type">Harap pilih field Tujuan Bergabung</string>
+    <string name="error_complete_form">Lengkapi Form</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="menu_my_session">Sesi Saya</string>
+    <string name="menu_find_tutor">Cari Tutor</string>
+    <string name="menu_fave_tutor">Tutor Favorit</string>
+    <string name="menu_session_history">Riwayat Sesi</string>
+    <string name="menu_preferences">Pengaturan</string>
+    <string name="menu_help">Bantuan</string>
+    <string name="menu_income">Pendapatan</string>
+    <string name="menu_availibility">Jadwal Tersedia</string>
+    <string name="menu_notifications">Pemberitahuan</string>
+
+    <string name="action_settings">Settings</string>
+</resources>
