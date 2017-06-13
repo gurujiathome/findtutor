@@ -15,22 +15,38 @@
         <item
             android:id="@+id/nav_availibility"
             android:title="@string/menu_availibility"/>
-    </group>
-    <group android:checkableBehavior="single"
-           android:id="@+id/group_nav_second">
         <item
             android:id="@+id/nav_preferences"
             android:title="@string/menu_preferences"/>
+    </group>
+    <!--<item android:title="@string/menu_preferences">
+        <menu>
+            <item
+                android:id="@+id/nav_set_basic_profile"
+                android:title="@string/basic_profile"/>
+            <item
+                android:id="@+id/nav_set_tutor_pref"
+                android:title="@string/tutor_preference"/>
+            <item
+                android:id="@+id/nav_set_account"
+                android:title="@string/account"/>
+        </menu>
+    </item>-->
+    <group android:checkableBehavior="single"
+           android:id="@+id/group_nav_second">
+        <!--<item
+            android:id="@+id/nav_preferences"
+            android:title="@string/menu_preferences"/>-->
         <item
             android:id="@+id/nav_help"
             android:title="@string/menu_help"/>
     </group>
-    <group android:checkableBehavior="single"
+    <!--<group android:checkableBehavior="single"
            android:id="@+id/group_nav_third">
         <item
             android:id="@+id/nav_logout"
             android:title="Logout"/>
-    </group>
+    </group>-->
 
 
 </menu>

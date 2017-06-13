@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/window_to_content_padding">
+
+        <LinearLayout
+            android:id="@+id/form_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/input_layout_margin_bottom">
+                <TextView
+                    android:id="@+id/label_email"
+                    android:text="@string/prompt_tutor_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:layout_marginBottom="@dimen/label_to_input_vmargin"
+                    android:layout_marginLeft="@dimen/label_left_margin"
+                    android:textColor="@color/label_text_color"/>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <EditText
+                        android:id="@+id/input_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress"
+                        android:maxLines="1"
+                        android:textColor="@color/value_text_color"/>
+                </android.support.design.widget.TextInputLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/input_layout_margin_bottom">
+                <TextView
+                    android:id="@+id/label_max_distance"
+                    android:text="@string/prompt_max_travel_distance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/label_to_input_vmargin"
+                    android:layout_marginLeft="@dimen/label_left_margin"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="@color/label_text_color"/>
+
+                <TextView
+                    android:layout_toRightOf="@id/label_max_distance"
+                    android:id="@+id/preview_max_distance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp"
+                    android:text="(0 KM)"/>
+
+                <SeekBar
+                    android:layout_below="@id/label_max_distance"
+                    android:id="@+id/seekbar_max_distance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/input_layout_margin_bottom">
+                <TextView
+                    android:id="@+id/label_min_price_rate"
+                    android:text="@string/prompt_min_price_rate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:layout_marginBottom="@dimen/label_to_value_vmargin"
+                    android:layout_marginLeft="@dimen/label_left_margin"
+                    android:textColor="@color/label_text_color"/>
+
+                <TextView
+                    android:layout_toRightOf="@id/label_min_price_rate"
+                    android:id="@+id/preview_min_price_rate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp"
+                    android:text="(Rp. 0 / Jam)"/>
+
+                <SeekBar
+                    android:layout_below="@id/label_min_price_rate"
+                    android:id="@+id/seekbar_min_price_rate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/input_layout_margin_bottom">
+                <TextView
+                    android:id="@+id/label_tutor_subject"
+                    android:text="@string/prompt_tutor_subject"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:layout_marginBottom="@dimen/label_to_value_vmargin"
+                    android:layout_marginLeft="@dimen/label_left_margin"
+                    android:textColor="@color/label_text_color"/>
+
+                <LinearLayout
+                    android:layout_below="@id/label_tutor_subject"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <!-- This rel layout needs to maintain listview height -->
+                    <RelativeLayout
+                        android:id="@+id/list_subject_wrapper"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <ListView
+                            android:id="@+id/list_subject"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                    </RelativeLayout>
+                    <Button
+                        android:id="@+id/btn_choose_subject"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/action_select_subject"/>
+                </LinearLayout>
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

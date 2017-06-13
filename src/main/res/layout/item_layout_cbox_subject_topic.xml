@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="@dimen/list_item_vpadding"
+                android:paddingBottom="@dimen/list_item_vpadding"
+                android:paddingLeft="@dimen/list_checkbox_hpadding"
+                android:paddingRight="@dimen/list_checkbox_hpadding">
+
+    <CheckBox
+        android:id="@+id/cbox_subject"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:text="CheckBox" />
+
+</RelativeLayout>

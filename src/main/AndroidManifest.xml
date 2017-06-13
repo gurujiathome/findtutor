@@ -9,9 +9,15 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-feature android:name="android.hardware.camera" android:required="true"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true"/>
 
     <application
         android:allowBackup="true"
@@ -30,35 +36,20 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".RegisterActivity"
-            android:label="@string/title_activity_register"
-            android:parentActivityName=".WelcomeActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.widiarifki.findtutor.WelcomeActivity"/>
-        </activity>
-        <activity
-            android:name=".LoginActivity"
-            android:label="@string/title_activity_login"
-            android:parentActivityName=".WelcomeActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.widiarifki.findtutor.WelcomeActivity"/>
+            android:name=".CompleteProfileActivity"
+            android:label="@string/title_activity_profile_form">
         </activity>
         <activity
             android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <!--<activity
-            android:name=".ProfileForm1Activity"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
         <activity
-            android:name=".ProfileForm2Activity"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>-->
-        <activity android:name=".ProfileFormActivity"
-                  android:label="@string/title_activity_profile_form">
+            android:name=".UserProfileActivity"
+            android:label="@string/title_activity_my_profile"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.widiarifki.findtutor.MainActivity"/>
         </activity>
 
         <provider
@@ -68,9 +59,15 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths"/>
         </provider>
+
         <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"/>
+        <activity
+            android:name=".SettingProfileActivity"
+            android:label="Atur Profil"
+            android:parentActivityName=".MainActivity">
+        </activity>
     </application>
 
 </manifest>

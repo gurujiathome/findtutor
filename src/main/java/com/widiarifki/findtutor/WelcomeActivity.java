@@ -1,75 +1,35 @@
 package com.widiarifki.findtutor;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Button;
 
-import com.widiarifki.findtutor.helper.SessionManager;
-import com.widiarifki.findtutor.model.User;
+import com.widiarifki.findtutor.adapter.TabsPagerAdapter;
+import com.widiarifki.findtutor.app.App;
+import com.widiarifki.findtutor.fragment.LoginFragment;
+import com.widiarifki.findtutor.fragment.RegisterFragment;
 
 public class WelcomeActivity extends AppCompatActivity {
-
-    SessionManager session;
-    User userLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        General.initStartIntent(WelcomeActivity.this);
-
-        /*session = new SessionManager(getApplicationContext());
-        userLogin = session.getUserDetail();
-        if (session.isLoggedIn()) {
-            Intent intent;
-            // User is already logged in. Take him to main activity or complete profile
-            if(userLogin.getIsProfileComplete() == 1){
-                intent = new Intent(WelcomeActivity.this, General.homeActivity);
-            }else{
-                intent = new Intent(WelcomeActivity.this, General.profileActivity);
-            }
-            startActivity(intent);
-            finish();
-        }*/
+        // If mSession has started, start new Intent
+        App.loadInitActivity(WelcomeActivity.this);
 
         setContentView(R.layout.activity_welcome);
 
-        Button mBtnRegister = (Button) findViewById(R.id.btnRegister);
-        Button mBtnLogin = (Button) findViewById(R.id.btnLogin);
+        ViewPager pager = (ViewPager) findViewById(R.id.pager);
+        TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
 
-        mBtnRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onClickRegisterListener();
-            }
-        });
+        TabsPagerAdapter adapter = new TabsPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(new LoginFragment(), getString(R.string.title_activity_login));
+        adapter.addFragment(new RegisterFragment(), getString(R.string.title_activity_register));
+        pager.setAdapter(adapter);
 
-        mBtnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onClickLoginListener();
-            }
-        });
+        tabs.setupWithViewPager(pager);
     }
 
-    private void onClickRegisterListener() {
-        Intent intent = new Intent(this, RegisterActivity.class);
-        //startActivity(intent);
-        startActivityForResult(intent, RegisterActivity.REQUEST_CODE);
-    }
-
-    private void onClickLoginListener() {
-        Intent intent = new Intent(this, LoginActivity.class);
-        //startActivity(intent);
-        startActivityForResult(intent, LoginActivity.REQUEST_CODE);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode==RegisterActivity.REQUEST_CODE || resultCode==LoginActivity.REQUEST_CODE){
-            finish();
-        }
-    }
 }

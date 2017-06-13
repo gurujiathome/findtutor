@@ -4,6 +4,8 @@
     <string name="title_activity_register">Daftar</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_profile_form">Lengkapi Profil</string>
+    <string name="title_activity_my_profile">Profil Saya</string>
+    <string name="title_activity_edit_profile">Edit Profil</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -11,23 +13,33 @@
     <string name="prompt_password_conf">Konfirmasi Password</string>
     <string name="prompt_fullname">Nama Lengkap</string>
     <string name="prompt_phone">No Handphone</string>
-    <string name="label_pick_selfie">Ambil Selfie</string>
-    <string name="label_pick_photo">Dari Galeri</string>
+    <string name="prompt_bio">Bio</string>
+    <string name="prompt_tutor_location">Lokasi Mengajar</string>
+    <string name="prompt_education">Pendidikan</string>
     <string name="label_form_tujuan_bergabung">Tujuan Bergabung</string>
-    <string name="label_opt_is_tutor">Menjadi Tutor</string>
-    <string name="label_opt_is_student">Mencari Tutor</string>
-    <string name="label_opt_is_both">Dua-duanya</string>
+    <string name="label_opt_is_tutor">Sebagai Tutor</string>
+    <string name="label_opt_is_student">Sebagai Siswa</string>
+    <string name="label_opt_is_both">Kedua-duanya</string>
+
+    <string name="action_pick_selfie">Ambil Selfie</string>
+    <string name="action_pick_photo">Dari Galeri</string>
     <string name="action_next">Selanjutnya</string>
     <string name="action_sign_in">Login</string>
     <string name="action_register">Daftar</string>
     <string name="action_sign_in_short">Login</string>
+    <string name="action_save">Save</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_add_education">Tambah Riwayat Pendidikan</string>
+    <string name="action_edit_education">Edit Riwayat Pendidikan</string>
+    <string name="action_cancel">Cancel</string>
+
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_email_exist">Email sudah terdaftar</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_invalid_password_conf">Konfirmasi password tidak sama</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
-    <string name="error_choose_user_type">Harap pilih field Tujuan Bergabung</string>
+    <string name="error_field_required_radio">Harap pilih salah satu pilihan</string>
     <string name="error_complete_form">Lengkapi Form</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
@@ -45,5 +57,45 @@
     <string name="menu_availibility">Jadwal Tersedia</string>
     <string name="menu_notifications">Pemberitahuan</string>
 
-    <string name="action_settings">Settings</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_welcome">WelcomeActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="school_department">Jurusan</string>
+    <string name="school_name">Nama Sekolah/Institusi Pendidikan</string>
+    <string name="school_level">Jenjang Pendidikan</string>
+    <string name="select_school_level">Pilih Jenjang Pendidikan</string>
+    <string name="school_year_graduate">Tahun Lulus</string>
+
+    <string name="delete_confirmation">Apakah anda yakin?</string>
+    <string name="title_activity_edit_account">Edit Akun</string>
+    <string name="title_activity_booked_preference">Booked Preference</string>
+    <string name="prompt_tutor_subject">Keahlian Mengajar</string>
+    <string name="action_select_subject">Pilih Keahlian Mengajar</string>
+    <string name="prompt_change_password">Ganti Password</string>
+    <string name="prompt_max_travel_distance">Jarak Maksimum Pertemuan</string>
+    <string name="prompt_min_price_rate">Tarif Mengajar Minimum</string>
+    <string name="set_basic_profile">Atur Profil Dasar</string>
+    <string name="set_account">Atur Akun</string>
+    <string name="set_tutor_preference">Atur Preferensi Pengajar</string>
+    <string name="basic_profile">Profil Dasar</string>
+    <string name="account">Pengaturan Akun</string>
+    <string name="tutor_preference">Preferensi Pengajar</string>
+    <string name="title_activity_test">TestActivity</string>
+    <string name="add_time_slot">Tambah Slot Waktu</string>
+    <string name="sampai_dengan">s/d</string>
+    <string name="label_male">Pria</string>
+    <string name="label_opt_female">Wanita</string>
+
+    <string-array name="day_arrays">
+        <item>Senin</item>
+        <item>Selasa</item>
+        <item>Rabu</item>
+        <item>Kamis</item>
+        <item>Jumat</item>
+        <item>Sabtu</item>
+        <item>Minggu</item>
+    </string-array>
 </resources>
