@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.widiarifki.findtutor.R;
 import com.widiarifki.findtutor.app.App;
-import com.widiarifki.findtutor.helper.DialogMessage;
+import com.widiarifki.findtutor.helper.RunnableDialogMessage;
 import com.widiarifki.findtutor.helper.SessionManager;
 import com.widiarifki.findtutor.model.AvailabilityPerDay;
 import com.widiarifki.findtutor.model.User;
@@ -78,7 +78,7 @@ public class AvailabilityTimeAdapter extends ArrayAdapter<AvailabilityPerDay> {
             public void onClick(View v) {
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mContext);
                 dialogBuilder.setMessage("Apakah anda yakin akan menghapus?");
-                dialogBuilder.setPositiveButton(mContext.getString(R.string.cast_tracks_chooser_dialog_ok), new DialogInterface.OnClickListener() {
+                dialogBuilder.setPositiveButton(mContext.getString(android.R.string.ok), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         onRemoveItem(parent, time);
@@ -124,7 +124,7 @@ public class AvailabilityTimeAdapter extends ArrayAdapter<AvailabilityPerDay> {
             @Override
             public void onFailure(Call call, IOException e) {
                 // alert user
-                ((Activity) mContext).runOnUiThread(new DialogMessage(mContext, "Hapus data gagal", String.valueOf(e), mProgressDialog));
+                ((Activity) mContext).runOnUiThread(new RunnableDialogMessage(mContext, "Hapus data gagal", String.valueOf(e), mProgressDialog));
             }
 
             @Override
@@ -155,14 +155,14 @@ public class AvailabilityTimeAdapter extends ArrayAdapter<AvailabilityPerDay> {
                             });
                         } else {
                             String message = responseObj.getString("error_msg");
-                            ((Activity) mContext).runOnUiThread(new DialogMessage(mContext, "Hapus data gagal", message, mProgressDialog));
+                            ((Activity) mContext).runOnUiThread(new RunnableDialogMessage(mContext, "Hapus data gagal", message, mProgressDialog));
                         }
                     } catch (JSONException e) {
-                        ((Activity) mContext).runOnUiThread(new DialogMessage(mContext, "Hapus data gagal", e.getMessage(), mProgressDialog));
+                        ((Activity) mContext).runOnUiThread(new RunnableDialogMessage(mContext, "Hapus data gagal", e.getMessage(), mProgressDialog));
                     }
                 } else {
 
-                    ((Activity) mContext).runOnUiThread(new DialogMessage(mContext, "Hapus data gagal", response.message(), mProgressDialog));
+                    ((Activity) mContext).runOnUiThread(new RunnableDialogMessage(mContext, "Hapus data gagal", response.message(), mProgressDialog));
                 }
             }
         });

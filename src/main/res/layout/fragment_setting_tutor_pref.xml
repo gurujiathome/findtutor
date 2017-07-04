@@ -20,44 +20,62 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/input_layout_margin_bottom">
+                style="@style/formFieldLayout">
                 <TextView
                     android:id="@+id/label_email"
                     android:text="@string/prompt_tutor_location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:layout_marginBottom="@dimen/label_to_input_vmargin"
-                    android:layout_marginLeft="@dimen/label_left_margin"
-                    android:textColor="@color/label_text_color"/>
-
-                <android.support.design.widget.TextInputLayout
+                    style="@style/formLabel"/>
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <EditText
-                        android:id="@+id/input_email"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/label_email"
+                    android:orientation="vertical"
+                    style="@style/formInputLayout">
+                    <TextView
+                        android:id="@+id/text_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorTextPrimary"
+                        android:textSize="16sp"
+                        android:layout_marginLeft="@dimen/label_left_margin"
+                        android:text=""
+                        android:visibility="gone"/>
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textEmailAddress"
-                        android:maxLines="1"
-                        android:textColor="@color/value_text_color"/>
-                </android.support.design.widget.TextInputLayout>
+                        android:orientation="horizontal">
+                        <Button
+                            android:id="@+id/btn_set_current_location"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="@string/current_location"
+                            android:drawableLeft="@drawable/ic_place_black_24dp"
+                            android:gravity="center"/>
+                        <Button
+                            android:id="@+id/btn_set_searched_location"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="@string/search_location"
+                            android:drawableLeft="@drawable/ic_search_black_24dp"
+                            android:gravity="center"/>
+                    </LinearLayout>
+                </LinearLayout>
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/input_layout_margin_bottom">
+                style="@style/formFieldLayout">
                 <TextView
                     android:id="@+id/label_max_distance"
                     android:text="@string/prompt_max_travel_distance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/label_to_input_vmargin"
-                    android:layout_marginLeft="@dimen/label_left_margin"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="@color/label_text_color"/>
-
+                    style="@style/formLabel"/>
                 <TextView
                     android:layout_toRightOf="@id/label_max_distance"
                     android:id="@+id/preview_max_distance"
@@ -65,29 +83,43 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="3dp"
                     android:text="(0 KM)"/>
-
-                <SeekBar
-                    android:layout_below="@id/label_max_distance"
-                    android:id="@+id/seekbar_max_distance"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
+                    android:layout_below="@id/label_max_distance"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    style="@style/formInputLayout">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_directions_bike_black_24dp"
+                        android:layout_marginLeft="@dimen/label_left_margin"/>
+                    <SeekBar
+                        android:id="@+id/seekbar_max_distance"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="0dp"
+                        android:paddingRight="0dp"/>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_directions_car_black_24dp"
+                        android:layout_marginLeft="@dimen/label_left_margin"/>
+                </LinearLayout>
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/input_layout_margin_bottom">
+                style="@style/formFieldLayout">
                 <TextView
                     android:id="@+id/label_min_price_rate"
                     android:text="@string/prompt_min_price_rate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:layout_marginBottom="@dimen/label_to_value_vmargin"
-                    android:layout_marginLeft="@dimen/label_left_margin"
-                    android:textColor="@color/label_text_color"/>
-
+                    style="@style/formLabel"/>
                 <TextView
                     android:layout_toRightOf="@id/label_min_price_rate"
                     android:id="@+id/preview_min_price_rate"
@@ -95,33 +127,41 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="3dp"
                     android:text="(Rp. 0 / Jam)"/>
-
-                <SeekBar
-                    android:layout_below="@id/label_min_price_rate"
-                    android:id="@+id/seekbar_min_price_rate"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
+                    android:layout_below="@id/label_min_price_rate"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    style="@style/formInputLayout">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_attach_money_black_24dp"
+                        android:layout_marginLeft="@dimen/label_left_margin"/>
+                    <SeekBar
+                        android:id="@+id/seekbar_min_price_rate"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/input_layout_margin_bottom">
+                style="@style/formFieldLayout">
                 <TextView
                     android:id="@+id/label_tutor_subject"
                     android:text="@string/prompt_tutor_subject"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:layout_marginBottom="@dimen/label_to_value_vmargin"
-                    android:layout_marginLeft="@dimen/label_left_margin"
-                    android:textColor="@color/label_text_color"/>
-
+                    style="@style/formLabel"/>
                 <LinearLayout
                     android:layout_below="@id/label_tutor_subject"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    style="@style/formInputLayout"
                     android:orientation="vertical">
                     <!-- This rel layout needs to maintain listview height -->
                     <RelativeLayout

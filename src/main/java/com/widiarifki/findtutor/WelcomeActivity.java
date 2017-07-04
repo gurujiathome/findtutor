@@ -16,7 +16,7 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // If mSession has started, start new Intent
+        // If mSession has started, skip this activity
         App.loadInitActivity(WelcomeActivity.this);
 
         setContentView(R.layout.activity_welcome);

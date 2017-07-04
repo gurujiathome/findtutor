@@ -26,10 +26,10 @@ import java.util.HashMap;
 public class SelectSubjectAdapter extends BaseAdapter {
     private SessionManager mSession;
     private Context mContext;
-    private ArrayList<Subject> mSubjects;
-    private HashMap<String, SubjectCategory> mSubjectCategoryHashMap = new HashMap<String, SubjectCategory>();
-    private HashMap<String, SavedSubject> mSavedSubject;
-    private ArrayList<String> mSavedSubjectTopic = new ArrayList<String>();
+    private ArrayList<Subject> mSubjects; // Variable list data subject
+    private HashMap<String, SubjectCategory> mSubjectCategoryHashMap = new HashMap<String, SubjectCategory>(); // Variable list data subject yg di HASHMAP kan
+    private HashMap<String, SavedSubject> mSavedSubject; // Variable list subjeck yg dipilih user + sub subject
+    private ArrayList<String> mSavedSubjectTopic = new ArrayList<String>(); // Variable topik/Sub subject yg dipilih
 
     public SelectSubjectAdapter() {
         super();
@@ -47,13 +47,6 @@ public class SelectSubjectAdapter extends BaseAdapter {
 
         // Check if activity has saved Subject
         mSavedSubject = ((MainActivity)mContext).getSelectedSubject();
-        /*
-        User mUserLogin = mSession.getUserDetail();
-        if(mUserLogin.getSubjects()==null){
-            mSavedSubject = ((MainActivity)mContext).getSelectedSubject();
-        }else{
-            mSavedSubject = mUserLogin.getSubjects();
-        }*/
         if(mSavedSubject == null){
             /** Initialized User's saved subject **/
             mSavedSubject = new HashMap<String, SavedSubject>();
@@ -116,15 +109,6 @@ public class SelectSubjectAdapter extends BaseAdapter {
                         if(subjectGroup != null){
                             savedTopicList = subjectGroup.getTopicList();
                             savedTopicList.put(item.getId()+"", item);
-                            /*if(idCategory == 0) {
-                                // if user select 'Semua' clear the topic list
-                                savedTopicList.clear();
-                                savedTopicList.put(item.getId()+"", item);
-                            }else{
-                                // if user havent check 'Semua'
-                                if(savedTopicList.get(idSubject+"") == null)
-                                    savedTopicList.put(item.getId()+"", item);
-                            }*/
                         }else{
                             /** add category to hashmap for 1st time **/
                             SubjectCategory selectedCat = mSubjectCategoryHashMap.get(idSubject+"");

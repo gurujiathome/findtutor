@@ -4,9 +4,15 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,7 +20,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -22,15 +27,21 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Picasso;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 import com.widiarifki.findtutor.R;
 import com.widiarifki.findtutor.adapter.EducationListAdapter;
 import com.widiarifki.findtutor.app.App;
-import com.widiarifki.findtutor.helper.DialogMessage;
+import com.widiarifki.findtutor.helper.CircleTransform;
+import com.widiarifki.findtutor.helper.RunnableDialogMessage;
 import com.widiarifki.findtutor.helper.SessionManager;
 import com.widiarifki.findtutor.model.Education;
 import com.widiarifki.findtutor.model.SubjectTopic;
@@ -40,6 +51,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -71,10 +83,13 @@ public class SettingProfileFragment extends Fragment {
     // UI comp.
     LinearLayout mFormLayout;
     EditText mInputName;
+    RadioGroup mRgrupGender;
     EditText mInputEmail;
     EditText mInputPhone;
     EditText mInputBio;
     ImageView mImgUserPhoto;
+    Button mBtnTakePhoto;
+    Button mBtnPickPhoto;
     ListView mListviewEducation;
     Button mBtnSave;
     Button mBtnAddEdu;
@@ -89,6 +104,10 @@ public class SettingProfileFragment extends Fragment {
     List<Education> mEducations;
     EducationListAdapter mEduListAdapter;
     ArrayList<SubjectTopic> mSubjects;
+    private Uri mPhotoUri;
+    private Uri mSavedPhotoUri;
+
+    static final int REQUEST_IMAGE_CAPTURE = 1;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -99,7 +118,8 @@ public class SettingProfileFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.main, menu);
+        inflater.inflate(R.menu.appbar_menu, menu);
+        menu.findItem(R.id.action_save).setVisible(true);
     }
 
     @Override
@@ -127,11 +147,26 @@ public class SettingProfileFragment extends Fragment {
 
         // Bind UI comp.
         mFormLayout = (LinearLayout) view.findViewById(R.id.form_layout);
+        mImgUserPhoto = (ImageView) view.findViewById(R.id.imgv_profile_photo);
         mInputName = (EditText) view.findViewById(R.id.input_name);
-        mInputEmail = (EditText) view.findViewById(R.id.input_email);
+        mRgrupGender = (RadioGroup) view.findViewById(R.id.rgrup_gender);
+        //mInputEmail = (EditText) view.findViewById(R.id.input_email);
         mInputPhone = (EditText) view.findViewById(R.id.input_phone);
         mInputBio = (EditText) view.findViewById(R.id.input_bio);
+        mBtnTakePhoto = (Button) view.findViewById(R.id.btn_take_photo);
+        mBtnTakePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                takePicture();
+            }
+        });
+        mBtnPickPhoto = (Button) view.findViewById(R.id.btn_pick_photo);
+        mBtnPickPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+            }
+        });
         mEducations = new ArrayList<Education>();
         mEduListAdapter = new EducationListAdapter(mContext, mEducations);
         mListviewEducation = (ListView) view.findViewById(R.id.list_education);
@@ -161,7 +196,7 @@ public class SettingProfileFragment extends Fragment {
                                     dialog.cancel();
                                 }
                             });
-                            dialogConfBuilder.setPositiveButton(mContext.getString(R.string.cast_tracks_chooser_dialog_ok), new DialogInterface.OnClickListener() {
+                            dialogConfBuilder.setPositiveButton(mContext.getString(android.R.string.ok), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     mEducations.remove(position);
@@ -214,8 +249,22 @@ public class SettingProfileFragment extends Fragment {
 
     void bindInitialData(){
         mUserLogin = mSession.getUserDetail();
+        int gender = mUserLogin.getGender();
+        Picasso.with(mContext).load(App.URL_PATH_PHOTO + mUserLogin.getPhotoUrl())
+                .transform(new CircleTransform())
+                .placeholder(R.drawable.ic_person_black_24dp)
+                .error(R.drawable.ic_broken_image_black_24dp)
+                .into(mImgUserPhoto);
         mInputName.setText(mUserLogin.getName());
-        mInputEmail.setText(mUserLogin.getEmail());
+        RadioButton selectedRadio = null;
+        if(gender == 1) {
+            selectedRadio = (RadioButton) mRgrupGender.findViewById(R.id.radio_opt_male);
+        }
+        else if(gender == 2) {
+            selectedRadio = (RadioButton) mRgrupGender.findViewById(R.id.radio_opt_female);
+        }
+        selectedRadio.setChecked(true);
+        //mInputEmail.setText(mUserLogin.getEmail());
         mInputPhone.setText(mUserLogin.getPhone());
         mInputBio.setText(mUserLogin.getBio());
         mEducations.clear();
@@ -267,7 +316,7 @@ public class SettingProfileFragment extends Fragment {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                if(mProgressDialog.isShowing()) mProgressDialog.hide();
+                                if(mProgressDialog.isShowing()) mProgressDialog.dismiss();
                             }
                         });
                     } catch (JSONException e) {
@@ -280,14 +329,82 @@ public class SettingProfileFragment extends Fragment {
         });
     }
 
+    private void takePicture() {
+        if (mContext.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            //resolveActivity(), returns the first activity component that can handle the intent
+            if (takePictureIntent.resolveActivity(mContext.getPackageManager()) != null) {
+                // Create the File where the photo should go
+                File photoFile = null;
+                try {
+                    photoFile = createImageFile();
+                } catch (IOException ex) {
+                    // Error occurred while creating the File
+                    ex.printStackTrace();
+                }
+
+                // Continue only if the File was successfully created
+                if (photoFile != null) {
+                    mPhotoUri = FileProvider.getUriForFile(mContext, mContext.getPackageName(), photoFile);
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mPhotoUri);
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                }
+            }else{
+                Toast.makeText(mContextActivity.getApplication(), "Aplikasi kamera tidak ditemukan", Toast.LENGTH_LONG).show();
+            }
+        }else{
+            Toast.makeText(mContextActivity.getApplication(), "Camera not supported", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String imageFileName = mUserLogin.getEmail();
+        File storageDir = mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        return image;
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
+            // start picker to get image for cropping and then use the image in cropping activity
+            CropImage.activity(mPhotoUri)
+                    .setGuidelines(CropImageView.Guidelines.OFF)
+                    .setCropShape(CropImageView.CropShape.OVAL)
+                    .setFixAspectRatio(true)
+                    .setAllowFlipping(false)
+                    .setActivityTitle("Tampilan Foto")
+                    .start(getContext(), this);
+        }
+
+        else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == Activity.RESULT_OK) {
+                mSavedPhotoUri = result.getUri();
+                Picasso.with(mContext).load(mSavedPhotoUri)
+                        .transform(new CircleTransform())
+                        .into(mImgUserPhoto);
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+            }
+        }
+    }
+
     private void actionUpdateEducation(final boolean isNewData, final int editedItemPos){
         View currentFocus = getActivity().getCurrentFocus();
         if (currentFocus != null) currentFocus.clearFocus();
         //getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);*/
 
-        InputMethodManager inputManager = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-
-        inputManager.hideSoftInputFromWindow(currentFocus.getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
+        /*InputMethodManager inputManager = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(currentFocus.getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);*/
+        App.hideSoftKeyboard(mContext);
 
         //mBtnAddEdu.requestFocus();
 
@@ -319,7 +436,7 @@ public class SettingProfileFragment extends Fragment {
                 dialog.cancel();
             }
         });
-        dialogBuilder.setPositiveButton(mContext.getString(R.string.cast_tracks_chooser_dialog_ok), new DialogInterface.OnClickListener() {
+        dialogBuilder.setPositiveButton(mContext.getString(android.R.string.ok), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Education education = new Education();
@@ -347,9 +464,9 @@ public class SettingProfileFragment extends Fragment {
                 if (currentFocus != null) currentFocus.clearFocus();
                 //getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);*/
 
-                InputMethodManager inputManager = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-
-                inputManager.hideSoftInputFromWindow(currentFocus.getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
+                /*InputMethodManager inputManager = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputManager.hideSoftInputFromWindow(currentFocus.getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);*/
+                App.hideSoftKeyboard(mContext);
                 //dialog.dismiss();
             }
         });
@@ -360,27 +477,36 @@ public class SettingProfileFragment extends Fragment {
     void saveChanges(){
         // Store values
         String name = mInputName.getText().toString();
-        String email = mInputEmail.getText().toString();
+        //String email = mInputEmail.getText().toString();
         String phone = mInputPhone.getText().toString();
         String bio = mInputBio.getText().toString();
+        int selectedGender = mRgrupGender.getCheckedRadioButtonId();
+        int gender = 0;
+        if(selectedGender == R.id.radio_opt_male) gender = 1;
+        else if(selectedGender == R.id.radio_opt_female) gender = 2;
 
         // Pass validation
+        mProgressDialog.setCancelable(false);
         mProgressDialog.setMessage("Menyimpan perubahan...");
         if(!mProgressDialog.isShowing()) mProgressDialog.show();
 
         MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json; charset=utf-8");
+        MediaType MEDIA_TYPE_JPG = MediaType.parse("image/jpg");
         // convert your list to json
         String jsonEducationList = new Gson().toJson(mEducations);
-
-        RequestBody formBody = new MultipartBody.Builder()
+        MultipartBody.Builder formBodyBuilder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("id_user", mUserLogin.getId()+"")
-                .addFormDataPart("email", email)
+                //.addFormDataPart("email", email)
                 .addFormDataPart("name", name)
+                .addFormDataPart("gender", gender+"")
                 .addFormDataPart("phone", phone)
                 .addFormDataPart("bio", bio)
-                .addFormDataPart("educations", null, RequestBody.create(MEDIA_TYPE_JSON, jsonEducationList))
-                .build();
+                .addFormDataPart("educations", null, RequestBody.create(MEDIA_TYPE_JSON, jsonEducationList));
+        if(mSavedPhotoUri != null)
+                formBodyBuilder.addFormDataPart("user_photo", mUserLogin.getId()+".jpg", RequestBody.create(MEDIA_TYPE_JPG, new File(mSavedPhotoUri.getPath())) );
+
+        RequestBody formBody = formBodyBuilder.build();
 
         OkHttpClient httpClient = new OkHttpClient();
 
@@ -394,7 +520,7 @@ public class SettingProfileFragment extends Fragment {
             @Override
             public void onFailure(Call call, IOException e) {
                 // alert user
-                getActivity().runOnUiThread(new DialogMessage(mContext, dialogTitle, String.valueOf(e), mProgressDialog));
+                getActivity().runOnUiThread(new RunnableDialogMessage(mContext, dialogTitle, String.valueOf(e), mProgressDialog));
             }
 
             @Override
@@ -411,7 +537,8 @@ public class SettingProfileFragment extends Fragment {
                             JSONObject objUserData = new JSONObject(userData);
                             // Store in Session w/ User object
                             mUserLogin.setName(objUserData.getString(mSession.KEY_NAME));
-                            mUserLogin.setEmail(objUserData.getString(mSession.KEY_EMAIL));
+                            mUserLogin.setGender(objUserData.getInt(mSession.KEY_GENDER));
+                            //mUserLogin.setEmail(objUserData.getString(mSession.KEY_EMAIL));
                             mUserLogin.setPhone(objUserData.getString(mSession.KEY_PHONE));
                             mUserLogin.setBio(objUserData.getString(mSession.KEY_BIO));
                             Type type = new TypeToken<List<Education>>(){}.getType();
@@ -422,22 +549,22 @@ public class SettingProfileFragment extends Fragment {
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if(mProgressDialog.isShowing()) mProgressDialog.hide();
+                                    if(mProgressDialog.isShowing()) mProgressDialog.dismiss();
                                     Toast.makeText(mContext, "Simpan profil berhasil", Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }else{
                             String message = responseObj.getString("error_msg");
                             // alert user
-                            getActivity().runOnUiThread(new DialogMessage(mContext, dialogTitle, message, mProgressDialog));
+                            getActivity().runOnUiThread(new RunnableDialogMessage(mContext, dialogTitle, message, mProgressDialog));
                         }
                     } catch (JSONException e) {
                         // alert user
-                        getActivity().runOnUiThread(new DialogMessage(mContext, dialogTitle, e.getMessage(), mProgressDialog));
+                        getActivity().runOnUiThread(new RunnableDialogMessage(mContext, dialogTitle, e.getMessage(), mProgressDialog));
                     }
                 }else{
                     // alert user
-                    getActivity().runOnUiThread(new DialogMessage(mContext, dialogTitle, response.message(), mProgressDialog));
+                    getActivity().runOnUiThread(new RunnableDialogMessage(mContext, dialogTitle, response.message(), mProgressDialog));
                 }
             }
         });

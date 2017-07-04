@@ -11,6 +11,7 @@ public class User {
     private int mId;
     private String mName;
     private String mEmail;
+    private int mGender;
     private String mPhone;
     private String mPhotoUrl;
     private int mIsTutor;
@@ -21,7 +22,13 @@ public class User {
     private int mMinPriceRate;
     private List<Education> mEducations;
     private HashMap<String, SavedSubject> mSubjects;
+    private int mIsAvailable;
     private HashMap<String, List<AvailabilityPerDay>> mAvailabilities;
+    private String mDeviceId;
+    private String mLatitude;
+    private String mLongitude;
+    private String mLocationAddress;
+    private double mDistanceFromRequestor;
 
     public int getId() {
         return mId;
@@ -45,6 +52,14 @@ public class User {
 
     public void setEmail(String email) {
         mEmail = email;
+    }
+
+    public int getGender() {
+        return mGender;
+    }
+
+    public void setGender(int gender) {
+        mGender = gender;
     }
 
     public String getPhone() {
@@ -123,11 +138,59 @@ public class User {
         mSubjects = subjects;
     }
 
+    public int getIsAvailable() {
+        return mIsAvailable;
+    }
+
+    public void setIsAvailable(int isAvailable) {
+        mIsAvailable = isAvailable;
+    }
+
     public HashMap<String, List<AvailabilityPerDay>> getAvailabilities() {
         return mAvailabilities;
     }
 
     public void setAvailabilities(HashMap<String, List<AvailabilityPerDay>> availabilities) {
         mAvailabilities = availabilities;
+    }
+
+    public String getDeviceId() {
+        return mDeviceId;
+    }
+
+    public void setDeviceId(String deviceId) {
+        mDeviceId = deviceId;
+    }
+
+    public String getLatitude() {
+        return mLatitude;
+    }
+
+    public void setLatitude(String latitude) {
+        mLatitude = latitude;
+    }
+
+    public String getLongitude() {
+        return mLongitude;
+    }
+
+    public void setLongitude(String longitude) {
+        mLongitude = longitude;
+    }
+
+    public String getLocationAddress() {
+        return mLocationAddress;
+    }
+
+    public void setLocationAddress(String locationAddress) {
+        mLocationAddress = locationAddress;
+    }
+
+    public double getDistanceFromRequestor() {
+        return mDistanceFromRequestor;
+    }
+
+    public void setDistanceFromRequestor(double distanceFromRequestor) {
+        mDistanceFromRequestor = distanceFromRequestor;
     }
 }

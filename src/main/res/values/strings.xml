@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">FindTutor</string>
+    <string name="api_key">AIzaSyAYQCFQ7PLPpcJD8i3Fy04WcFiLVfHpw5c</string>
     <string name="title_activity_login">Login</string>
     <string name="title_activity_register">Daftar</string>
     <string name="title_activity_main">MainActivity</string>
@@ -22,7 +23,7 @@
     <string name="label_opt_is_both">Kedua-duanya</string>
 
     <string name="action_pick_selfie">Ambil Selfie</string>
-    <string name="action_pick_photo">Dari Galeri</string>
+    <string name="action_pick_from_gallery">Dari Galeri</string>
     <string name="action_next">Selanjutnya</string>
     <string name="action_sign_in">Login</string>
     <string name="action_register">Daftar</string>
@@ -75,7 +76,7 @@
     <string name="prompt_tutor_subject">Keahlian Mengajar</string>
     <string name="action_select_subject">Pilih Keahlian Mengajar</string>
     <string name="prompt_change_password">Ganti Password</string>
-    <string name="prompt_max_travel_distance">Jarak Maksimum Pertemuan</string>
+    <string name="prompt_max_travel_distance">Jarak Perjalanan Maksimum</string>
     <string name="prompt_min_price_rate">Tarif Mengajar Minimum</string>
     <string name="set_basic_profile">Atur Profil Dasar</string>
     <string name="set_account">Atur Akun</string>
@@ -86,8 +87,15 @@
     <string name="title_activity_test">TestActivity</string>
     <string name="add_time_slot">Tambah Slot Waktu</string>
     <string name="sampai_dengan">s/d</string>
-    <string name="label_male">Pria</string>
+    <string name="label_opt_male">Pria</string>
     <string name="label_opt_female">Wanita</string>
+    <string name="prompt_gender">Jenis Kelamin</string>
+    <string name="service_not_available">Service not available</string>
+    <string name="invalid_lat_long_used">Invalid location value</string>
+    <string name="no_address_found">No address found</string>
+    <string name="address_found">Address Found</string>
+    <string name="current_location">Lokasi Saat Ini</string>
+    <string name="search_location">Cari Lokasi</string>
 
     <string-array name="day_arrays">
         <item>Senin</item>
@@ -98,4 +106,16 @@
         <item>Sabtu</item>
         <item>Minggu</item>
     </string-array>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_search_select_subject">Pilih Subjek</string>
+    <string name="title_search_select_location">Pilih Lokasi Pertemuan</string>
+    <string name="use_current_location">Gunakan Lokasi Saat Ini</string>
+    <string name="title_search_select_date">Tentukan Tanggal</string>
+    <string name="title_search_tutor">Cari Tutor</string>
+    <string name="menu_search_tutor">Cari Tutor</string>
+    <string name="title_search_tutor_result">Hasil Pencarian</string>
+    <string name="title_search_select_gender">Gender Preference (Optional)</string>
+    <string name="tutor_tab_title_profile">Profil</string>
+    <string name="tutor_tab_title_subject">Subjek</string>
+    <string name="tutor_tab_title_feedback">Ulasan</string>
 </resources>

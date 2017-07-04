@@ -32,7 +32,7 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 import com.widiarifki.findtutor.app.App;
 import com.widiarifki.findtutor.helper.CircleTransform;
-import com.widiarifki.findtutor.helper.DialogMessage;
+import com.widiarifki.findtutor.helper.RunnableDialogMessage;
 import com.widiarifki.findtutor.helper.SessionManager;
 import com.widiarifki.findtutor.model.User;
 
@@ -99,7 +99,7 @@ public class CompleteProfileActivity extends AppCompatActivity implements Vertic
         firstImpression();
 
         // Stepper form element
-        String[] mySteps = {"Nama Lengkap", "No Handphone", "Jenis Kelamin", "Bergabung Sebagai", "Upload Foto Profil"/*, "Foto Kartu Identitas"*/};
+        String[] mySteps = {"Nama Lengkap", "Jenis Kelamin", "No Handphone", "Bergabung Sebagai", "Upload Foto Profil"/*, "Foto Kartu Identitas"*/};
 
         // Finding the view
         mVerticalStepperForm = (VerticalStepperFormLayout) findViewById(R.id.vertical_stepper_form);
@@ -124,10 +124,10 @@ public class CompleteProfileActivity extends AppCompatActivity implements Vertic
                 view = createNameStep();
                 break;
             case 1:
-                view = createPhoneStep();
+                view = createChooseGender();
                 break;
             case 2:
-                view = createChooseGender();
+                view = createPhoneStep();
                 break;
             case 3:
                 view = createChooseUserStep();
@@ -183,6 +183,28 @@ public class CompleteProfileActivity extends AppCompatActivity implements Vertic
     }
 
     private View createChooseGender(){
+        mRgrupGender = new RadioGroup(this);
+
+        mRbtnIsMale = new RadioButton(this);
+        mRbtnIsMale.setId(R.id.radio_opt_male);
+        mRbtnIsMale.setText(R.string.label_opt_male);
+        mRgrupGender.addView(mRbtnIsMale);
+
+        mRbtnIsFemale = new RadioButton(this);
+        mRbtnIsFemale.setId(R.id.radio_opt_female);
+        mRbtnIsFemale.setText(R.string.label_opt_female);
+        mRgrupGender.addView(mRbtnIsFemale);
+
+        mRgrupGender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
+                checkGender();
+            }
+        });
+        return mRgrupGender;
+    }
+
+    private View createChooseUserStep(){
         mRgrupUserOpt = new RadioGroup(this);
 
         mRbtnIsTutor = new RadioButton(this);
@@ -209,28 +231,6 @@ public class CompleteProfileActivity extends AppCompatActivity implements Vertic
         return mRgrupUserOpt;
     }
 
-    private View createChooseUserStep(){
-        mRgrupGender = new RadioGroup(this);
-
-        mRbtnIsMale = new RadioButton(this);
-        mRbtnIsMale.setId(R.id.radio_opt_male);
-        mRbtnIsMale.setText(R.string.label_male);
-        mRgrupGender.addView(mRbtnIsMale);
-
-        mRbtnIsFemale = new RadioButton(this);
-        mRbtnIsFemale.setId(R.id.radio_opt_female);
-        mRbtnIsFemale.setText(R.string.label_opt_female);
-        mRgrupGender.addView(mRbtnIsFemale);
-
-        mRgrupGender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
-                checkGender();
-            }
-        });
-        return mRgrupGender;
-    }
-
     private View createPhotoStep(){
         mLayoutUserPhoto = new LinearLayout(this);
         mLayoutUserPhoto.setOrientation(LinearLayout.VERTICAL);
@@ -240,7 +240,7 @@ public class CompleteProfileActivity extends AppCompatActivity implements Vertic
 
         mBtnOpenCamera = new Button(this);
         mBtnOpenCamera.setText(getString(R.string.action_pick_selfie));
-        mBtnOpenCamera.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_menu_camera,0, 0, 0);
+        mBtnOpenCamera.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_camera,0, 0, 0);
         mBtnOpenCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -250,8 +250,8 @@ public class CompleteProfileActivity extends AppCompatActivity implements Vertic
         layoutBtn.addView(mBtnOpenCamera);
 
         mBtnOpenAlbum = new Button(this);
-        mBtnOpenAlbum.setText(getString(R.string.action_pick_photo));
-        mBtnOpenAlbum.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_menu_gallery,0, 0, 0);
+        mBtnOpenAlbum.setText(getString(R.string.action_pick_from_gallery));
+        mBtnOpenAlbum.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_gallery,0, 0, 0);
         mBtnOpenAlbum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -277,10 +277,10 @@ public class CompleteProfileActivity extends AppCompatActivity implements Vertic
                 checkName();
                 break;
             case 1:
-                checkPhone();
+                checkGender();
                 break;
             case 2:
-                checkGender();
+                checkPhone();
                 break;
             case 3:
                 checkUserOpt();
@@ -372,7 +372,7 @@ public class CompleteProfileActivity extends AppCompatActivity implements Vertic
 
                 // Continue only if the File was successfully created
                 if (photoFile != null) {
-                    mPhotoUri = FileProvider.getUriForFile(CompleteProfileActivity.this, "com.widiarifki.findtutor", photoFile);
+                    mPhotoUri = FileProvider.getUriForFile(CompleteProfileActivity.this, mContext.getPackageName(), photoFile);
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mPhotoUri);
                     startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                 }
@@ -432,7 +432,7 @@ public class CompleteProfileActivity extends AppCompatActivity implements Vertic
                 dialog.cancel();
             }
         });
-        dialogBuilder.setPositiveButton(getString(R.string.cast_tracks_chooser_dialog_ok), new DialogInterface.OnClickListener() {
+        dialogBuilder.setPositiveButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 doSendData();
@@ -449,7 +449,11 @@ public class CompleteProfileActivity extends AppCompatActivity implements Vertic
         // get value from fields
         String name = mInputName.getText().toString();
         String phone = mInputPhone.getText().toString();
-        int gender = mRgrupGender.getCheckedRadioButtonId();
+        int selectedGender = mRgrupGender.getCheckedRadioButtonId();
+        int gender = 0;
+        if(selectedGender == mRbtnIsMale.getId()) gender = 1;
+        else if(selectedGender == mRbtnIsFemale.getId()) gender = 2;
+
         int is_tutor = 0;
         int is_student = 0;
         int selectedUserType = mRgrupUserOpt.getCheckedRadioButtonId();
@@ -476,7 +480,7 @@ public class CompleteProfileActivity extends AppCompatActivity implements Vertic
                 .build();
 
         Request httpRequest = new Request.Builder()
-                .url(App.URL_USER_PROFILE_FORM)
+                .url(App.URL_SAVE_PROFILE)
                 .post(formBody)
                 .build();
 
@@ -486,7 +490,7 @@ public class CompleteProfileActivity extends AppCompatActivity implements Vertic
             public void onFailure(Call call, IOException e) {
                 //Log.v(TAG, String.valueOf(e));
                 // alert user
-                runOnUiThread(new DialogMessage(mContext, dialogTitle, String.valueOf(e), mProgressDialog));
+                runOnUiThread(new RunnableDialogMessage(mContext, dialogTitle, String.valueOf(e), mProgressDialog));
             }
 
             @Override
@@ -494,7 +498,7 @@ public class CompleteProfileActivity extends AppCompatActivity implements Vertic
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if(mProgressDialog.isShowing()) mProgressDialog.hide();
+                        if(mProgressDialog.isShowing()) mProgressDialog.dismiss();
                     }
                 });
                 String json = response.body().string();
@@ -509,11 +513,13 @@ public class CompleteProfileActivity extends AppCompatActivity implements Vertic
                             JSONObject objUserData = new JSONObject(userData);
                             // set another attribute's value
                             mUserLogin.setName(objUserData.getString(mSession.KEY_NAME));
+                            mUserLogin.setGender(objUserData.getInt(mSession.KEY_GENDER));
                             mUserLogin.setPhone(objUserData.getString(mSession.KEY_PHONE));
                             mUserLogin.setPhotoUrl(objUserData.getString(mSession.KEY_PHOTO_URL));
                             mUserLogin.setIsTutor(objUserData.getInt(mSession.KEY_IS_TUTOR));
                             mUserLogin.setIsStudent(objUserData.getInt(mSession.KEY_IS_STUDENT));
                             mUserLogin.setIsProfileComplete(objUserData.getInt(mSession.KEY_IS_PROFILE_COMPLETE));
+                            mUserLogin.setIsAvailable(objUserData.getInt(mSession.KEY_IS_AVAILABLE));
                             mSession.updateSession(mUserLogin);
 
                             runOnUiThread(new Runnable() {
@@ -527,15 +533,15 @@ public class CompleteProfileActivity extends AppCompatActivity implements Vertic
                             });
                         }else{
                             String message = objResponse.getString("error_msg");
-                            runOnUiThread(new DialogMessage(mContext, dialogTitle, message, mProgressDialog));
+                            runOnUiThread(new RunnableDialogMessage(mContext, dialogTitle, message, mProgressDialog));
                         }
                     } catch (JSONException e) {
                         // alert user
-                        runOnUiThread(new DialogMessage(mContext, dialogTitle, e.getMessage(), mProgressDialog));
+                        runOnUiThread(new RunnableDialogMessage(mContext, dialogTitle, e.getMessage(), mProgressDialog));
                     }
                 }else{
                     // alert user
-                    runOnUiThread(new DialogMessage(mContext, dialogTitle, response.message(), mProgressDialog));
+                    runOnUiThread(new RunnableDialogMessage(mContext, dialogTitle, response.message(), mProgressDialog));
                 }
             }
         });

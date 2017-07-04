@@ -38,8 +38,7 @@ public class SessionManager {
     private static final String PREF_NAME = "sharedPref";
 
     // All Shared Preferences Keys
-    private static final String IS_LOGIN = "isLoggedIn";
-
+    private static final String KEY_IS_LOGIN = "isLoggedIn";
     public static final String KEY_ID_USER = "id_user";
     public static final String KEY_EMAIL = "email";
     public static final String KEY_NAME = "name";
@@ -53,7 +52,13 @@ public class SessionManager {
     public static final String KEY_MIN_PRICE_RATE = "min_price_rate";
     public static final String KEY_EDUCATIONS = "educations";
     public static final String KEY_SUBJECTS = "subjects";
+    public static final String KEY_IS_AVAILABLE = "is_available";
     public static final String KEY_AVAILABILITIES = "availabilities";
+    public static final String KEY_GENDER = "gender";
+    public static final String KEY_DEVICE_ID = "device_id";
+    public static final String KEY_LATITUDE = "latitude";
+    public static final String KEY_LONGITUDE = "longitude";
+    public static final String KEY_LOCATION_ADDRESS = "location_address";
 
     // Constructor
     public SessionManager(Context context){
@@ -63,13 +68,15 @@ public class SessionManager {
     }
 
     public boolean isLoggedIn() {
-        return pref.getBoolean(IS_LOGIN, false);
+        return pref.getBoolean(KEY_IS_LOGIN, false);
     }
 
     public void updateSession(User user){
-        editor.putBoolean(IS_LOGIN, true);
+        editor.putBoolean(KEY_IS_LOGIN, true);
         editor.putInt(KEY_ID_USER, user.getId());
         editor.putString(KEY_EMAIL, user.getEmail());
+        editor.putInt(KEY_GENDER, user.getGender());
+        editor.putString(KEY_DEVICE_ID, user.getDeviceId());
         editor.putString(KEY_NAME, user.getName());
         editor.putString(KEY_PHONE, user.getPhone());
         editor.putString(KEY_BIO, user.getBio());
@@ -81,7 +88,11 @@ public class SessionManager {
         editor.putInt(KEY_MAX_TRAVEL_DISTANCE, user.getMaxTravelDistance());
         editor.putInt(KEY_MIN_PRICE_RATE, user.getMinPriceRate());
         editor.putString(KEY_SUBJECTS, new Gson().toJson(user.getSubjects()));
+        editor.putInt(KEY_IS_AVAILABLE, user.getIsAvailable());
         editor.putString(KEY_AVAILABILITIES, new Gson().toJson(user.getAvailabilities()));
+        editor.putString(KEY_LATITUDE, user.getLatitude());
+        editor.putString(KEY_LONGITUDE, user.getLongitude());
+        editor.putString(KEY_LOCATION_ADDRESS, user.getLocationAddress());
         // commit changes
         editor.commit();
     }
@@ -91,14 +102,20 @@ public class SessionManager {
         user.setId(pref.getInt(KEY_ID_USER, 0));
         user.setName(pref.getString(KEY_NAME, null));
         user.setEmail(pref.getString(KEY_EMAIL, null));
+        user.setGender(pref.getInt(KEY_GENDER, 0));
+        user.setDeviceId(pref.getString(KEY_DEVICE_ID, null));
         user.setPhone(pref.getString(KEY_PHONE, null));
         user.setPhotoUrl(pref.getString(KEY_PHOTO_URL, null));
         user.setIsTutor(pref.getInt(KEY_IS_TUTOR, 0));
         user.setIsStudent(pref.getInt(KEY_IS_STUDENT, 0));
         user.setIsProfileComplete(pref.getInt(KEY_IS_PROFILE_COMPLETE, 0));
         user.setBio(pref.getString(KEY_BIO, null));
-        user.setMaxTravelDistance(pref.getInt(KEY_MAX_TRAVEL_DISTANCE, App.MAX_TRAVEL_DISTANCE_DEFAULT));
+        user.setMaxTravelDistance(pref.getInt(KEY_MAX_TRAVEL_DISTANCE, App.SETTING_TRAVEL_DISTANCE_MAX_DEFAULT));
         user.setMinPriceRate(pref.getInt(KEY_MIN_PRICE_RATE, 0));
+        user.setLatitude(pref.getString(KEY_LATITUDE, null));
+        user.setLongitude(pref.getString(KEY_LONGITUDE, null));
+        user.setLocationAddress(pref.getString(KEY_LOCATION_ADDRESS, null));
+        user.setIsAvailable(pref.getInt(KEY_IS_AVAILABLE, 0));
         Type eduType = new TypeToken<List<Education>>(){}.getType();
         List<Education> educationList = new Gson().fromJson(pref.getString(KEY_EDUCATIONS, null), eduType);
         if(educationList == null)

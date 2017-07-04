@@ -18,7 +18,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:layout_marginBottom="@dimen/label_to_input_vmargin"
             android:layout_marginLeft="@dimen/label_left_margin"
-            android:textColor="@color/label_text_color"/>
+            android:textColor="@color/colorTextLabel"/>
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -43,7 +43,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:layout_marginBottom="4dp"
             android:layout_marginLeft="@dimen/label_left_margin"
-            android:textColor="@color/label_text_color"/>
+            android:textColor="@color/colorTextLabel"/>
         <Spinner
             android:id="@+id/spinner_school_level"
             android:layout_below="@id/label_school_level"
@@ -63,7 +63,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:layout_marginBottom="@dimen/label_to_input_vmargin"
             android:layout_marginLeft="@dimen/label_left_margin"
-            android:textColor="@color/label_text_color"/>
+            android:textColor="@color/colorTextLabel"/>
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -85,7 +85,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:layout_marginBottom="@dimen/label_to_input_vmargin"
             android:layout_marginLeft="@dimen/label_left_margin"
-            android:textColor="@color/label_text_color"/>
+            android:textColor="@color/colorTextLabel"/>
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">

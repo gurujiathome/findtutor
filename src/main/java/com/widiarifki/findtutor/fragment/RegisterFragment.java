@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +20,8 @@ import android.widget.Toast;
 import com.widiarifki.findtutor.CompleteProfileActivity;
 import com.widiarifki.findtutor.R;
 import com.widiarifki.findtutor.app.App;
-import com.widiarifki.findtutor.helper.DialogMessage;
+import com.widiarifki.findtutor.helper.RunnableDialogMessage;
+import com.widiarifki.findtutor.helper.FormInputChecker;
 import com.widiarifki.findtutor.helper.SessionManager;
 import com.widiarifki.findtutor.model.User;
 
@@ -115,7 +117,7 @@ public class RegisterFragment extends Fragment {
             mInputPassword.setError(getString(R.string.error_field_required));
             focusView = mInputPassword;
             cancel = true;
-        }else if(!TextUtils.isEmpty(pass) && !isPasswordValid(pass)){
+        }else if(!TextUtils.isEmpty(pass) && !FormInputChecker.isPasswordValid(pass, App.SETTING_MIN_PASSWORD_LEN)){
             mInputPassword.setError(getString(R.string.error_invalid_password));
             focusView = mInputPassword;
             cancel = true;
@@ -126,7 +128,7 @@ public class RegisterFragment extends Fragment {
             mInputEmail.setError(getString(R.string.error_field_required));
             focusView = mInputEmail;
             cancel = true;
-        }else if(!isEmailValid(email)){
+        }else if(!FormInputChecker.isEmailValid(email)){
             mInputEmail.setError(getString(R.string.error_invalid_email));
             focusView = mInputEmail;
             cancel = true;
@@ -138,9 +140,11 @@ public class RegisterFragment extends Fragment {
             mProgressDialog.setMessage("Memproses registrasi akun...");
             if(!mProgressDialog.isShowing()) mProgressDialog.show();
 
+            TelephonyManager telephonyManager = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
             RequestBody formBody = new FormBody.Builder()
                     .add("email", email)
                     .add("password", pass)
+                    .add("device_id", telephonyManager.getDeviceId())
                     .build();
 
             OkHttpClient httpClient = new OkHttpClient.Builder()
@@ -150,7 +154,7 @@ public class RegisterFragment extends Fragment {
                     .build();;
 
             Request httpRequest = new Request.Builder()
-                    .url(App.URL_USER_REGISTER)
+                    .url(App.URL_REGISTER)
                     .post(formBody)
                     .build();
 
@@ -160,7 +164,7 @@ public class RegisterFragment extends Fragment {
                 public void onFailure(Call call, IOException e) {
                     //Log.v(TAG, String.valueOf(e));
                     // alert user
-                    getActivity().runOnUiThread(new DialogMessage(mContext, dialogTitle, String.valueOf(e), mProgressDialog));
+                    getActivity().runOnUiThread(new RunnableDialogMessage(mContext, dialogTitle, String.valueOf(e), mProgressDialog));
                 }
 
                 @Override
@@ -168,7 +172,7 @@ public class RegisterFragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if(mProgressDialog.isShowing()) mProgressDialog.hide();
+                            if(mProgressDialog.isShowing()) mProgressDialog.dismiss();
                         }
                     });
                     String json = response.body().string();
@@ -186,6 +190,7 @@ public class RegisterFragment extends Fragment {
                                 User user = new User();
                                 user.setId(objUserData.getInt(mSession.KEY_ID_USER));
                                 user.setEmail(objUserData.getString(mSession.KEY_EMAIL));
+                                user.setDeviceId(objUserData.getString(mSession.KEY_DEVICE_ID));
                                 user.setIsProfileComplete(objUserData.getInt(mSession.KEY_IS_PROFILE_COMPLETE));
                                 mSession.updateSession(user);
 
@@ -211,28 +216,20 @@ public class RegisterFragment extends Fragment {
                                         }
                                     });
                                 }else{
-                                    getActivity().runOnUiThread(new DialogMessage(mContext, dialogTitle, message, mProgressDialog));
+                                    getActivity().runOnUiThread(new RunnableDialogMessage(mContext, dialogTitle, message, mProgressDialog));
                                 }
 
                             }
                         } catch (JSONException e) {
                             // alert user
-                            getActivity().runOnUiThread(new DialogMessage(mContext, dialogTitle, e.getMessage(), mProgressDialog));
+                            getActivity().runOnUiThread(new RunnableDialogMessage(mContext, dialogTitle, e.getMessage(), mProgressDialog));
                         }
                     }else{
                         // alert user
-                        getActivity().runOnUiThread(new DialogMessage(mContext, dialogTitle, response.message(), mProgressDialog));
+                        getActivity().runOnUiThread(new RunnableDialogMessage(mContext, dialogTitle, response.message(), mProgressDialog));
                     }
                 }
             });
         }
-    }
-
-    private boolean isEmailValid(String email){
-        return email.contains("@");
-    }
-
-    private boolean isPasswordValid(String password){
-        return password.length() > 5;
     }
 }

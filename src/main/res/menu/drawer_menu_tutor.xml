@@ -5,18 +5,23 @@
            android:id="@+id/group_nav_first">
         <item
             android:id="@+id/nav_my_session"
+            android:icon="@drawable/ic_assignment_black_24dp"
             android:title="@string/menu_my_session"/>
         <item
             android:id="@+id/nav_session_history"
+            android:icon="@drawable/ic_history_black_24dp"
             android:title="@string/menu_session_history"/>
         <item
             android:id="@+id/nav_income"
+            android:icon="@drawable/ic_attach_money_black_24dp"
             android:title="@string/menu_income"/>
         <item
             android:id="@+id/nav_availibility"
+            android:icon="@drawable/ic_schedule_black_24dp"
             android:title="@string/menu_availibility"/>
         <item
             android:id="@+id/nav_preferences"
+            android:icon="@drawable/ic_settings_black_24dp"
             android:title="@string/menu_preferences"/>
     </group>
     <!--<item android:title="@string/menu_preferences">
@@ -39,6 +44,7 @@
             android:title="@string/menu_preferences"/>-->
         <item
             android:id="@+id/nav_help"
+            android:icon="@drawable/ic_help_black_24dp"
             android:title="@string/menu_help"/>
     </group>
     <!--<group android:checkableBehavior="single"

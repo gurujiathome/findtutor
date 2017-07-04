@@ -4,33 +4,32 @@
     <group android:checkableBehavior="single"
            android:id="@+id/group_nav_first">
         <item
+            android:id="@+id/nav_search_tutor"
+            android:icon="@drawable/ic_search_black_24dp"
+            android:title="@string/menu_search_tutor"/>
+        <item
             android:id="@+id/nav_my_session"
+            android:icon="@drawable/ic_assignment_black_24dp"
             android:title="@string/menu_my_session"/>
         <item
-            android:id="@+id/nav_find_tutor"
-            android:title="@string/menu_find_tutor"/>
-        <item
             android:id="@+id/nav_session_history"
+            android:icon="@drawable/ic_history_black_24dp"
             android:title="@string/menu_session_history"/>
         <item
             android:id="@+id/nav_fave_tutor"
+            android:icon="@drawable/ic_star_black_24dp"
             android:title="@string/menu_fave_tutor"/>
     </group>
     <group android:checkableBehavior="single"
            android:id="@+id/group_nav_second">
         <item
             android:id="@+id/nav_preferences"
-            android:title="@string/menu_preferences"/>
+            android:title="@string/menu_preferences"
+            android:icon="@drawable/ic_settings_black_24dp"/>
         <item
             android:id="@+id/nav_help"
-            android:title="@string/menu_help"/>
+            android:title="@string/menu_help"
+            android:icon="@drawable/ic_help_black_24dp"/>
     </group>
-    <group android:checkableBehavior="single"
-           android:id="@+id/group_nav_third">
-        <item
-            android:id="@+id/nav_logout"
-            android:title="Logout"/>
-    </group>
-
 
 </menu>

@@ -30,7 +30,7 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:layout_marginBottom="@dimen/label_to_input_vmargin"
                     android:layout_marginLeft="@dimen/label_left_margin"
-                    android:textColor="@color/label_text_color"/>
+                    android:textColor="@color/colorTextLabel"/>
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
@@ -42,7 +42,7 @@
                         android:layout_height="wrap_content"
                         android:inputType="textEmailAddress"
                         android:maxLines="1"
-                        android:textColor="@color/value_text_color"/>
+                        android:textColor="@color/colorTextPrimary"/>
                 </android.support.design.widget.TextInputLayout>
 
                 <Button
@@ -66,7 +66,7 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:layout_marginBottom="@dimen/label_to_input_vmargin"
                     android:layout_marginLeft="@dimen/label_left_margin"
-                    android:textColor="@color/label_text_color"/>
+                    android:textColor="@color/colorTextLabel"/>
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
@@ -78,7 +78,7 @@
                         android:layout_height="wrap_content"
                         android:inputType="textEmailAddress"
                         android:maxLines="1"
-                        android:textColor="@color/value_text_color"/>
+                        android:textColor="@color/colorTextPrimary"/>
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
@@ -92,7 +92,7 @@
                         android:layout_height="wrap_content"
                         android:inputType="textEmailAddress"
                         android:maxLines="1"
-                        android:textColor="@color/value_text_color"/>
+                        android:textColor="@color/colorTextPrimary"/>
                 </android.support.design.widget.TextInputLayout>
 
                 <Button

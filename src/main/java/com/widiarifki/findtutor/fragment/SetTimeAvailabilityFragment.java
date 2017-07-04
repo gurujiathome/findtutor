@@ -19,7 +19,7 @@ import android.widget.TimePicker;
 import com.widiarifki.findtutor.R;
 import com.widiarifki.findtutor.adapter.AvailabilityTimeAdapter;
 import com.widiarifki.findtutor.app.App;
-import com.widiarifki.findtutor.helper.DialogMessage;
+import com.widiarifki.findtutor.helper.RunnableDialogMessage;
 import com.widiarifki.findtutor.helper.SessionManager;
 import com.widiarifki.findtutor.model.AvailabilityPerDay;
 import com.widiarifki.findtutor.model.User;
@@ -145,7 +145,7 @@ public class SetTimeAvailabilityFragment extends Fragment {
             @Override
             public void onFailure(Call call, IOException e) {
                 // alert user
-                getActivity().runOnUiThread(new DialogMessage(mContext, "Tambah Data Gagal", String.valueOf(e), mProgressDialog));
+                getActivity().runOnUiThread(new RunnableDialogMessage(mContext, "Tambah Data Gagal", String.valueOf(e), mProgressDialog));
             }
 
             @Override
@@ -173,15 +173,15 @@ public class SetTimeAvailabilityFragment extends Fragment {
                         }else{
                             String message = responseObj.getString("error_msg");
                             // alert user
-                            new DialogMessage(mContext, "Tambah Data Gagal", message, mProgressDialog);
+                            new RunnableDialogMessage(mContext, "Tambah Data Gagal", message, mProgressDialog);
                         }
                     } catch (JSONException e) {
                         // alert user
-                        new DialogMessage(mContext, "Tambah Data Gagal", e.getMessage(), mProgressDialog);
+                        new RunnableDialogMessage(mContext, "Tambah Data Gagal", e.getMessage(), mProgressDialog);
                     }
                 }else{
                     // alert user
-                    getActivity().runOnUiThread(new DialogMessage(mContext, "Tambah Data Gagal", response.message(), mProgressDialog));
+                    getActivity().runOnUiThread(new RunnableDialogMessage(mContext, "Tambah Data Gagal", response.message(), mProgressDialog));
                 }
             }
         });
@@ -234,7 +234,7 @@ public class SetTimeAvailabilityFragment extends Fragment {
                 dialog.cancel();
             }
         });
-        dialogBuilder.setPositiveButton(getString(R.string.cast_tracks_chooser_dialog_ok), new DialogInterface.OnClickListener() {
+        dialogBuilder.setPositiveButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 int pickedHour, pickedMin;

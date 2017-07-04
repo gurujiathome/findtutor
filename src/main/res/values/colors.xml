@@ -7,8 +7,10 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="black_overlay">#66000000</color>
-    <color name="primary_text_color">#212121</color>
-    <color name="label_text_color">#727272</color>
-    <color name="value_text_color">#212121</color>
-    <color name="btn_default_color">#dcdcdc</color>
+    <color name="colorTextPrimary">#212121</color>
+    <color name="colorTextLabel">#727272</color>
+    <color name="colorBtnDefault">#dcdcdc</color>
+    <color name="defaultLvBg">#EEEEEE</color>
+    <color name="disableLvBg">#BDBDBD</color>
+    <color name="color_white_semitransparent">#CC3F51B5</color>
 </resources>

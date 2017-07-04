@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import com.widiarifki.findtutor.R;
 import com.widiarifki.findtutor.app.App;
-import com.widiarifki.findtutor.helper.DialogMessage;
+import com.widiarifki.findtutor.helper.RunnableDialogMessage;
 import com.widiarifki.findtutor.helper.SessionManager;
 import com.widiarifki.findtutor.model.User;
 
@@ -110,7 +110,7 @@ public class SettingAccountFragment extends Fragment {
             @Override
             public void onFailure(Call call, IOException e) {
                 // alert user
-                getActivity().runOnUiThread(new DialogMessage(mContext, dialogTitle, String.valueOf(e), mProgressDialog));
+                getActivity().runOnUiThread(new RunnableDialogMessage(mContext, dialogTitle, String.valueOf(e), mProgressDialog));
             }
 
             @Override
@@ -133,22 +133,22 @@ public class SettingAccountFragment extends Fragment {
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if(mProgressDialog.isShowing()) mProgressDialog.hide();
+                                    if(mProgressDialog.isShowing()) mProgressDialog.dismiss();
                                     Toast.makeText(mContext, "Ganti email akun berhasil", Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }else{
                             String message = responseObj.getString("error_msg");
                             // alert user
-                            getActivity().runOnUiThread(new DialogMessage(mContext, dialogTitle, message, mProgressDialog));
+                            getActivity().runOnUiThread(new RunnableDialogMessage(mContext, dialogTitle, message, mProgressDialog));
                         }
                     } catch (JSONException e) {
                         // alert user
-                        getActivity().runOnUiThread(new DialogMessage(mContext, dialogTitle, e.getMessage(), mProgressDialog));
+                        getActivity().runOnUiThread(new RunnableDialogMessage(mContext, dialogTitle, e.getMessage(), mProgressDialog));
                     }
                 }else{
                     // alert user
-                    getActivity().runOnUiThread(new DialogMessage(mContext, dialogTitle, response.message(), mProgressDialog));
+                    getActivity().runOnUiThread(new RunnableDialogMessage(mContext, dialogTitle, response.message(), mProgressDialog));
                 }
             }
         });

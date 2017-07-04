@@ -47,14 +47,13 @@ public class SelectSubjectFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         mContext = container.getContext();
+        mContextActivity = (Activity)mContext;
         mSubjects = new ArrayList<Subject>();
 
         View view = inflater.inflate(R.layout.fragment_select_subject, container, false);
 
-        // set adapter
-        mListViewSubject = (ListView) view.findViewById(R.id.lvCountry);
+        mListViewSubject = (ListView) view.findViewById(R.id.lvSubject);
         mProgressDialog = new ProgressDialog(mContext);
         mProgressDialog.setCancelable(true);
         settleRefData();
@@ -96,12 +95,12 @@ public class SelectSubjectFragment extends Fragment {
                             }
                         }
                         /** Hide progress bae **/
-                        getActivity().runOnUiThread(new Runnable() {
+                        mContextActivity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 SelectSubjectAdapter adapter = new SelectSubjectAdapter(mContext, mSubjects);
                                 mListViewSubject.setAdapter(adapter);
-                                if(mProgressDialog.isShowing()) mProgressDialog.hide();
+                                if(mProgressDialog.isShowing()) mProgressDialog.dismiss();
                             }
                         });
                     } catch (JSONException e) {

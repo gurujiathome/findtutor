@@ -19,9 +19,17 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!--<RelativeLayout
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginBottom="8dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Foto Profil"
+                    android:layout_marginBottom="4dp"/>
                 <ImageView
                     android:id="@+id/imgv_profile_photo"
                     android:layout_width="100dp"
@@ -30,48 +38,83 @@
                     android:layout_toRightOf="@id/imgv_profile_photo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="horizontal">
                     <Button
                         android:id="@+id/btn_take_photo"
+                        android:drawableLeft="@drawable/ic_camera"
+                        style="@style/btnWithLeftImg"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/label_pick_selfie"/>
+                        android:text="@string/action_pick_selfie"/>
                     <Button
                         android:id="@+id/btn_pick_photo"
+                        android:drawableLeft="@drawable/ic_gallery"
+                        style="@style/btnWithLeftImg"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/label_pick_photo"/>
+                        android:text="@string/action_pick_from_gallery"/>
                 </LinearLayout>
-            </RelativeLayout>-->
+            </LinearLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/input_layout_margin_bottom">
+                style="@style/formFieldLayout">
                 <TextView
                     android:id="@+id/label_name"
                     android:text="@string/prompt_fullname"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:layout_marginBottom="@dimen/label_to_input_vmargin"
-                    android:layout_marginLeft="@dimen/label_left_margin"
-                    android:textColor="@color/label_text_color"/>
-
+                    style="@style/formLabel"/>
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    style="@style/formInputLayout">
                     <EditText
                         android:id="@+id/input_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textCapWords"
-                        android:maxLines="1"
-                        android:textColor="@color/value_text_color"/>
+                        android:maxLines="1"/>
                 </android.support.design.widget.TextInputLayout>
             </RelativeLayout>
 
             <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/formFieldLayout">
+                <TextView
+                    android:id="@+id/label_gender"
+                    android:text="@string/prompt_gender"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/formLabel"/>
+                <LinearLayout
+                    android:layout_below="@id/label_gender"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/formInputLayout">
+                    <RadioGroup
+                        android:id="@+id/rgrup_gender"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+                        <RadioButton
+                            android:id="@id/radio_opt_male"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/label_opt_male"/>
+                        <RadioButton
+                            android:id="@id/radio_opt_female"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/label_opt_female"/>
+                    </RadioGroup>
+                </LinearLayout>
+            </RelativeLayout>
+
+            <!--<RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/input_layout_margin_bottom">
@@ -83,7 +126,7 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:layout_marginBottom="@dimen/label_to_input_vmargin"
                     android:layout_marginLeft="@dimen/label_left_margin"
-                    android:textColor="@color/label_text_color"/>
+                    android:textColor="@color/colorTextLabel"/>
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
@@ -94,27 +137,24 @@
                         android:layout_height="wrap_content"
                         android:inputType="textEmailAddress"
                         android:maxLines="1"
-                        android:textColor="@color/value_text_color"/>
+                        android:textColor="@color/colorTextPrimary"/>
                 </android.support.design.widget.TextInputLayout>
-            </RelativeLayout>
+            </RelativeLayout>-->
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/input_layout_margin_bottom">
+                style="@style/formFieldLayout">
                 <TextView
                     android:id="@+id/label_phone"
                     android:text="@string/prompt_phone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/label_to_input_vmargin"
-                    android:layout_marginLeft="@dimen/label_left_margin"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="@color/label_text_color"/>
-
+                    style="@style/formLabel"/>
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    style="@style/formInputLayout">
                     <EditText
                         android:id="@+id/input_phone"
                         android:layout_width="match_parent"
@@ -127,20 +167,17 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/input_layout_margin_bottom">
+                style="@style/formFieldLayout">
                 <TextView
                     android:id="@+id/label_bio"
                     android:text="@string/prompt_bio"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:layout_marginBottom="@dimen/label_to_value_vmargin"
-                    android:layout_marginLeft="@dimen/label_left_margin"
-                    android:textColor="@color/label_text_color"/>
-
+                    style="@style/formLabel"/>
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    style="@style/formInputLayout">
                     <EditText
                         android:id="@+id/input_bio"
                         android:layout_width="match_parent"
@@ -156,21 +193,19 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/input_layout_margin_bottom">
+                style="@style/formFieldLayout">
                 <TextView
                     android:id="@+id/label_education"
                     android:text="@string/prompt_education"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:layout_marginBottom="4dp"
-                    android:layout_marginLeft="@dimen/label_left_margin"
-                    android:textColor="@color/label_text_color"/>
+                    style="@style/formLabel"/>
                 <LinearLayout
                     android:layout_below="@id/label_education"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    style="@style/formInputLayout">
                     <!-- This rel layout needs to maintain listview height -->
                     <RelativeLayout
                         android:id="@+id/list_education_wrapper"
@@ -185,6 +220,8 @@
                         android:id="@+id/btn_add_edu"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        style="@style/btnWithLeftImg"
+                        android:drawableLeft="@drawable/ic_add_black_24dp"
                         android:text="@string/action_add_education"/>
                 </LinearLayout>
             </RelativeLayout>

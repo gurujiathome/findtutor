@@ -22,8 +22,10 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.widiarifki.findtutor.R;
 import com.widiarifki.findtutor.app.App;
-import com.widiarifki.findtutor.helper.DialogMessage;
+import com.widiarifki.findtutor.helper.RunnableDialogMessage;
+import com.widiarifki.findtutor.helper.FormInputChecker;
 import com.widiarifki.findtutor.helper.SessionManager;
+import com.widiarifki.findtutor.model.AvailabilityPerDay;
 import com.widiarifki.findtutor.model.Education;
 import com.widiarifki.findtutor.model.SavedSubject;
 import com.widiarifki.findtutor.model.User;
@@ -130,7 +132,7 @@ public class LoginFragment extends Fragment {
             mInputEmail.setError(getString(R.string.error_field_required));
             focusView = mInputEmail;
             cancel = true;
-        } else if (!isEmailValid(email)) {
+        } else if (!FormInputChecker.isEmailValid(email)) {
             mInputEmail.setError(getString(R.string.error_invalid_email));
             focusView = mInputEmail;
             cancel = true;
@@ -153,7 +155,7 @@ public class LoginFragment extends Fragment {
             OkHttpClient httpClient = new OkHttpClient();
 
             Request httpRequest = new Request.Builder()
-                    .url(App.URL_USER_LOGIN)
+                    .url(App.URL_LOGIN)
                     .post(formBody)
                     .build();
 
@@ -163,7 +165,7 @@ public class LoginFragment extends Fragment {
                 public void onFailure(Call call, IOException e) {
                     //Log.v(TAG, String.valueOf(e));
                     // alert user
-                    getActivity().runOnUiThread(new DialogMessage(mContext, dialogTitle, String.valueOf(e), mProgressDialog));
+                    getActivity().runOnUiThread(new RunnableDialogMessage(mContext, dialogTitle, String.valueOf(e), mProgressDialog));
                 }
 
                 @Override
@@ -171,7 +173,7 @@ public class LoginFragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if(mProgressDialog.isShowing()) mProgressDialog.hide();
+                            if(mProgressDialog.isShowing()) mProgressDialog.dismiss();
                         }
                     });
                     String json = response.body().string();
@@ -191,11 +193,17 @@ public class LoginFragment extends Fragment {
                                 user.setId(objUserData.getInt(mSession.KEY_ID_USER));
                                 user.setEmail(objUserData.getString(mSession.KEY_EMAIL));
                                 user.setName(objUserData.getString(mSession.KEY_NAME));
+                                user.setGender(objUserData.getInt(mSession.KEY_GENDER));
                                 user.setPhone(objUserData.getString(mSession.KEY_PHONE));
                                 user.setPhotoUrl(objUserData.getString(mSession.KEY_PHOTO_URL));
                                 user.setIsTutor(objUserData.getInt(mSession.KEY_IS_TUTOR));
                                 user.setIsStudent(objUserData.getInt(mSession.KEY_IS_STUDENT));
+                                user.setLatitude(objUserData.getString(mSession.KEY_LATITUDE));
+                                user.setLongitude(objUserData.getString(mSession.KEY_LONGITUDE));
+                                user.setLocationAddress(objUserData.getString(mSession.KEY_LOCATION_ADDRESS));
+                                user.setDeviceId(objUserData.getString(mSession.KEY_DEVICE_ID));
                                 user.setIsProfileComplete(objUserData.getInt(mSession.KEY_IS_PROFILE_COMPLETE));
+                                user.setIsAvailable(objUserData.getInt(mSession.KEY_IS_AVAILABLE));
                                 if(objUserData.getInt(mSession.KEY_IS_TUTOR) == 1) {
                                     user.setBio(objUserData.getString(mSession.KEY_BIO));
                                     user.setMinPriceRate(objUserData.getInt(mSession.KEY_MIN_PRICE_RATE));
@@ -212,6 +220,15 @@ public class LoginFragment extends Fragment {
                                         if (subjectMap != null) {
                                             HashMap<String, SavedSubject> subjectHashmap = new HashMap<String, SavedSubject>(subjectMap); // cast process
                                             user.setSubjects(subjectHashmap);
+                                        }
+                                    }
+
+                                    if(objUserData.getString(mSession.KEY_AVAILABILITIES) != null) {
+                                        Type availabilityType = new TypeToken<Map<String, List<AvailabilityPerDay>>>() {}.getType();
+                                        Map<String, List<AvailabilityPerDay>> availabilityMap = new Gson().fromJson(objUserData.getString(mSession.KEY_AVAILABILITIES), availabilityType);
+                                        if (availabilityMap != null) {
+                                            HashMap<String, List<AvailabilityPerDay>> availabilityHashmap = new HashMap<String, List<AvailabilityPerDay>>(availabilityMap); // cast process
+                                            user.setAvailabilities(availabilityHashmap);
                                         }
                                     }
                                 }
@@ -238,25 +255,20 @@ public class LoginFragment extends Fragment {
                                         }
                                     });
                                 }else{
-                                    getActivity().runOnUiThread(new DialogMessage(mContext, dialogTitle, message, mProgressDialog));
+                                    getActivity().runOnUiThread(new RunnableDialogMessage(mContext, dialogTitle, message, mProgressDialog));
                                 }
 
                             }
                         } catch (JSONException e) {
                             // alert user
-                            getActivity().runOnUiThread(new DialogMessage(mContext, dialogTitle, e.getMessage(), mProgressDialog));
+                            getActivity().runOnUiThread(new RunnableDialogMessage(mContext, dialogTitle, e.getMessage(), mProgressDialog));
                         }
                     }else{
                         // alert user
-                        getActivity().runOnUiThread(new DialogMessage(mContext, dialogTitle, response.message(), mProgressDialog));
+                        getActivity().runOnUiThread(new RunnableDialogMessage(mContext, dialogTitle, response.message(), mProgressDialog));
                     }
                 }
             });
         }
-    }
-
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
     }
 }
