@@ -3,7 +3,6 @@ package com.widiarifki.findtutor.fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,15 +13,15 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import com.widiarifki.findtutor.R;
 import com.widiarifki.findtutor.adapter.AvailabilityTimeAdapter;
 import com.widiarifki.findtutor.app.App;
+import com.widiarifki.findtutor.app.SessionManager;
 import com.widiarifki.findtutor.helper.RunnableDialogMessage;
-import com.widiarifki.findtutor.helper.SessionManager;
 import com.widiarifki.findtutor.model.AvailabilityPerDay;
 import com.widiarifki.findtutor.model.User;
+import com.widiarifki.findtutor.view.MyNumberPicker;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,6 +59,10 @@ public class SetTimeAvailabilityFragment extends Fragment {
     private ListView lvAvailability;
 
     ProgressDialog mProgressDialog;
+
+    static int ACTION_CODE_START_TIME = 1;
+    static int ACTION_CODE_END_TIME = 2;
+    int mNextHourVal = 0;
 
     @Nullable
     @Override
@@ -104,16 +107,18 @@ public class SetTimeAvailabilityFragment extends Fragment {
         tvStartTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                inputTime(tvStartTime);
+                inputTime(tvStartTime, ACTION_CODE_START_TIME);
             }
         });
         tvEndTime = (TextView) view.findViewById(R.id.text_end_time);
         tvEndTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                inputTime(tvEndTime);
+                inputTime(tvEndTime, ACTION_CODE_END_TIME);
             }
         });
+        tvStartTime.setText("--:--");
+        tvEndTime.setText("--:--");
 
         return view;
     }
@@ -168,6 +173,8 @@ public class SetTimeAvailabilityFragment extends Fragment {
                                     }
                                     mSession.updateSession(mUserLogin);
                                     if(mProgressDialog.isShowing()) mProgressDialog.dismiss();
+                                    tvStartTime.setText("--:--");
+                                    tvEndTime.setText("--:--");
                                 }
                             });
                         }else{
@@ -187,15 +194,22 @@ public class SetTimeAvailabilityFragment extends Fragment {
         });
     }
 
-    private void inputTime(final TextView textView) {
-        final String startTime = textView.getText()+"";
-        String[] startTimeSplit = startTime.split(":");
-        String startTimeHour = startTimeSplit[0];
-        String startTimeMin = startTimeSplit[1];
+    private void inputTime(final TextView textView, int actionCode) {
+        final String time = textView.getText()+"";
+        String[] timeSplit = time.split(":");
+        String timeHour = timeSplit[0];
+        String timeMin = timeSplit[1];
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mContext);
         View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialog_layout_input_time, null);
-        final TimePicker timePicker = (TimePicker) dialogView.findViewById(R.id.timepicker_start);
+        final MyNumberPicker hourpicker = (MyNumberPicker) dialogView.findViewById(R.id.hourpicker);
+        final MyNumberPicker minpicker = (MyNumberPicker) dialogView.findViewById(R.id.minpicker);
+        int defaultVal = (mNextHourVal);
+        hourpicker.setMinValue(defaultVal);
+        hourpicker.setValue(defaultVal);
+        //hourpicker.setValue(Integer.parseInt(timeHour));
+        //minpicker.setValue(Integer.parseInt(timeMin));
+        /*final TimePicker timePicker = (TimePicker) dialogView.findViewById(R.id.timepicker_start);
         timePicker.setIs24HourView(true);
         timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override
@@ -219,12 +233,12 @@ public class SetTimeAvailabilityFragment extends Fragment {
             }
         });
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            timePicker.setHour(Integer.parseInt(startTimeHour));
-            timePicker.setMinute(Integer.parseInt(startTimeMin));
+            timePicker.setHour(Integer.parseInt(timeHour));
+            timePicker.setMinute(Integer.parseInt(timeMin));
         }else{
-            timePicker.setCurrentHour(Integer.parseInt(startTimeHour));
-            timePicker.setCurrentMinute(Integer.parseInt(startTimeMin));
-        }
+            timePicker.setCurrentHour(Integer.parseInt(timeHour));
+            timePicker.setCurrentMinute(Integer.parseInt(timeMin));
+        }*/
 
         dialogBuilder.setView(dialogView);
         dialogBuilder.setTitle("Dari Jam");
@@ -238,14 +252,19 @@ public class SetTimeAvailabilityFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 int pickedHour, pickedMin;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                    pickedHour = timePicker.getHour();
-                    pickedMin = timePicker.getMinute();
+                /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                    //pickedHour = timePicker.getHour();
+                    //pickedMin = timePicker.getMinute();
                 }else {
-                    pickedHour = timePicker.getCurrentHour();
-                    pickedMin = timePicker.getCurrentMinute();
-                }
+                    //pickedHour = timePicker.getCurrentHour();
+                    //pickedMin = timePicker.getCurrentMinute();
+                }*/
+                pickedHour = hourpicker.getValue();
+                String[] minsVal = minpicker.getDisplayedValues();
+                pickedMin = Integer.parseInt(minsVal[minpicker.getValue() - 1]);
                 textView.setText(String.format("%02d:%02d", pickedHour, pickedMin));
+                mNextHourVal = pickedHour + 1;
+
             }
         });
         AlertDialog alertDialog = dialogBuilder.create();

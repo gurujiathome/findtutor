@@ -1,5 +1,6 @@
 <resources>
 
+    <!-- THEME STYLE -->
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
@@ -7,62 +8,59 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
-
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
-
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
+    <!-- ITEM LIST STYLE -->
     <style name="settingsHeader">
         <item name="android:textColor">@color/colorAccent</item>
         <item name="android:textAllCaps">true</item>
     </style>
-
     <style name="settingsItemLayout">
         <item name="android:orientation">vertical</item>
         <item name="android:paddingBottom">14dp</item>
         <item name="android:paddingTop">14dp</item>
         <item name="android:clickable">true</item>
     </style>
-
     <style name="settingsItemTitle">
         <item name="android:textSize">16sp</item>
     </style>
 
+    <!-- LINE STYLE -->
     <style name="horizontalLineSeparator">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
         <item name="android:background">#cccccc</item>
     </style>
-
     <style name="verticalLineSeparator">
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_width">1dp</item>
         <item name="android:background">#cccccc</item>
     </style>
 
+    <!-- BUTTON STYLE -->
     <style name="btnWithLeftImg">
         <item name="android:drawablePadding">6dp</item>
         <item name="android:gravity">left|center</item>
     </style>
 
+    <!-- FORM STYLE -->
     <style name="formFieldLayout">
         <item name="android:layout_marginBottom">12dp</item>
     </style>
-
     <style name="formLabel">
         <item name="android:layout_marginLeft">@dimen/label_left_margin</item>
-        <item name="android:textColor">@color/colorTextLabel</item>
+        <item name="android:textColor">@color/textLabel</item>
     </style>
-
     <style name="formInputLayout">
         <item name="android:layout_marginTop">4dp</item>
     </style>
 
+    <!-- TAB LAYOUT STYLE -->
     <style name="ProfileTabLayoutStyle">
         <item name="tabSelectedTextColor">@color/colorPrimary</item>
         <item name="tabIndicatorColor">@color/colorPrimary</item>
@@ -72,10 +70,23 @@
         <item name="tabBackground">@android:color/white</item>
         <item name="tabTextAppearance">@style/ProfileTabTextAppearance</item>
     </style>
-
     <style name="ProfileTabTextAppearance" parent="TextAppearance.Design.Tab">
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/color_white_semitransparent</item>
+        <item name="android:textColor">@color/colorPrimarySemiTransparent</item>
+        <item name="textAllCaps">true</item>
+    </style>
+    <style name="WelcomeTabLayoutStyle">
+        <item name="tabSelectedTextColor">@color/white</item>
+        <item name="tabIndicatorColor">@color/white</item>
+        <item name="tabIndicatorHeight">2dp</item>
+        <item name="tabPaddingStart">8dp</item>
+        <item name="tabPaddingEnd">8dp</item>
+        <item name="tabBackground">@color/colorPrimary</item>
+        <item name="tabTextAppearance">@style/WelcomeTabTextAppearance</item>
+    </style>
+    <style name="WelcomeTabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/whiteSemiTransparent</item>
         <item name="textAllCaps">true</item>
     </style>
 

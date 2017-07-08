@@ -16,7 +16,6 @@ import android.widget.ListView;
 
 import com.widiarifki.findtutor.CompleteProfileActivity;
 import com.widiarifki.findtutor.MainActivity;
-import com.widiarifki.findtutor.helper.SessionManager;
 import com.widiarifki.findtutor.model.User;
 
 import java.util.List;
@@ -33,12 +32,15 @@ public class App {
     public static String URL_EDIT_PROFILE = "http://app-widiarifki.rhcloud.com/api/post-edit-profile";
     public static String URL_EDIT_TUTOR_PREF = "http://app-widiarifki.rhcloud.com/api/post-edit-tutor-pref";
     public static String URL_SET_AVAILABILITY = "http://app-widiarifki.rhcloud.com/api/post-set-availability";
+    public static String URL_SAVE_TUTOR_TIMESLOT = "http://app-widiarifki.rhcloud.com/api/post-tutor-timeslot";
     public static String URL_ADD_AVAILABILITY = "http://app-widiarifki.rhcloud.com/api/post-add-availability";
     public static String URL_RMV_AVAILABILITY = "http://app-widiarifki.rhcloud.com/api/remove-availability";
     public static String URL_GET_SCHOOL_LEVEL = "http://app-widiarifki.rhcloud.com/api/get-list-school-level";
     public static String URL_GET_SUBJECT_LIST = "http://app-widiarifki.rhcloud.com/api/get-list-subject";
     public static String URL_REQUEST_TUTOR = "http://app-widiarifki.rhcloud.com/api/post-request-tutor";
     public static String URL_GET_TUTOR_INFO = "http://app-widiarifki.rhcloud.com/api/get-tutor-info";
+    public static String URL_GET_TUTOR_TIME = "http://app-widiarifki.rhcloud.com/api/get-tutor-available-time";
+    public static String URL_BOOK_TUTOR = "http://app-widiarifki.rhcloud.com/api/post-book-tutor";
 
     public static String URL_PATH_PHOTO = "http://app-widiarifki.rhcloud.com/uploads/user/photo/";
 

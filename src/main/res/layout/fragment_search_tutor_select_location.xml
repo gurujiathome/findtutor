@@ -70,7 +70,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorTextLabel"
+                android:textColor="@color/textLabel"
                 android:text="Lokasi Yang Dipilih"
                 android:textAllCaps="true"
                 android:textSize="12sp"
@@ -81,7 +81,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="---"
-                android:textColor="@color/colorTextPrimary"
+                android:textColor="@color/textPrimary"
                 android:textSize="16sp"/>
         </LinearLayout>
         <LinearLayout

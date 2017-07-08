@@ -36,11 +36,12 @@ import com.squareup.picasso.Picasso;
 import com.widiarifki.findtutor.app.App;
 import com.widiarifki.findtutor.fragment.HomeFragment;
 import com.widiarifki.findtutor.fragment.MySessionFragment;
+import com.widiarifki.findtutor.fragment.NotificationFragment;
 import com.widiarifki.findtutor.fragment.SearchTutorFragment;
 import com.widiarifki.findtutor.fragment.SettingAvailabilityFragment;
-import com.widiarifki.findtutor.fragment.SettingsFragment;
+import com.widiarifki.findtutor.fragment.SettingFragment;
 import com.widiarifki.findtutor.helper.CircleTransform;
-import com.widiarifki.findtutor.helper.SessionManager;
+import com.widiarifki.findtutor.app.SessionManager;
 import com.widiarifki.findtutor.model.SavedSubject;
 import com.widiarifki.findtutor.model.User;
 
@@ -202,6 +203,9 @@ public class MainActivity extends AppCompatActivity
             mSession.logout();
         } else {
             switch (menuItem.getItemId()) {
+                case R.id.nav_notification:
+                    fragment = new NotificationFragment();
+                    break;
                 case R.id.nav_search_tutor:
                     fragment = new SearchTutorFragment();
                     break;
@@ -212,7 +216,7 @@ public class MainActivity extends AppCompatActivity
                     fragment = new SettingAvailabilityFragment();
                     break;
                 case R.id.nav_preferences:
-                    fragment = new SettingsFragment();
+                    fragment = new SettingFragment();
                     break;
                 /*case R.id.nav_set_basic_profile:
                     fragment = new SettingProfileFragment();

@@ -16,14 +16,14 @@ import android.widget.LinearLayout;
 import com.widiarifki.findtutor.MainActivity;
 import com.widiarifki.findtutor.R;
 import com.widiarifki.findtutor.WelcomeActivity;
-import com.widiarifki.findtutor.helper.SessionManager;
+import com.widiarifki.findtutor.app.SessionManager;
 import com.widiarifki.findtutor.model.User;
 
 /**
  * Created by widiarifki on 28/05/2017.
  */
 
-public class SettingsFragment extends Fragment {
+public class SettingFragment extends Fragment {
 
     private Context mContext;
     private Activity mContextActivity;
@@ -43,7 +43,7 @@ public class SettingsFragment extends Fragment {
         mSession = new SessionManager(mContext);
         mUserLogin = mSession.getUserDetail();
 
-        View view = inflater.inflate(R.layout.fragment_settings, container, false);
+        View view = inflater.inflate(R.layout.fragment_setting, container, false);
         mBasicProfileMenu = (LinearLayout) view.findViewById(R.id.basicProfile);
         mTutorPrefMenu = (LinearLayout) view.findViewById(R.id.tutorPref);
         mChangeEmailMenu = (LinearLayout) view.findViewById(R.id.changeEmail);

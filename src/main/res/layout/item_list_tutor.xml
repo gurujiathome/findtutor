@@ -46,8 +46,15 @@
                 android:text="Widia Rifkianti"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorTextPrimary"
+                android:textColor="@color/textPrimary"
                 android:textSize="16dp"/>
+            <TextView
+                android:id="@+id/tvDistance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 km away"
+                android:textColor="@color/textLabel"
+                android:textStyle="italic"/>
         </LinearLayout>
 
     </RelativeLayout>

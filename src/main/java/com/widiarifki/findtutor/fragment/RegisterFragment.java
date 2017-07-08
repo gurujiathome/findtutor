@@ -3,33 +3,36 @@ package com.widiarifki.findtutor.fragment;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.widiarifki.findtutor.CompleteProfileActivity;
 import com.widiarifki.findtutor.R;
 import com.widiarifki.findtutor.app.App;
-import com.widiarifki.findtutor.helper.RunnableDialogMessage;
+import com.widiarifki.findtutor.app.SessionManager;
 import com.widiarifki.findtutor.helper.FormInputChecker;
-import com.widiarifki.findtutor.helper.SessionManager;
+import com.widiarifki.findtutor.helper.RunnableDialogMessage;
 import com.widiarifki.findtutor.model.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -66,32 +69,37 @@ public class RegisterFragment extends Fragment {
         mSession = new SessionManager(mContext);
         User user = mSession.getUserDetail();
 
-        View view = inflater.inflate(R.layout.fragment_welcome_register, container, false);
+        View view = inflater.inflate(R.layout.fragment_register, container, false);
 
         mProgressDialog = new ProgressDialog(mContext);
-        mProgressDialog.setCancelable(true);
 
         mForm = view.findViewById(R.id.form);
         mInputEmail = (AutoCompleteTextView) view.findViewById(R.id.input_email);
         mInputPassword = (EditText) view.findViewById(R.id.input_password);
         mInputPassConf = (EditText) view.findViewById(R.id.input_password_conf);
+        mInputPassConf.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+                if (id == R.id.register || id == EditorInfo.IME_NULL) {
+                    attemptRegister();
+                    return true;
+                }
+                return false;
+            }
+        });
         mBtnRegister = (Button) view.findViewById(R.id.btn_register);
 
         mBtnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    attemptRegister();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                attemptRegister();
             }
         });
 
         return view;
     }
 
-    private void attemptRegister() throws IOException {
+    private void attemptRegister() {
         View focusView = null;
         boolean cancel = false;
 
@@ -105,8 +113,9 @@ public class RegisterFragment extends Fragment {
         String pass = mInputPassword.getText().toString();
         String passConf = mInputPassConf.getText().toString();
 
-        // check pass conf
-        if(!TextUtils.isEmpty(pass) && !TextUtils.equals(pass, passConf)){
+        // Validate value
+        // Password Conf
+        if(!FormInputChecker.isEqual(pass, passConf)){
             mInputPassConf.setError(getString(R.string.error_invalid_password_conf));
             focusView = mInputPassConf;
             cancel = true;
@@ -117,7 +126,8 @@ public class RegisterFragment extends Fragment {
             mInputPassword.setError(getString(R.string.error_field_required));
             focusView = mInputPassword;
             cancel = true;
-        }else if(!TextUtils.isEmpty(pass) && !FormInputChecker.isPasswordValid(pass, App.SETTING_MIN_PASSWORD_LEN)){
+        }
+        else if(!TextUtils.isEmpty(pass) && !FormInputChecker.isPasswordValid(pass, App.SETTING_MIN_PASSWORD_LEN)){
             mInputPassword.setError(getString(R.string.error_invalid_password));
             focusView = mInputPassword;
             cancel = true;
@@ -128,7 +138,8 @@ public class RegisterFragment extends Fragment {
             mInputEmail.setError(getString(R.string.error_field_required));
             focusView = mInputEmail;
             cancel = true;
-        }else if(!FormInputChecker.isEmailValid(email)){
+        }
+        else if(!FormInputChecker.isEmailValid(email)){
             mInputEmail.setError(getString(R.string.error_invalid_email));
             focusView = mInputEmail;
             cancel = true;
@@ -137,9 +148,6 @@ public class RegisterFragment extends Fragment {
         if(cancel){
             focusView.requestFocus();
         }else{
-            mProgressDialog.setMessage("Memproses registrasi akun...");
-            if(!mProgressDialog.isShowing()) mProgressDialog.show();
-
             TelephonyManager telephonyManager = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
             RequestBody formBody = new FormBody.Builder()
                     .add("email", email)
@@ -147,23 +155,27 @@ public class RegisterFragment extends Fragment {
                     .add("device_id", telephonyManager.getDeviceId())
                     .build();
 
-            OkHttpClient httpClient = new OkHttpClient.Builder()
-                    .connectTimeout(30, TimeUnit.SECONDS)
-                    .writeTimeout(30, TimeUnit.SECONDS)
-                    .readTimeout(30, TimeUnit.SECONDS)
-                    .build();;
-
+            OkHttpClient httpClient = new OkHttpClient();
             Request httpRequest = new Request.Builder()
                     .url(App.URL_REGISTER)
                     .post(formBody)
                     .build();
 
-            Call httpCall = httpClient.newCall(httpRequest);
+            final Call httpCall = httpClient.newCall(httpRequest);
+
+            mProgressDialog.setMessage("Memproses registrasi akun...");
+            mProgressDialog.setCancelable(true);
+            mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    httpCall.cancel();
+                }
+            });
+            if(!mProgressDialog.isShowing()) mProgressDialog.show();
+
             httpCall.enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    //Log.v(TAG, String.valueOf(e));
-                    // alert user
                     getActivity().runOnUiThread(new RunnableDialogMessage(mContext, dialogTitle, String.valueOf(e), mProgressDialog));
                 }
 
@@ -176,7 +188,6 @@ public class RegisterFragment extends Fragment {
                         }
                     });
                     String json = response.body().string();
-                    //Log.v(TAG, json);
                     if(response.isSuccessful() && response.code() == 200){
                         try {
                             JSONObject objResponse = new JSONObject(json);
@@ -203,7 +214,8 @@ public class RegisterFragment extends Fragment {
                                         mContextActivity.finish();
                                     }
                                 });
-                            }else if(status == 0){
+                            }
+                            else if(status == 0){
                                 int isEmailExist = objResponse.getInt("email_exist");
                                 String message = objResponse.getString("error_msg");
                                 // email sudah ada || error

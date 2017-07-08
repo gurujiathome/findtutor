@@ -4,6 +4,10 @@
     <group android:checkableBehavior="single"
            android:id="@+id/group_nav_first">
         <item
+            android:id="@+id/nav_notification"
+            android:icon="@drawable/ic_notifications_black_24dp"
+            android:title="@string/menu_notifications"/>
+        <item
             android:id="@+id/nav_my_session"
             android:icon="@drawable/ic_assignment_black_24dp"
             android:title="@string/menu_my_session"/>

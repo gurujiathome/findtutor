@@ -3,10 +3,30 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-    <TimePicker
+    <!--<TimePicker
         android:id="@+id/timepicker_start"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:timePickerMode="spinner"
-        android:overScrollMode="never"/>
+        android:overScrollMode="never"/>-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
+        <com.widiarifki.findtutor.view.MyNumberPicker
+            android:id="@+id/hourpicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"
+            min="0"
+            max="23"/>
+        <com.widiarifki.findtutor.view.MyNumberPicker
+            android:id="@+id/minpicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            isMinute="true"/>
+    </LinearLayout>
+
 </LinearLayout>

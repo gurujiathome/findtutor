@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.widiarifki.findtutor.R;
 import com.widiarifki.findtutor.app.App;
 import com.widiarifki.findtutor.helper.RunnableDialogMessage;
-import com.widiarifki.findtutor.helper.SessionManager;
+import com.widiarifki.findtutor.app.SessionManager;
 import com.widiarifki.findtutor.model.User;
 
 import org.json.JSONException;

@@ -25,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:text="Senin"
                 android:textSize="16dp"
-                android:textColor="@color/colorTextPrimary"
+                android:textColor="@color/textPrimary"
                 android:layout_marginBottom="4dp"/>
             <TextView
                 android:id="@+id/text_time"

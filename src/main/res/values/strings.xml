@@ -118,4 +118,6 @@
     <string name="tutor_tab_title_profile">Profil</string>
     <string name="tutor_tab_title_subject">Subjek</string>
     <string name="tutor_tab_title_feedback">Ulasan</string>
+    <string name="title_tutor_profile">Profil Tutor</string>
+    <string name="title_book_tutor">Booking Tutor</string>
 </resources>

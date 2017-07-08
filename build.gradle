@@ -42,5 +42,6 @@ dependencies {
     compile 'com.theartofdev.edmodo:android-image-cropper:2.4.+'
     compile 'uk.com.robust-it:cloning:1.9.2'
     compile 'joda-time:joda-time:2.3'
+    compile 'com.github.jhonnyx2012:horizontal-picker:1.0.5'
     testCompile 'junit:junit:4.12'
 }

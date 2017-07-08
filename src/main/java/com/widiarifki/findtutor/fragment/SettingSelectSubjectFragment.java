@@ -7,18 +7,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.widiarifki.findtutor.MainActivity;
 import com.widiarifki.findtutor.R;
-import com.widiarifki.findtutor.adapter.SearchTutorSubjectAdapter;
+import com.widiarifki.findtutor.adapter.SelectSubjectAdapter;
 import com.widiarifki.findtutor.app.App;
-import com.widiarifki.findtutor.model.SavedSubject;
 import com.widiarifki.findtutor.model.Subject;
 import com.widiarifki.findtutor.model.SubjectCategory;
 import com.widiarifki.findtutor.model.SubjectTopic;
@@ -29,7 +24,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -38,10 +32,10 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * Created by widiarifki on 26/06/2017.
+ * Created by widiarifki on 04/06/2017.
  */
 
-public class SearchTutorSubjectFragment extends Fragment {
+public class SettingSelectSubjectFragment extends Fragment {
 
     private Context mContext;
     private Activity mContextActivity;
@@ -50,42 +44,6 @@ public class SearchTutorSubjectFragment extends Fragment {
     private ListView mListViewSubject;
     ProgressDialog mProgressDialog;
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.appbar_menu, menu);
-        //menu.findItem(R.id.action_next).setVisible(true);
-        menu.findItem(R.id.action_save).setVisible(true);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_next) {
-            ((MainActivity)mContext).addStackedFragment(new SearchTutorLocationFragment(), getString(R.string.title_search_select_location), getString(R.string.title_search_select_subject));
-        }
-        else if(id == R.id.action_save){
-            ((MainActivity)mContext).removeFragmentFromStack(this);
-        }
-        return true;
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -93,16 +51,12 @@ public class SearchTutorSubjectFragment extends Fragment {
         mContextActivity = (Activity)mContext;
         mSubjects = new ArrayList<Subject>();
 
-        View view = inflater.inflate(R.layout.fragment_search_tutor_subject, container, false);
+        View view = inflater.inflate(R.layout.fragment_setting_select_subject, container, false);
 
         mListViewSubject = (ListView) view.findViewById(R.id.lvSubject);
         mProgressDialog = new ProgressDialog(mContext);
         mProgressDialog.setCancelable(true);
-
         settleRefData();
-        if(((MainActivity)mContext).getSearchTutorSubject() == null){
-            ((MainActivity)mContext).setSearchTutorSubject(new HashMap<String, SavedSubject>());
-        }
 
         return view;
     }
@@ -135,7 +89,7 @@ public class SearchTutorSubjectFragment extends Fragment {
                             String name = dataObj.getString("SUBJECT_NAME");
                             if(idCategory == 0){
                                 mSubjects.add(new SubjectCategory(id, name));
-                                mSubjects.add(new SubjectTopic(idCategory, id, name));
+                                mSubjects.add(new SubjectTopic(idCategory, id, "Semua topik di " + name));
                             }else{
                                 mSubjects.add(new SubjectTopic(idCategory, id, name));
                             }
@@ -144,7 +98,7 @@ public class SearchTutorSubjectFragment extends Fragment {
                         mContextActivity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                SearchTutorSubjectAdapter adapter = new SearchTutorSubjectAdapter(mContext, mSubjects);
+                                SelectSubjectAdapter adapter = new SelectSubjectAdapter(mContext, mSubjects);
                                 mListViewSubject.setAdapter(adapter);
                                 if(mProgressDialog.isShowing()) mProgressDialog.dismiss();
                             }

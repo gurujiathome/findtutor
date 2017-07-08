@@ -1,11 +1,10 @@
-package com.widiarifki.findtutor.helper;
+package com.widiarifki.findtutor.app;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.widiarifki.findtutor.app.App;
 import com.widiarifki.findtutor.model.AvailabilityPerDay;
 import com.widiarifki.findtutor.model.Education;
 import com.widiarifki.findtutor.model.SavedSubject;
@@ -53,6 +52,7 @@ public class SessionManager {
     public static final String KEY_EDUCATIONS = "educations";
     public static final String KEY_SUBJECTS = "subjects";
     public static final String KEY_IS_AVAILABLE = "is_available";
+    public static final String KEY_TIMESLOTS = "timeslots";
     public static final String KEY_AVAILABILITIES = "availabilities";
     public static final String KEY_GENDER = "gender";
     public static final String KEY_DEVICE_ID = "device_id";
@@ -89,6 +89,7 @@ public class SessionManager {
         editor.putInt(KEY_MIN_PRICE_RATE, user.getMinPriceRate());
         editor.putString(KEY_SUBJECTS, new Gson().toJson(user.getSubjects()));
         editor.putInt(KEY_IS_AVAILABLE, user.getIsAvailable());
+        editor.putString(KEY_TIMESLOTS, new Gson().toJson(user.getTimeslots()));
         editor.putString(KEY_AVAILABILITIES, new Gson().toJson(user.getAvailabilities()));
         editor.putString(KEY_LATITUDE, user.getLatitude());
         editor.putString(KEY_LONGITUDE, user.getLongitude());
@@ -126,8 +127,15 @@ public class SessionManager {
         Type subjectType = new TypeToken<Map<String, SavedSubject>>(){}.getType();
         Map<String, SavedSubject> subjectMap = new Gson().fromJson(pref.getString(KEY_SUBJECTS, null), subjectType);
         if(subjectMap != null) {
-            HashMap<String, SavedSubject> subjectHashmap = new HashMap<String, SavedSubject>(subjectMap); // cast process
-            user.setSubjects(subjectHashmap);
+            // cast process
+            user.setSubjects(new HashMap<String, SavedSubject>(subjectMap));
+        }
+
+        Type timeslotType = new TypeToken<Map<String, List<Integer>>>(){}.getType();
+        Map<String, List<Integer>> timeslotMap = new Gson().fromJson(pref.getString(KEY_TIMESLOTS, null), timeslotType);
+        if(timeslotMap != null) {
+            // cast process
+            user.setTimeslots(new HashMap<String, List<Integer>>(timeslotMap));
         }
 
         Type availabilityType = new TypeToken<Map<String, List<AvailabilityPerDay>>>(){}.getType();

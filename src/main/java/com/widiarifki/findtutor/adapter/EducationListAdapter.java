@@ -34,7 +34,7 @@ public class EducationListAdapter extends ArrayAdapter<Education> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_layout_education_list, null);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_list_education, null);
         }
 
         //get the property we are displaying

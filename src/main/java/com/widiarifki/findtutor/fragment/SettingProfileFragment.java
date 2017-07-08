@@ -42,7 +42,7 @@ import com.widiarifki.findtutor.adapter.EducationListAdapter;
 import com.widiarifki.findtutor.app.App;
 import com.widiarifki.findtutor.helper.CircleTransform;
 import com.widiarifki.findtutor.helper.RunnableDialogMessage;
-import com.widiarifki.findtutor.helper.SessionManager;
+import com.widiarifki.findtutor.app.SessionManager;
 import com.widiarifki.findtutor.model.Education;
 import com.widiarifki.findtutor.model.SubjectTopic;
 import com.widiarifki.findtutor.model.User;
@@ -236,7 +236,7 @@ public class SettingProfileFragment extends Fragment {
         mBtnChooseSubject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment fragment = new SelectSubjectFragment();
+                Fragment fragment = new SettingSelectSubjectFragment();
                 ((MainActivity)mContext).addStackedFragment(fragment, getString(R.string.action_select_subject), getString(R.string.title_activity_edit_profile));
             }
         });

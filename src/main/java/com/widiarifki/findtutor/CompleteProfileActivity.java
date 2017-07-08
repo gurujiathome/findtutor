@@ -33,7 +33,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import com.widiarifki.findtutor.app.App;
 import com.widiarifki.findtutor.helper.CircleTransform;
 import com.widiarifki.findtutor.helper.RunnableDialogMessage;
-import com.widiarifki.findtutor.helper.SessionManager;
+import com.widiarifki.findtutor.app.SessionManager;
 import com.widiarifki.findtutor.model.User;
 
 import org.json.JSONException;
@@ -94,9 +94,8 @@ public class CompleteProfileActivity extends AppCompatActivity implements Vertic
         mUserLogin = mSession.getUserDetail();
 
         mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setCancelable(true);
 
-        firstImpression();
+        sayHello();
 
         // Stepper form element
         String[] mySteps = {"Nama Lengkap", "Jenis Kelamin", "No Handphone", "Bergabung Sebagai", "Upload Foto Profil"/*, "Foto Kartu Identitas"*/};
@@ -110,7 +109,7 @@ public class CompleteProfileActivity extends AppCompatActivity implements Vertic
                 .init();
     }
 
-    public void firstImpression() {
+    public void sayHello() {
         App.showSimpleDialog(mContext, "Selamat Datang!", "Terima kasih telah bergabung di " +
                 getString(R.string.app_name) +
                 ". Selanjutnya, silakan lengkapi data diri anda.");
@@ -184,6 +183,7 @@ public class CompleteProfileActivity extends AppCompatActivity implements Vertic
 
     private View createChooseGender(){
         mRgrupGender = new RadioGroup(this);
+        mRgrupGender.setOrientation(LinearLayout.HORIZONTAL);
 
         mRbtnIsMale = new RadioButton(this);
         mRbtnIsMale.setId(R.id.radio_opt_male);
@@ -351,8 +351,6 @@ public class CompleteProfileActivity extends AppCompatActivity implements Vertic
                 storageDir      /* directory */
         );
 
-        // Save a file: path for use with ACTION_VIEW intents
-        //mCurrentPhotoPath = image.getAbsolutePath();
         return image;
     }
 
@@ -424,12 +422,14 @@ public class CompleteProfileActivity extends AppCompatActivity implements Vertic
     @Override
     public void sendData() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mContext);
+        dialogBuilder.setCancelable(false);
         dialogBuilder.setTitle("Apakah anda yakin data sudah benar?");
         dialogBuilder.setMessage("Anda masih dapat menyunting data di menu pengaturan");
         dialogBuilder.setNegativeButton(getString(R.string.action_cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
+                mVerticalStepperForm.setActiveStepAsCompleted();
             }
         });
         dialogBuilder.setPositiveButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {
@@ -443,9 +443,6 @@ public class CompleteProfileActivity extends AppCompatActivity implements Vertic
     }
 
     private void doSendData() {
-        mProgressDialog.setMessage("Mengirimkan data...");
-        if(!mProgressDialog.isShowing()) mProgressDialog.show();
-
         // get value from fields
         String name = mInputName.getText().toString();
         String phone = mInputPhone.getText().toString();
@@ -466,8 +463,6 @@ public class CompleteProfileActivity extends AppCompatActivity implements Vertic
         }
 
         MediaType MEDIA_TYPE_JPG = MediaType.parse("image/jpg");
-
-        OkHttpClient httpClient = new OkHttpClient();
         RequestBody formBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("id_user", mUserLogin.getId()+"")
@@ -479,18 +474,34 @@ public class CompleteProfileActivity extends AppCompatActivity implements Vertic
                 .addFormDataPart("user_photo", mUserLogin.getId()+".jpg", RequestBody.create(MEDIA_TYPE_JPG, new File(mSavedPhotoUri.getPath())) )
                 .build();
 
+        OkHttpClient httpClient = new OkHttpClient();
         Request httpRequest = new Request.Builder()
                 .url(App.URL_SAVE_PROFILE)
                 .post(formBody)
                 .build();
+        final Call httpCall = httpClient.newCall(httpRequest);
 
-        Call httpCall = httpClient.newCall(httpRequest);
+        mProgressDialog.setMessage("Mengirimkan data...");
+        mProgressDialog.setCancelable(true);
+        mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                httpCall.cancel();
+                App.showSimpleDialog(CompleteProfileActivity.this, "Proses kirim data dibatalkan");
+                mVerticalStepperForm.setActiveStepAsCompleted();
+            }
+        });
+        if(!mProgressDialog.isShowing()) mProgressDialog.show();
         httpCall.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                //Log.v(TAG, String.valueOf(e));
-                // alert user
                 runOnUiThread(new RunnableDialogMessage(mContext, dialogTitle, String.valueOf(e), mProgressDialog));
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mVerticalStepperForm.setActiveStepAsCompleted();
+                    }
+                });
             }
 
             @Override
@@ -502,7 +513,6 @@ public class CompleteProfileActivity extends AppCompatActivity implements Vertic
                     }
                 });
                 String json = response.body().string();
-                //Log.v(TAG, json);
                 if(response.isSuccessful() && response.code() == 200){
                     try {
                         JSONObject objResponse = new JSONObject(json);
@@ -525,7 +535,6 @@ public class CompleteProfileActivity extends AppCompatActivity implements Vertic
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    //Toast.makeText(getApplicationContext(), "Submit profil berhasil", Toast.LENGTH_LONG).show();
                                     Intent intent = new Intent(CompleteProfileActivity.this, App.HOME_ACTIVITY);
                                     startActivity(intent);
                                     finish();
@@ -534,14 +543,32 @@ public class CompleteProfileActivity extends AppCompatActivity implements Vertic
                         }else{
                             String message = objResponse.getString("error_msg");
                             runOnUiThread(new RunnableDialogMessage(mContext, dialogTitle, message, mProgressDialog));
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mVerticalStepperForm.setActiveStepAsCompleted();
+                                }
+                            });
                         }
                     } catch (JSONException e) {
                         // alert user
                         runOnUiThread(new RunnableDialogMessage(mContext, dialogTitle, e.getMessage(), mProgressDialog));
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mVerticalStepperForm.setActiveStepAsCompleted();
+                            }
+                        });
                     }
                 }else{
                     // alert user
                     runOnUiThread(new RunnableDialogMessage(mContext, dialogTitle, response.message(), mProgressDialog));
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mVerticalStepperForm.setActiveStepAsCompleted();
+                        }
+                    });
                 }
             }
         });

@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.widiarifki.findtutor.R;
 import com.widiarifki.findtutor.app.App;
 import com.widiarifki.findtutor.helper.RunnableDialogMessage;
-import com.widiarifki.findtutor.helper.SessionManager;
+import com.widiarifki.findtutor.app.SessionManager;
 import com.widiarifki.findtutor.model.AvailabilityPerDay;
 import com.widiarifki.findtutor.model.User;
 
@@ -71,6 +71,12 @@ public class AvailabilityTimeAdapter extends ArrayAdapter<AvailabilityPerDay> {
         final AvailabilityPerDay time = mObjects.get(position);
 
         TextView tvStartTime = (TextView) convertView.findViewById(R.id.text_start_time);
+        tvStartTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         TextView tvEndTime = (TextView) convertView.findViewById(R.id.text_end_time);
         ImageButton btnRemove = (ImageButton) convertView.findViewById(R.id.btn_remove);
         btnRemove.setOnClickListener(new View.OnClickListener() {

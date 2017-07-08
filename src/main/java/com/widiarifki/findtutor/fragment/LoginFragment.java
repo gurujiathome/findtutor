@@ -3,10 +3,10 @@ package com.widiarifki.findtutor.fragment;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,10 +22,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.widiarifki.findtutor.R;
 import com.widiarifki.findtutor.app.App;
-import com.widiarifki.findtutor.helper.RunnableDialogMessage;
+import com.widiarifki.findtutor.app.SessionManager;
 import com.widiarifki.findtutor.helper.FormInputChecker;
-import com.widiarifki.findtutor.helper.SessionManager;
-import com.widiarifki.findtutor.model.AvailabilityPerDay;
+import com.widiarifki.findtutor.helper.RunnableDialogMessage;
 import com.widiarifki.findtutor.model.Education;
 import com.widiarifki.findtutor.model.SavedSubject;
 import com.widiarifki.findtutor.model.User;
@@ -72,15 +71,14 @@ public class LoginFragment extends Fragment {
         mContextActivity = (Activity)mContext;
         mSession = new SessionManager(mContext);
 
-        View view = inflater.inflate(R.layout.fragment_welcome_login, container, false);
+        View view = inflater.inflate(R.layout.fragment_login, container, false);
 
         // Set up the login form.
         mProgressDialog = new ProgressDialog(mContext);
-        mProgressDialog.setCancelable(true);
 
         mForm = view.findViewById(R.id.login_form);
+        mForm.requestFocus();
         mInputEmail = (AutoCompleteTextView) view.findViewById(R.id.input_email);
-        //populateAutoComplete();
         mInputPassword = (EditText) view.findViewById(R.id.input_password);
         mInputPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -104,11 +102,6 @@ public class LoginFragment extends Fragment {
         return view;
     }
 
-    /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
-     */
     private void attemptLogin() {
         boolean cancel = false;
         View focusView = null;
@@ -117,54 +110,57 @@ public class LoginFragment extends Fragment {
         mInputEmail.setError(null);
         mInputPassword.setError(null);
 
-        // Store values at the time of the login attempt.
+        // Store values.
         String email = mInputEmail.getText().toString();
         String pass = mInputPassword.getText().toString();
 
-        // Check for a valid email address && required field.
-        if(TextUtils.isEmpty(pass)){
+        // Validate values.
+        if(FormInputChecker.isEmpty(pass)){
             mInputPassword.setError(getString(R.string.error_field_required));
             focusView = mInputPassword;
             cancel = true;
         }
 
-        if (TextUtils.isEmpty(email)) {
+        if (FormInputChecker.isEmpty(email)) {
             mInputEmail.setError(getString(R.string.error_field_required));
             focusView = mInputEmail;
             cancel = true;
-        } else if (!FormInputChecker.isEmailValid(email)) {
+        }
+        else if (!FormInputChecker.isEmailValid(email)) {
             mInputEmail.setError(getString(R.string.error_invalid_email));
             focusView = mInputEmail;
             cancel = true;
         }
 
         if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
             focusView.requestFocus();
         } else {
-            mProgressDialog.setMessage("Memproses login akun...");
-            if(!mProgressDialog.isShowing()) mProgressDialog.show();
-
-            /** Process Reg v.2**/
             RequestBody formBody = new FormBody.Builder()
                     .add("email", email)
                     .add("password", pass)
                     .build();
 
             OkHttpClient httpClient = new OkHttpClient();
-
             Request httpRequest = new Request.Builder()
                     .url(App.URL_LOGIN)
                     .post(formBody)
                     .build();
 
-            Call httpCall = httpClient.newCall(httpRequest);
+            final Call httpCall = httpClient.newCall(httpRequest);
+
+            mProgressDialog.setMessage("Memproses login akun...");
+            mProgressDialog.setCancelable(true);
+            mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    httpCall.cancel();
+                }
+            });
+            if(!mProgressDialog.isShowing()) mProgressDialog.show();
+
             httpCall.enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    //Log.v(TAG, String.valueOf(e));
-                    // alert user
                     getActivity().runOnUiThread(new RunnableDialogMessage(mContext, dialogTitle, String.valueOf(e), mProgressDialog));
                 }
 
@@ -177,12 +173,10 @@ public class LoginFragment extends Fragment {
                         }
                     });
                     String json = response.body().string();
-                    //Log.v(TAG, json);
                     if(response.isSuccessful() && response.code() == 200){
                         try {
                             JSONObject objResponse = new JSONObject(json);
                             int status = objResponse.getInt("success");
-                            //Log.v(TAG, status+"");
                             if(status == 1){
                                 // store di sqlite && session
                                 // store session
@@ -218,27 +212,33 @@ public class LoginFragment extends Fragment {
                                         Type subjectType = new TypeToken<Map<String, SavedSubject>>() {}.getType();
                                         Map<String, SavedSubject> subjectMap = new Gson().fromJson(objUserData.getString(mSession.KEY_SUBJECTS), subjectType);
                                         if (subjectMap != null) {
-                                            HashMap<String, SavedSubject> subjectHashmap = new HashMap<String, SavedSubject>(subjectMap); // cast process
-                                            user.setSubjects(subjectHashmap);
+                                            user.setSubjects(new HashMap<String, SavedSubject>(subjectMap));
                                         }
                                     }
 
-                                    if(objUserData.getString(mSession.KEY_AVAILABILITIES) != null) {
+                                    if(objUserData.getString(mSession.KEY_TIMESLOTS) != null) {
+                                        Type timeslotType = new TypeToken<Map<String, List<Integer>>>() {}.getType();
+                                        Map<String, List<Integer>> timeslotMap = new Gson().fromJson(objUserData.getString(mSession.KEY_TIMESLOTS), timeslotType);
+                                        if (timeslotMap != null) {
+                                            user.setTimeslots(new HashMap<String, List<Integer>>(timeslotMap));
+                                        }
+                                    }
+
+                                    /*if(objUserData.getString(mSession.KEY_AVAILABILITIES) != null) {
                                         Type availabilityType = new TypeToken<Map<String, List<AvailabilityPerDay>>>() {}.getType();
                                         Map<String, List<AvailabilityPerDay>> availabilityMap = new Gson().fromJson(objUserData.getString(mSession.KEY_AVAILABILITIES), availabilityType);
                                         if (availabilityMap != null) {
                                             HashMap<String, List<AvailabilityPerDay>> availabilityHashmap = new HashMap<String, List<AvailabilityPerDay>>(availabilityMap); // cast process
                                             user.setAvailabilities(availabilityHashmap);
                                         }
-                                    }
+                                    }*/
                                 }
                                 mSession.updateSession(user);
 
                                 getActivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Toast.makeText(mContext, "Selamat Datang!", Toast.LENGTH_SHORT).show();
-
+                                        Toast.makeText(mContext, "Selamat Datang Kembali!", Toast.LENGTH_SHORT).show();
                                         App.loadInitActivity(mContext);
                                     }
                                 });
@@ -260,11 +260,9 @@ public class LoginFragment extends Fragment {
 
                             }
                         } catch (JSONException e) {
-                            // alert user
                             getActivity().runOnUiThread(new RunnableDialogMessage(mContext, dialogTitle, e.getMessage(), mProgressDialog));
                         }
                     }else{
-                        // alert user
                         getActivity().runOnUiThread(new RunnableDialogMessage(mContext, dialogTitle, response.message(), mProgressDialog));
                     }
                 }

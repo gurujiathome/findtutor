@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 import com.widiarifki.findtutor.app.App;
 import com.widiarifki.findtutor.helper.RoundedCornersTransform;
-import com.widiarifki.findtutor.helper.SessionManager;
+import com.widiarifki.findtutor.app.SessionManager;
 import com.widiarifki.findtutor.model.User;
 
 public class UserProfileActivity extends AppCompatActivity {

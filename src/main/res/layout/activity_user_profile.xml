@@ -60,7 +60,7 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:layout_marginBottom="@dimen/label_to_input_vmargin"
                     android:layout_marginLeft="@dimen/label_left_margin"
-                    android:textColor="@color/colorTextLabel"/>
+                    android:textColor="@color/textLabel"/>
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
@@ -71,7 +71,7 @@
                         android:layout_height="wrap_content"
                         android:inputType="text"
                         android:maxLines="1"
-                        android:textColor="@color/colorTextPrimary"/>
+                        android:textColor="@color/textPrimary"/>
                 </android.support.design.widget.TextInputLayout>
             </RelativeLayout>
 
@@ -86,7 +86,7 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:layout_marginBottom="@dimen/label_to_input_vmargin"
                     android:layout_marginLeft="@dimen/label_left_margin"
-                    android:textColor="@color/colorTextLabel"/>
+                    android:textColor="@color/textLabel"/>
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
@@ -97,7 +97,7 @@
                         android:layout_height="wrap_content"
                         android:inputType="textEmailAddress"
                         android:maxLines="1"
-                        android:textColor="@color/colorTextPrimary"/>
+                        android:textColor="@color/textPrimary"/>
                 </android.support.design.widget.TextInputLayout>
             </RelativeLayout>
 
@@ -112,7 +112,7 @@
                     android:layout_marginBottom="@dimen/label_to_input_vmargin"
                     android:layout_marginLeft="@dimen/label_left_margin"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="@color/colorTextLabel"/>
+                    android:textColor="@color/textLabel"/>
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
@@ -139,7 +139,7 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:layout_marginBottom="@dimen/label_to_value_vmargin"
                     android:layout_marginLeft="@dimen/label_left_margin"
-                    android:textColor="@color/colorTextLabel"/>
+                    android:textColor="@color/textLabel"/>
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
@@ -167,7 +167,7 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:layout_marginBottom="@dimen/label_to_value_vmargin"
                     android:layout_marginLeft="@dimen/label_left_margin"
-                    android:textColor="@color/colorTextLabel"/>
+                    android:textColor="@color/textLabel"/>
 
             </RelativeLayout>
 
@@ -182,7 +182,7 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:layout_marginBottom="@dimen/label_to_value_vmargin"
                     android:layout_marginLeft="@dimen/label_left_margin"
-                    android:textColor="@color/colorTextLabel"/>
+                    android:textColor="@color/textLabel"/>
 
             </RelativeLayout>
 

@@ -20,7 +20,7 @@ import com.widiarifki.findtutor.R;
 import com.widiarifki.findtutor.adapter.AvailabilityAdapter;
 import com.widiarifki.findtutor.app.App;
 import com.widiarifki.findtutor.app.Constants;
-import com.widiarifki.findtutor.helper.SessionManager;
+import com.widiarifki.findtutor.app.SessionManager;
 import com.widiarifki.findtutor.model.Day;
 import com.widiarifki.findtutor.model.User;
 
@@ -85,9 +85,10 @@ public class SettingAvailabilityFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Day day = mDays.get(position);
-                Fragment fragment = new SetTimeAvailabilityFragment();
+                //Fragment fragment = new SetTimeAvailabilityFragment();
+                Fragment fragment = new SettingAvailabilityTimeFragment();
                 Bundle bundle = new Bundle();
-                bundle.putInt("idDay", day.getId());
+                bundle.putInt(Constants.PARAM_KEY_DAY, day.getId());
                 fragment.setArguments(bundle);
                 ((MainActivity)getContext()).addStackedFragment(fragment, "Jadwal Hari " + day.getName(), getString(R.string.menu_availibility));
                 //((MainActivity)getContext()).addStackedFragment(mThisFragment, fragment, "Jadwal Hari " + day.getName(), getString(R.string.menu_availibility));
@@ -106,11 +107,11 @@ public class SettingAvailabilityFragment extends Fragment {
         public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
 
             if(checkedId == R.id.radio_opt_available)
-                updateAvailability(Constants.VALUE_KEY_AVAILABLE);
+                setAvailability(Constants.TUTOR_AVAILABLE);
             else if(checkedId == R.id.radio_opt_unavailable)
-                updateAvailability(Constants.VALUE_KEY_UNAVAILABLE);
+                setAvailability(Constants.TUTOR_UNAVAILABLE);
             else if(checkedId == R.id.radio_opt_scheduled)
-                updateAvailability(Constants.VALUE_KEY_SCHEDULED);
+                setAvailability(Constants.TUTOR_AVAILABLE_BY_SCHEDULE);
 
         }
     };
@@ -124,22 +125,22 @@ public class SettingAvailabilityFragment extends Fragment {
     private void updateSelectedRadio() {
         int isAvailable = mUserLogin.getIsAvailable();
         RadioButton selectedRadio = null;
-        if(isAvailable == Constants.VALUE_KEY_AVAILABLE){
+        if(isAvailable == Constants.TUTOR_AVAILABLE){
             selectedRadio = (RadioButton) mAvailabilityOpt.findViewById(R.id.radio_opt_available);
-            mListView.setBackgroundColor(getResources().getColor(R.color.disableLvBg));
+            mListView.setBackgroundColor(getResources().getColor(R.color.listviewBgDisable));
         }
-        else if(isAvailable == Constants.VALUE_KEY_UNAVAILABLE){
+        else if(isAvailable == Constants.TUTOR_UNAVAILABLE){
             selectedRadio = (RadioButton) mAvailabilityOpt.findViewById(R.id.radio_opt_unavailable);
-            mListView.setBackgroundColor(getResources().getColor(R.color.disableLvBg));
+            mListView.setBackgroundColor(getResources().getColor(R.color.listviewBgDisable));
         }
-        else if(isAvailable == Constants.VALUE_KEY_SCHEDULED){
+        else if(isAvailable == Constants.TUTOR_AVAILABLE_BY_SCHEDULE){
             selectedRadio = (RadioButton) mAvailabilityOpt.findViewById(R.id.radio_opt_scheduled);
-            mListView.setBackgroundColor(getResources().getColor(R.color.defaultLvBg));
+            mListView.setBackgroundColor(getResources().getColor(R.color.listviewBgDefault));
         }
         selectedRadio.setChecked(true);
     }
 
-    void updateAvailability(int status){
+    void setAvailability(int status){
         mProgressDialog.setCancelable(false);
         mProgressDialog.setMessage("Menyimpan..");
         if(!mProgressDialog.isShowing()) mProgressDialog.show();

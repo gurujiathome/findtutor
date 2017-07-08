@@ -83,8 +83,8 @@ public class SearchTutorFragment extends Fragment {
         selectSubject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mParentActivity.addStackedFragment(new SearchTutorSubjectFragment(), getString(R.string.title_search_select_subject), getString(R.string.title_search_tutor));
-                //mParentActivity.addStackedFragment(mThisFragment, new SearchTutorSubjectFragment(), getString(R.string.title_search_select_subject), getString(R.string.title_search_tutor));
+                mParentActivity.addStackedFragment(new SearchTutorSelectSubjectFragment(), getString(R.string.title_search_select_subject), getString(R.string.title_search_tutor));
+                //mParentActivity.addStackedFragment(mThisFragment, new SearchTutorSelectSubjectFragment(), getString(R.string.title_search_select_subject), getString(R.string.title_search_tutor));
             }
         });
 
@@ -92,8 +92,8 @@ public class SearchTutorFragment extends Fragment {
         selectLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mParentActivity.addStackedFragment(new SearchTutorLocationFragment(), getString(R.string.title_search_select_location), getString(R.string.title_search_tutor));
-                //mParentActivity.addStackedFragment(mThisFragment, new SearchTutorLocationFragment(), getString(R.string.title_search_select_location), getString(R.string.title_search_tutor));
+                mParentActivity.addStackedFragment(new SearchTutorSelectLocationFragment(), getString(R.string.title_search_select_location), getString(R.string.title_search_tutor));
+                //mParentActivity.addStackedFragment(mThisFragment, new SearchTutorSelectLocationFragment(), getString(R.string.title_search_select_location), getString(R.string.title_search_tutor));
             }
         });
 

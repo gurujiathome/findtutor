@@ -18,7 +18,7 @@ import com.widiarifki.findtutor.R;
 import com.widiarifki.findtutor.adapter.SearchTutorResultAdapter;
 import com.widiarifki.findtutor.app.App;
 import com.widiarifki.findtutor.app.Constants;
-import com.widiarifki.findtutor.helper.SessionManager;
+import com.widiarifki.findtutor.app.SessionManager;
 import com.widiarifki.findtutor.model.SavedSubject;
 import com.widiarifki.findtutor.model.SubjectTopic;
 import com.widiarifki.findtutor.model.User;
@@ -36,7 +36,6 @@ import java.util.List;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -57,6 +56,7 @@ public class SearchTutorResultFragment extends Fragment {
     Bundle mParams;
 
     RecyclerView rvTutorList;
+    String mRequestedDate;
 
     @Nullable
     @Override
@@ -79,30 +79,28 @@ public class SearchTutorResultFragment extends Fragment {
 
     private void fetchResult() {
         Location location = mParentActivity.mSearchTutorLocation;
-        LocalDate date = mParentActivity.mSearchTutorDate;
+        final LocalDate date = mParentActivity.mSearchTutorDate;
         HashMap<String, SavedSubject> subjects = mParentActivity.getSearchTutorSubject();
-        List<Integer> subjectDisplay = new ArrayList<Integer>();
+        List<Integer> subjectId = new ArrayList<Integer>();
         for (SavedSubject group : subjects.values()){
             int idParent = group.getCategoryId();
             String parentName = group.getCategoryName();
             HashMap<String, SubjectTopic> topic = group.getTopicList();
-            if(topic.containsKey(idParent+"") && !subjectDisplay.contains(idParent)){
-                subjectDisplay.add(idParent);
+            if(topic.containsKey(idParent+"") && !subjectId.contains(idParent)){
+                subjectId.add(idParent);
             }else{
                 for (SubjectTopic topicItem : topic.values())
-                    subjectDisplay.add(topicItem.getId());
+                    subjectId.add(topicItem.getId());
             }
         }
 
-        MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json; charset=utf-8");
-        String jsonSubjectList = new Gson().toJson(subjectDisplay);
-
+        String jsonSubjectList = new Gson().toJson(subjectId);
         RequestBody formBody = new FormBody.Builder()
                 .add(Constants.PARAM_KEY_ID_USER, mUser.getId()+"")
                 .add("subjects", jsonSubjectList)
-                .add("schedule_date", date.toString())
-                .add("latitude", location.getLatitude()+"")
-                .add("longitude", location.getLongitude()+"")
+                .add(Constants.PARAM_KEY_SCHEDULE_DATE, date.toString())
+                .add(Constants.PARAM_KEY_LATITUDE, location.getLatitude()+"")
+                .add(Constants.PARAM_KEY_LONGITUDE, location.getLongitude()+"")
                 .add(Constants.PARAM_KEY_GENDER, mParams.getInt(Constants.PARAM_KEY_GENDER, 0)+"")
                 .build();
 
@@ -141,6 +139,7 @@ public class SearchTutorResultFragment extends Fragment {
                         mContextActivity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                /** Bind search result to list **/
                                 SearchTutorResultAdapter adapter = new SearchTutorResultAdapter(mContext, tutors, mThisFragment);
                                 rvTutorList.setAdapter(adapter);
                                 rvTutorList.setLayoutManager(new LinearLayoutManager(mContext));

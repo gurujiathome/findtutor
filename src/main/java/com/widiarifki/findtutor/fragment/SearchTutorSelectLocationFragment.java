@@ -68,7 +68,7 @@ import okhttp3.Response;
  * Created by widiarifki on 26/06/2017.
  */
 
-public class SearchTutorLocationFragment extends Fragment
+public class SearchTutorSelectLocationFragment extends Fragment
         implements LocationListener,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
@@ -119,12 +119,12 @@ public class SearchTutorLocationFragment extends Fragment
         mContextActivity = (AppCompatActivity)mContext;
         buildGoogleApi();
 
-        View view = inflater.inflate(R.layout.fragment_search_tutor_location, container, false);
+        View view = inflater.inflate(R.layout.fragment_search_tutor_select_location, container, false);
 
         final ImageButton btnClear = (ImageButton) view.findViewById(R.id.btn_clear_autocomplete);
         final AutoCompleteTextView autoCompView = (AutoCompleteTextView) view.findViewById(R.id.input_search);
         final KeyListener autoCompViewListener = autoCompView.getKeyListener();
-        autoCompView.setAdapter(new GooglePlacesAutocompleteAdapter(mContext, R.layout.item_layout_autocomplete_place));
+        autoCompView.setAdapter(new GooglePlacesAutocompleteAdapter(mContext, R.layout.item_list_place_autocomplete));
         autoCompView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

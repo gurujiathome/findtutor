@@ -23,6 +23,7 @@ public class User {
     private List<Education> mEducations;
     private HashMap<String, SavedSubject> mSubjects;
     private int mIsAvailable;
+    private HashMap<String, List<Integer>> mTimeslots;
     private HashMap<String, List<AvailabilityPerDay>> mAvailabilities;
     private String mDeviceId;
     private String mLatitude;
@@ -144,6 +145,14 @@ public class User {
 
     public void setIsAvailable(int isAvailable) {
         mIsAvailable = isAvailable;
+    }
+
+    public HashMap<String, List<Integer>> getTimeslots() {
+        return mTimeslots;
+    }
+
+    public void setTimeslots(HashMap<String, List<Integer>> timeslots) {
+        mTimeslots = timeslots;
     }
 
     public HashMap<String, List<AvailabilityPerDay>> getAvailabilities() {

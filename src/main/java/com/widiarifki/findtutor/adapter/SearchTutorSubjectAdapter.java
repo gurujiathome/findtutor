@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.widiarifki.findtutor.MainActivity;
 import com.widiarifki.findtutor.R;
-import com.widiarifki.findtutor.helper.SessionManager;
+import com.widiarifki.findtutor.app.SessionManager;
 import com.widiarifki.findtutor.model.SavedSubject;
 import com.widiarifki.findtutor.model.Subject;
 import com.widiarifki.findtutor.model.SubjectCategory;
@@ -81,7 +81,7 @@ public class SearchTutorSubjectAdapter extends BaseAdapter {
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (mSubjects.get(position).isSection()) {
             // if section header
-            convertView = inflater.inflate(R.layout.item_layout_list_header, parent, false);
+            convertView = inflater.inflate(R.layout.item_list_default_header, parent, false);
             TextView tvSubjectCategory = (TextView) convertView.findViewById(R.id.text_title);
 
             SubjectCategory subjectCategory = (SubjectCategory) mSubjects.get(position);
@@ -91,7 +91,7 @@ public class SearchTutorSubjectAdapter extends BaseAdapter {
         {
             // if item
             SubjectTopic topic = (SubjectTopic) mSubjects.get(position);
-            convertView = inflater.inflate(R.layout.item_layout_cbox_subject_topic, parent, false);
+            convertView = inflater.inflate(R.layout.item_list_select_subject, parent, false);
             CheckBox cbSubjectTopic = (CheckBox) convertView.findViewById(R.id.cbox_subject);
             cbSubjectTopic.setText(topic.getName());
             cbSubjectTopic.setTag(topic);

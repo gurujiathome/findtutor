@@ -44,7 +44,7 @@ public class GooglePlacesAutocompleteAdapter extends ArrayAdapter implements Fil
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_layout_autocomplete_place, null);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_list_place_autocomplete, null);
         }
 
         GooglePlace place = getItem(position);
