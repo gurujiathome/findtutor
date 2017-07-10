@@ -120,4 +120,18 @@
     <string name="tutor_tab_title_feedback">Ulasan</string>
     <string name="title_tutor_profile">Profil Tutor</string>
     <string name="title_book_tutor">Booking Tutor</string>
+    <string name="session_accepted">Accepted</string>
+    <string name="session_pending">Pending</string>
+    <string name="action_reschedule">Reschedule</string>
+    <string name="action_accept">Accept</string>
+    <string name="action_reject">Reject</string>
+    <string name="title_session_accept_confirmation">Konfirmasi Permintaan Sesi</string>
+    <string name="action_yes">Ya</string>
+    <string name="confirm_message_accept_session">Anda yakin akan menerima permintaan jadwal dari:</string>
+    <string name="confirm_message_reject_session">Anda yakin akan menolak permintaan jadwal dari:</string>
+    <string name="action_start_session">Mulai Sesi</string>
+    <string name="action_cancel_session">Batalkan Sesi</string>
+    <string name="empty_data">Tidak ada data</string>
+    <string name="confirm_message_start_session">Anda yakin akan memulai sesi belajar dengan</string>
+    <string name="info_session_has_started">Sesi belajar telah dimulai</string>
 </resources>

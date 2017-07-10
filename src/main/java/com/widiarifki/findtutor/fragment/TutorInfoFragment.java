@@ -49,7 +49,6 @@ public class TutorInfoFragment extends Fragment {
     String mLatitude;
     String mLongitude;
     double mDistance;
-    String mRequestedDate;
 
     ImageView mImgUserPhoto;
     TextView mTextName;
@@ -69,7 +68,6 @@ public class TutorInfoFragment extends Fragment {
         mLatitude = params.getString(Constants.PARAM_KEY_LATITUDE, null);
         mLongitude = params.getString(Constants.PARAM_KEY_LONGITUDE, null);
         mDistance = params.getDouble(Constants.PARAM_KEY_DISTANCE, 0);
-        mRequestedDate = params.getString("date", null);
     }
 
     @Nullable
@@ -88,8 +86,8 @@ public class TutorInfoFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Bundle params = new Bundle();
-                params.putString("date", mRequestedDate);
                 params.putInt(Constants.PARAM_KEY_ID_USER, mIdUser);
+                params.putDouble(Constants.PARAM_KEY_DISTANCE, mDistance);
                 Fragment fragment = new BookTutorFragment();
                 fragment.setArguments(params);
                 ((MainActivity)mContext).addStackedFragment(

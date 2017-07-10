@@ -28,7 +28,22 @@ public class Constants {
     public static final String PARAM_KEY_TIME_LENGTH = "time_length";
     public static final String PARAM_KEY_TIMESLOTS = "timeslots";
     public static final String PARAM_KEY_BOOKED_TIME = "booked_time";
+    public static final String PARAM_KEY_USER_CONTEXT = "user_context";
+    public static final String PARAM_KEY_SESSION_STATE = "session_state";
+    public static final String PARAM_KEY_APPROVAL_TYPE = "approval_type";
     public static final int TUTOR_AVAILABLE = 1;
     public static final int TUTOR_UNAVAILABLE = 0;
     public static final int TUTOR_AVAILABLE_BY_SCHEDULE = 2;
+
+    public static final int SESSION_CONTEXT_AS_TUTOR = 1;
+    public static final int SESSION_CONTEXT_AS_STUDENT = 2;
+
+    public static final int SESSION_PENDING = 1;
+    public static final int SESSION_RESCHEDULE = 2;
+    public static final int SESSION_ACCEPTED = 3;
+    public static final int SESSION_REJECTED = 4;
+    public static final int SESSION_CANCELED_BY_STUDENT = 5;
+    public static final int SESSION_CANCELED_BY_TUTOR = 6;
+    public static final int SESSION_STARTED = 7;
+    public static final int SESSION_FINISHED = 8;
 }

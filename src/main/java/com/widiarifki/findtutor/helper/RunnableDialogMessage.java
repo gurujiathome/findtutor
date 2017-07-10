@@ -32,6 +32,11 @@ public class RunnableDialogMessage implements Runnable {
         if(mProgressDialog != null){
             if(mProgressDialog.isShowing()) mProgressDialog.dismiss();
         }
-        App.showSimpleDialog(mContext, mTitle, mMessage);
+
+        if(mTitle.isEmpty()){
+            App.showSimpleDialog(mContext, mMessage);
+        }else{
+            App.showSimpleDialog(mContext, mTitle, mMessage);
+        }
     }
 }

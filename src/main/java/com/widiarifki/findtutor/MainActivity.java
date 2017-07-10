@@ -35,9 +35,10 @@ import com.rits.cloning.Cloner;
 import com.squareup.picasso.Picasso;
 import com.widiarifki.findtutor.app.App;
 import com.widiarifki.findtutor.fragment.HomeFragment;
-import com.widiarifki.findtutor.fragment.MySessionFragment;
+import com.widiarifki.findtutor.fragment.SessionFragment;
 import com.widiarifki.findtutor.fragment.NotificationFragment;
 import com.widiarifki.findtutor.fragment.SearchTutorFragment;
+import com.widiarifki.findtutor.fragment.SessionPreviousFragment;
 import com.widiarifki.findtutor.fragment.SettingAvailabilityFragment;
 import com.widiarifki.findtutor.fragment.SettingFragment;
 import com.widiarifki.findtutor.helper.CircleTransform;
@@ -210,7 +211,10 @@ public class MainActivity extends AppCompatActivity
                     fragment = new SearchTutorFragment();
                     break;
                 case R.id.nav_my_session:
-                    fragment = new MySessionFragment();
+                    fragment = new SessionFragment();
+                    break;
+                case R.id.nav_session_history:
+                    fragment = new SessionPreviousFragment();
                     break;
                 case R.id.nav_availibility:
                     fragment = new SettingAvailabilityFragment();
@@ -246,7 +250,7 @@ public class MainActivity extends AppCompatActivity
             menuItem.setChecked(true);
             // Set action bar title
             setTitle(menuItem.getTitle());
-            // Close the bottom_menu drawer
+            // Close the drawer
             mDrawer.closeDrawers();
         }
     }

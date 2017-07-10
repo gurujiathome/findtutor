@@ -1,25 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:orientation="vertical"
-              tools:context="com.widiarifki.findtutor.WelcomeActivity">
+              android:orientation="vertical">
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/topTabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        app:tabMode="fixed"
+        app:tabGravity="fill"
+        style="@style/ProfileTabLayoutStyle"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
-
-    </android.support.v4.view.ViewPager>
+        android:layout_weight="1"/>
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tabs"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/custom_tab_layout_height"
         android:layout_gravity="bottom"
+        app:tabMode="fixed"
+        app:tabGravity="fill"
         style="@style/WelcomeTabLayoutStyle"/>
 
 </LinearLayout>

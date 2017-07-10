@@ -94,10 +94,10 @@ public class SettingFragment extends Fragment {
                 new SettingAccountFragment(),
         };
 
-        ArrayAdapter adapter = new ArrayAdapter<String>(mContext, R.layout.item_layout_settings_list, settingList);
+        ArrayAdapter mTabsPagerAdapter = new ArrayAdapter<String>(mContext, R.layout.item_layout_settings_list, settingList);
 
         ListView listView = (ListView) view.findViewById(R.id.settings_list);
-        listView.setAdapter(adapter);
+        listView.setAdapter(mTabsPagerAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

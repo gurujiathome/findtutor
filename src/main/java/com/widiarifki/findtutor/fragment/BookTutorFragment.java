@@ -68,9 +68,11 @@ public class BookTutorFragment extends Fragment {
 
     int mIdStudent;
     int mIdTutor;
+    double mDistance;
     HashMap<String, SavedSubject> mSubjects;
     String mStudentLatitude;
     String mStudentLongitude;
+    String mStudentLocAddress;
     String mSelectedDate;
     int mStartTime;
     int mEndTime;
@@ -85,6 +87,7 @@ public class BookTutorFragment extends Fragment {
 
         Bundle givenParams = getArguments();
         mIdTutor = givenParams.getInt(Constants.PARAM_KEY_ID_USER, 0);
+        mDistance = givenParams.getDouble(Constants.PARAM_KEY_DISTANCE, 0);
 
         mSelectedTimes = new ArrayList<Integer>();
     }
@@ -125,6 +128,7 @@ public class BookTutorFragment extends Fragment {
             Location studentLocation = mParentActivity.mSearchTutorLocation;
             mStudentLatitude = String.valueOf(studentLocation.getLatitude());
             mStudentLongitude = String.valueOf(studentLocation.getLongitude());
+            mStudentLocAddress = mParentActivity.mSearchTutorLocationTxt;
         }
         if(mParentActivity.mSearchTutorDate != null){
             mSelectedDate = mParentActivity.mSearchTutorDate.toString();
@@ -277,6 +281,8 @@ public class BookTutorFragment extends Fragment {
                 .add(Constants.PARAM_KEY_SUBJECTS, jsonSubjectList)
                 .add(Constants.PARAM_KEY_LATITUDE, mStudentLatitude+"")
                 .add(Constants.PARAM_KEY_LONGITUDE, mStudentLongitude+"")
+                .add(Constants.PARAM_KEY_LOCATION_ADDRESS, mStudentLocAddress+"")
+                .add(Constants.PARAM_KEY_DISTANCE, mDistance+"")
                 .add(Constants.PARAM_KEY_SCHEDULE_DATE, mSelectedDate)
                 .add(Constants.PARAM_KEY_START_TIME_ID, startTime+"")
                 .add(Constants.PARAM_KEY_TIME_LENGTH, timeLn+"")

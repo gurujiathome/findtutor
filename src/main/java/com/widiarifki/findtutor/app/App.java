@@ -41,6 +41,9 @@ public class App {
     public static String URL_GET_TUTOR_INFO = "http://app-widiarifki.rhcloud.com/api/get-tutor-info";
     public static String URL_GET_TUTOR_TIME = "http://app-widiarifki.rhcloud.com/api/get-tutor-available-time";
     public static String URL_BOOK_TUTOR = "http://app-widiarifki.rhcloud.com/api/post-book-tutor";
+    public static String URL_GET_SESSION = "http://app-widiarifki.rhcloud.com/api/get-session";
+    public static String URL_POST_SESSION_APPROVAL = "http://app-widiarifki.rhcloud.com/api/post-session-approval";
+    public static String URL_POST_SESSION_START = "http://app-widiarifki.rhcloud.com/api/post-session-start";
 
     public static String URL_PATH_PHOTO = "http://app-widiarifki.rhcloud.com/uploads/user/photo/";
 
