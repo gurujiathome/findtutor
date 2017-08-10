@@ -23,6 +23,10 @@ public class Session {
     String mSubject;
     String mDateHeld;
     String mStartHourHeld;
+    String mEndHourHeld;
+    int mFrequenceType;
+    private String mEndDate;
+    private String mTutorFee;
 
     public int getId() {
         return mId;
@@ -145,5 +149,37 @@ public class Session {
 
     public void setStartHourHeld(String startHourHeld) {
         mStartHourHeld = startHourHeld;
+    }
+
+    public String getEndHourHeld() {
+        return mEndHourHeld;
+    }
+
+    public void setEndHourHeld(String endHourHeld) {
+        mEndHourHeld = endHourHeld;
+    }
+
+    public void setFrequenceType(int frequenceType) {
+        mFrequenceType = frequenceType;
+    }
+
+    public int getFrequenceType() {
+        return mFrequenceType;
+    }
+
+    public void setEndDate(String endDate) {
+        mEndDate = endDate;
+    }
+
+    public String getEndDate() {
+        return mEndDate;
+    }
+
+    public void setTutorFee(String tutorFee) {
+        mTutorFee = tutorFee;
+    }
+
+    public String getTutorFee() {
+        return mTutorFee;
     }
 }

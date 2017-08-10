@@ -15,9 +15,11 @@ public class Constants {
     public static final String PARAM_KEY_ID_REQUESTOR = "id_requestor";
     public static final String PARAM_KEY_ID_TUTOR = "id_tutor";
     public static final String PARAM_KEY_SUBJECTS = "subjects";
+    public static final String PARAM_KEY_SUBJECT_NAME = "subject_name";
     public static final String PARAM_KEY_PHOTO_URL = "photo_url";
     public static final String PARAM_KEY_NAME = "name";
     public static final String PARAM_KEY_GENDER = "gender";
+    public static final String PARAM_KEY_MIN_PRICE = "min_price_rate";
     public static final String PARAM_KEY_DISTANCE = "distance";
     public static final String PARAM_KEY_LOCATION_ADDRESS = "location_address";
     public static final String PARAM_KEY_LATITUDE = "latitude";
@@ -31,6 +33,11 @@ public class Constants {
     public static final String PARAM_KEY_USER_CONTEXT = "user_context";
     public static final String PARAM_KEY_SESSION_STATE = "session_state";
     public static final String PARAM_KEY_APPROVAL_TYPE = "approval_type";
+    public static final String PARAM_KEY_RATE_ATTITUDE = "rate_attitude";
+    public static final String PARAM_KEY_RATE_KNOWLEDGE = "rate_knowledge";
+    public static final String PARAM_KEY_RATE_HELPFULNESS = "rate_helpfulness";
+    public static final String PARAM_KEY_RATE_CLARITY = "rate_clarity";
+    public static final String PARAM_KEY_STUDENT_FEEDBACK = "student_feedback";
     public static final int TUTOR_AVAILABLE = 1;
     public static final int TUTOR_UNAVAILABLE = 0;
     public static final int TUTOR_AVAILABLE_BY_SCHEDULE = 2;
@@ -46,4 +53,6 @@ public class Constants {
     public static final int SESSION_CANCELED_BY_TUTOR = 6;
     public static final int SESSION_STARTED = 7;
     public static final int SESSION_FINISHED = 8;
+
+    public static final String[] DAY_INA = {"Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"};
 }

@@ -9,12 +9,17 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ToggleButton;
 
+import com.rits.cloning.Cloner;
 import com.widiarifki.findtutor.R;
 import com.widiarifki.findtutor.app.Constants;
+import com.widiarifki.findtutor.fragment.BookRegularFragment;
 import com.widiarifki.findtutor.fragment.BookTutorFragment;
 import com.widiarifki.findtutor.fragment.SettingAvailabilityTimeFragment;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -30,6 +35,7 @@ public class SelectHourAdapter extends RecyclerView.Adapter {
     Integer[] mEnabledTimes;
     Integer[] mDisabledTimes;
     Fragment mFragment;
+    String mSelectedDate;
 
     private HashMap<Integer, String> setTimes(){
         HashMap<Integer, String> times = new HashMap<Integer, String>();
@@ -41,10 +47,11 @@ public class SelectHourAdapter extends RecyclerView.Adapter {
     }
 
     /** Constructor to be called from BOOK TUTOR FRAGMENT **/
-    public SelectHourAdapter(Context context, Fragment fragment, Integer[] tutorTimes, int availabilityStatus) {
+    public SelectHourAdapter(Context context, Fragment fragment, String selectedDate, Integer[] tutorTimes, int availabilityStatus) {
         mTimes = setTimes();
         mContext = context;
         mFragment = fragment;
+        mSelectedDate = selectedDate;
         if(availabilityStatus == Constants.TUTOR_AVAILABLE_BY_SCHEDULE) {
             mEnabledTimes = tutorTimes;
         }
@@ -58,7 +65,8 @@ public class SelectHourAdapter extends RecyclerView.Adapter {
         mTimes = setTimes();
         mContext = context;
         mFragment = fragment;
-        mSelectedTimes = selectedTimes;
+        Cloner cloner = new Cloner();
+        mSelectedTimes = cloner.deepClone(selectedTimes);
     }
 
     @Override
@@ -71,27 +79,49 @@ public class SelectHourAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         MyViewHolder myHolder = (MyViewHolder) holder;
         String label = mTimes.get(position);
-
-        /** In case adapter called from BookTutorFragment, check if time label is adjust to user setting **/
-        if(mEnabledTimes != null && mEnabledTimes.length > 0) {
-            if(!Arrays.asList(mEnabledTimes).contains(position)){
-                myHolder.toggle.setEnabled(false);
-            }
-        }
-
-        if(mDisabledTimes != null && mDisabledTimes.length > 0) {
-            if(Arrays.asList(mDisabledTimes).contains(position)){
-                myHolder.toggle.setEnabled(false);
-            }
-        }
-
-        if(mSelectedTimes != null) {
-            if (mSelectedTimes.contains(position)) myHolder.toggle.setChecked(true);
-        }
-
+        myHolder.toggle.setEnabled(false);
         myHolder.toggle.setText(label);
         myHolder.toggle.setTextOn(label);
         myHolder.toggle.setTextOff(label);
+
+        if(mFragment instanceof BookTutorFragment) {
+            Date currentTime = new Date();
+            Date optionTime = null;
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            try {
+                optionTime = sdf.parse(mSelectedDate + " " + label.substring(0, 5) + ":00");
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            /** In case adapter called from BookTutorFragment, check if time label is adjust to user setting **/
+            if (mEnabledTimes != null && mEnabledTimes.length > 0) {
+                if (Arrays.asList(mEnabledTimes).contains(position)) {
+                    myHolder.toggle.setEnabled(true);
+                }
+            }
+
+            if (mDisabledTimes != null && mDisabledTimes.length > 0) {
+                if (!Arrays.asList(mDisabledTimes).contains(position)) {
+                    myHolder.toggle.setEnabled(true);
+                }
+            }
+
+            if (optionTime.before(currentTime)) {
+                myHolder.toggle.setEnabled(false);
+            }
+        }
+
+        if(mFragment instanceof SettingAvailabilityTimeFragment || mFragment instanceof BookRegularFragment) {
+            myHolder.toggle.setEnabled(true);
+            if (mSelectedTimes != null) {
+                if (mSelectedTimes.contains(Integer.valueOf(position)))
+                    myHolder.toggle.setChecked(true);
+                else
+                    myHolder.toggle.setChecked(false);
+            }
+        }
+
         myHolder.toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -101,6 +131,14 @@ public class SelectHourAdapter extends RecyclerView.Adapter {
                         timeFragment.addTime(position);
                     }else{
                         timeFragment.removeTime(position);
+                    }
+                }
+                else if(mFragment instanceof BookRegularFragment){
+                    BookRegularFragment fragment = (BookRegularFragment) mFragment;
+                    if(isChecked) {
+                        fragment.addTime(position);
+                    }else{
+                        fragment.removeTime(position);
                     }
                 }
                 else if(mFragment instanceof BookTutorFragment){

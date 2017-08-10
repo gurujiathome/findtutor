@@ -114,14 +114,14 @@
     <string name="title_search_tutor">Cari Tutor</string>
     <string name="menu_search_tutor">Cari Tutor</string>
     <string name="title_search_tutor_result">Hasil Pencarian</string>
-    <string name="title_search_select_gender">Gender Preference (Optional)</string>
+    <string name="title_search_select_gender">Preferensi Gender (Opsional)</string>
     <string name="tutor_tab_title_profile">Profil</string>
     <string name="tutor_tab_title_subject">Subjek</string>
     <string name="tutor_tab_title_feedback">Ulasan</string>
     <string name="title_tutor_profile">Profil Tutor</string>
     <string name="title_book_tutor">Booking Tutor</string>
-    <string name="session_accepted">Accepted</string>
-    <string name="session_pending">Pending</string>
+    <string name="session_accepted">Jadwal Sesi</string>
+    <string name="session_pending">Permintaan Sesi</string>
     <string name="action_reschedule">Reschedule</string>
     <string name="action_accept">Accept</string>
     <string name="action_reject">Reject</string>
@@ -132,6 +132,38 @@
     <string name="action_start_session">Mulai Sesi</string>
     <string name="action_cancel_session">Batalkan Sesi</string>
     <string name="empty_data">Tidak ada data</string>
-    <string name="confirm_message_start_session">Anda yakin akan memulai sesi belajar dengan</string>
-    <string name="info_session_has_started">Sesi belajar telah dimulai</string>
+    <string name="confirm_message_start_session">Apakah anda dan tutor telah setuju untuk memulai sesi belajar ?</string>
+    <string name="info_session_has_started">Sesi belajar telah dimulai. Saat sesi belajar telah berakhir, harap tap tombol dibawah.</string>
+    <string name="action_end_session">Akhiri Sesi</string>
+    <string name="title_activity_rate_tutor">Beri Rating Untuk Tutor</string>
+    <string name="label_knowledge_of_subject">Penguasaan Materi</string>
+    <string name="label_attitude">Sikap</string>
+    <string name="label_clarity">Cara Menyampaikan</string>
+    <string name="label_helpfulness">Pemberian Solusi</string>
+    <string name="action_send">Kirim</string>
+    <string name="confirm_message_end_session">Apakah anda dan tutor telah setuju untuk memulai sesi belajar ?</string>
+    <string name="label_feedback">Komentar/Review</string>
+    <string name="menu_session_n_request"><![CDATA[Jadwal & Permintaan Sesi]]></string>
+    <string name="session_rejected_by_tutor">Ditolak oleh tutor</string>
+    <string name="session_canceled_by_tutor">Dibatalkan oleh tutor</string>
+    <string name="session_canceled_by_student">Dibatalkan oleh siswa</string>
+    <string name="session_finished">Telah berakhir</string>
+    <string name="title_session_overview">Ringkasan Sesi</string>
+    <string name="select_frequency">Pilih Frekuensi</string>
+    <string name="title_book_tutor_regular">Book Berkala</string>
+    <string name="label_opt_daily">Harian</string>
+    <string name="label_opt_weekly">Mingguan</string>
+    <string name="tutor_tab_title_availability">Jadwal Mengajar</string>
+    <string-array name="book_frequency">
+        <item>Harian</item>
+        <item>Mingguan</item>
+    </string-array>
+    <string-array name="day">
+        <item>Senin</item>
+        <item>Selasa</item>
+        <item>Rabu</item>
+        <item>Kamis</item>
+        <item>Sabtu</item>
+        <item>Minggu</item>
+    </string-array>
 </resources>

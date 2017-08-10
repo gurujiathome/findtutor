@@ -5,6 +5,60 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
+    <!--<LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/window_to_content_padding"
+        android:background="@color/white"
+        android:clickable="true"
+        android:id="@+id/selectFrequency"
+        android:gravity="center_vertical">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_access_time_black_24dp"/>
+        <TextView
+            android:id="@+id/tvFrequency"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:textSize="16sp"
+            android:text="Frekuensi Pengajaran"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/place_autocomplete_separator"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/window_to_content_padding"
+        android:background="@color/white"
+        android:clickable="true"
+        android:id="@+id/selectDay"
+        android:gravity="center_vertical">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_date_range_black_24dp"/>
+        <TextView
+            android:id="@+id/tvDay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:textSize="16sp"
+            android:text="Hari"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/place_autocomplete_separator"/>-->
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -17,7 +71,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_library_books_black_24dp"/>
+            app:srcCompat="@drawable/ic_book_black_24dp"/>
         <TextView
             android:id="@+id/tvSubject"
             android:layout_width="wrap_content"
@@ -73,11 +127,20 @@
             app:srcCompat="@drawable/ic_date_range_black_24dp"/>
         <TextView
             android:id="@+id/tvDate"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:textSize="16sp"
             android:text="@string/title_search_select_date"/>
+        <ImageButton
+            android:id="@+id/btn_clear_date"
+            app:srcCompat="@drawable/ic_clear_black_24dp"
+            android:background="@android:color/transparent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
     </LinearLayout>
 
     <View

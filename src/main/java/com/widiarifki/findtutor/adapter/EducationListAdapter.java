@@ -46,7 +46,7 @@ public class EducationListAdapter extends ArrayAdapter<Education> {
 
             year.setText(education.getYearGraduate());
             schoolName.setText(education.getSchoolName());
-            deptLevel.setText(education.getSchoolLevelText() + "-" + education.getDepartment());
+            deptLevel.setText(education.getSchoolLevelText() + ", " + education.getDepartment());
         }
 
         return convertView;

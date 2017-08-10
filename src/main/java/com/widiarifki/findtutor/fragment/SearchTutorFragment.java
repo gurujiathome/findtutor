@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -44,12 +45,13 @@ public class SearchTutorFragment extends Fragment {
     TextView mTvSubject;
     TextView mTvLocation;
     TextView mTvDate;
+    ImageButton mBtnClearDate;
     TextView mTvGender;
     Button mBtnSearch;
 
-    int mSelectedD;
-    int mSelectedM;
-    int mSelectedY;
+    int mSelectedD = 0;
+    int mSelectedM = 0;
+    int mSelectedY = 0;
     int mSelectedGender;
 
     @Nullable
@@ -65,6 +67,7 @@ public class SearchTutorFragment extends Fragment {
         mTvSubject = (TextView) view.findViewById(R.id.tvSubject);
         mTvLocation = (TextView) view.findViewById(R.id.tvLocation);
         mTvDate = (TextView) view.findViewById(R.id.tvDate);
+        mBtnClearDate = (ImageButton) view.findViewById(R.id.btn_clear_date);
         mTvGender = (TextView) view.findViewById(R.id.tvGender);
         mBtnSearch = (Button) view.findViewById(R.id.btnSearchTutor);
         mBtnSearch.setOnClickListener(new View.OnClickListener() {
@@ -74,6 +77,7 @@ public class SearchTutorFragment extends Fragment {
                 Bundle params = new Bundle();
                 params.putInt(Constants.PARAM_KEY_GENDER, mSelectedGender);
                 Fragment fragment = new SearchTutorResultFragment();
+                //Fragment fragment = new TestSlideFragment();
                 fragment.setArguments(params);
                 mParentActivity.addStackedFragment(mThisFragment, fragment, getString(R.string.title_search_tutor_result), getString(R.string.title_search_tutor));
             }
@@ -101,17 +105,22 @@ public class SearchTutorFragment extends Fragment {
         selectDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Calendar c = Calendar.getInstance();
-                int year = c.get(Calendar.YEAR);
-                int month = c.get(Calendar.MONTH);
-                int day = c.get(Calendar.DAY_OF_MONTH);
+                int year = mSelectedY;
+                int month = mSelectedM - 1;
+                int day = mSelectedD;
+                if(mSelectedD == 0 && mSelectedM == 0 && mSelectedY == 0){
+                    final Calendar c = Calendar.getInstance();
+                    year = c.get(Calendar.YEAR);
+                    month = c.get(Calendar.MONTH);
+                    day = c.get(Calendar.DAY_OF_MONTH);
+                }
 
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mContext);
                 View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialog_layout_select_date, null);
                 final DatePicker datePicker = (DatePicker) dialogView.findViewById(R.id.datePicker);
                 datePicker.init(year, month, day, null);
                 datePicker.setMinDate(System.currentTimeMillis() - 1000);
 
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mContext);
                 dialogBuilder.setView(dialogView);
                 dialogBuilder.setNegativeButton(getString(R.string.action_cancel), new DialogInterface.OnClickListener() {
                     @Override
@@ -137,12 +146,23 @@ public class SearchTutorFragment extends Fragment {
             }
         });
 
+        mBtnClearDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mParentActivity.mSearchTutorDate = null;
+                updateTvDate();
+            }
+        });
+
         LinearLayout selectGender = (LinearLayout) view.findViewById(R.id.selectGender);
         selectGender.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialog_layout_select_gender, null);
                 final RadioGroup rgrupGender = (RadioGroup) dialogView.findViewById(R.id.rgrup_gender);
+                if(mSelectedGender == 1) rgrupGender.check(R.id.radio_opt_male);
+                if(mSelectedGender == 2) rgrupGender.check(R.id.radio_opt_male);
+                if(mSelectedGender == 0) rgrupGender.check(R.id.radio_opt_no_gender);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setTitle("Gender Preference (Optional)");
@@ -222,8 +242,21 @@ public class SearchTutorFragment extends Fragment {
     private void updateTvDate() {
         LocalDate date = mParentActivity.mSearchTutorDate;
         if(date != null) {
-            String dateStr = date.toString("dd MM yyy");
+            String dateStr = "";
+            if(date.equals(new LocalDate())) {
+                dateStr += "Hari ini";
+            }
+            else {
+                dateStr += Constants.DAY_INA[Integer.parseInt(date.toString("e")) - 1];
+            }
+            dateStr += ", ";
+            dateStr += date.toString("dd MMM yyy");
+
             mTvDate.setText(dateStr);
+            mBtnClearDate.setVisibility(View.VISIBLE);
+        }else{
+            mTvDate.setText(getString(R.string.title_search_select_date));
+            mBtnClearDate.setVisibility(View.GONE);
         }
     }
 }

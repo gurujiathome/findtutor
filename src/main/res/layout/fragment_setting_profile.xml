@@ -59,6 +59,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusableInTouchMode="true"
                 style="@style/formFieldLayout">
                 <TextView
                     android:id="@+id/label_name"
@@ -165,6 +166,7 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/fieldBio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/formFieldLayout">
@@ -186,11 +188,13 @@
                         android:lines="2"
                         android:maxLines="6"
                         android:gravity="top|left"
-                        android:scrollbars="vertical"/>
+                        android:scrollbars="vertical"
+                        android:imeOptions="actionDone"/>
                 </android.support.design.widget.TextInputLayout>
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/fieldEducation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/formFieldLayout">

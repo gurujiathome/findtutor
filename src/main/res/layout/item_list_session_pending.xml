@@ -13,6 +13,32 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/btnBgDefault"
+            android:visibility="visible">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="#dddddd"
+                android:paddingRight="@dimen/window_to_content_padding"
+                android:paddingLeft="@dimen/window_to_content_padding"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="4dp"
+                    android:text="Tipe Permintaan:"/>
+                <TextView
+                    android:id="@+id/tvFrequenceType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Pertemuan Sekali"/>
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
@@ -54,12 +80,29 @@
                             android:layout_width="16dp"
                             android:layout_height="16dp"
                             android:layout_marginRight="2dp"
-                            app:srcCompat="@drawable/ic_library_books_black_24dp"/>
+                            app:srcCompat="@drawable/ic_book_black_24dp"/>
                         <TextView
                             android:id="@+id/tvSubjectName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Bahasa Inggris"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="6dp">
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_marginRight="2dp"
+                            app:srcCompat="@drawable/ic_date_range_black_24dp"/>
+                        <TextView
+                            android:id="@+id/tvSchedule"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Selasa, 21 Feb 2017 - Selasa 30 Feb 2017"/>
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -72,10 +115,10 @@
                             android:layout_marginRight="2dp"
                             app:srcCompat="@drawable/ic_access_time_black_24dp"/>
                         <TextView
-                            android:id="@+id/tvSchedule"
+                            android:id="@+id/tvTime"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Selasa, 21 Feb 2017 08:00 - 10.00"/>
+                            android:text="08:00 - 10.00"/>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -97,27 +140,57 @@
                     android:text="SMPN 175 Jakarta, Jalan Bla Bla Bla, Kec Jagakarsa, Kel Lenteng Agung, Jakarta Selatan"/>
             </LinearLayout>
         </LinearLayout>
-        <Button
-            android:id="@+id/btnReschedule"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/action_reschedule"/>
+
         <LinearLayout
+            android:orientation="vertical"
+            android:id="@+id/layoutBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/btnReschedule"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/action_reschedule"
+                android:visibility="gone"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/btnAccept"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/action_accept"/>
+                <Button
+                    android:id="@+id/btnReject"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/action_reject"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutStatus"
+            android:background="#dddddd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <Button
-                android:id="@+id/btnAccept"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingRight="@dimen/window_to_content_padding"
+            android:paddingLeft="@dimen/window_to_content_padding"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/action_accept"/>
-            <Button
-                android:id="@+id/btnReject"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:text="Status: "/>
+            <TextView
+                android:id="@+id/tvStatus"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/action_reject"/>
+                android:text="Ditolak oleh tutor"/>
         </LinearLayout>
     </LinearLayout>
     <View

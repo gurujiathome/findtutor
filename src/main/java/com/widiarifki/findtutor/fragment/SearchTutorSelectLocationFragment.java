@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -77,12 +78,15 @@ public class SearchTutorSelectLocationFragment extends Fragment
     Context mContext;
     AppCompatActivity mContextActivity;
     private MapView mMapView;
-    private GoogleMap googleMap;
+    private GoogleMap mGoogleMap;
     private GoogleApiClient mGoogleApiClient;
     private FusedLocationProviderApi mFusedLocationClient;
     TextView mTvLocation;
+    Button mBtnCurrentLoc;
 
     Location mSelectedLocation;
+    String mSelectedLocationTxt;
+    System a;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -105,7 +109,14 @@ public class SearchTutorSelectLocationFragment extends Fragment
             /*((MainActivity)mContext).addStackedFragment(new SearchTutorDateFragment(), getString(R.string.title_search_select_date), getString(R.string.title_search_select_location));
             MainActivity.mSearchTutorLocation = mSelectedLocation;*/
         }
-        else if(id == R.id.action_save){
+        else if(id == R.id.action_save)
+        {
+            // Transfer val to activity
+            if(mSelectedLocation != null)
+                ((MainActivity)mContext).mSearchTutorLocation = mSelectedLocation;
+            if(mSelectedLocationTxt != null)
+                ((MainActivity)mContext).mSearchTutorLocationTxt = mSelectedLocationTxt;
+
             App.hideSoftKeyboard(mContext);
             ((MainActivity)mContext).removeFragmentFromStack(this);
         }
@@ -121,13 +132,38 @@ public class SearchTutorSelectLocationFragment extends Fragment
 
         View view = inflater.inflate(R.layout.fragment_search_tutor_select_location, container, false);
 
-        final ImageButton btnClear = (ImageButton) view.findViewById(R.id.btn_clear_autocomplete);
+        mMapView = (MapView) view.findViewById(R.id.mapView);
+        mMapView.onCreate(savedInstanceState);
+        mMapView.onResume(); // needed to get the map to display immediately
+        try {
+            MapsInitializer.initialize(getActivity().getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        mMapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap mMap) {
+                mGoogleMap = mMap;
+                /*checkLocationPermission();
+                mGoogleMap.setMyLocationEnabled(true);*/
+
+                if(((MainActivity)mContext).mSearchTutorLocation != null && ((MainActivity)mContext).mSearchTutorLocationTxt != null){
+                    mSelectedLocation = ((MainActivity)mContext).mSearchTutorLocation;
+                    updateMapMarker(((MainActivity)mContext).mSearchTutorLocationTxt);
+                }else {
+                    fetchLastLocation();
+                }
+            }
+        });
+
         final AutoCompleteTextView autoCompView = (AutoCompleteTextView) view.findViewById(R.id.input_search);
+        final ImageButton btnClear = (ImageButton) view.findViewById(R.id.btn_clear_autocomplete);
         final KeyListener autoCompViewListener = autoCompView.getKeyListener();
         autoCompView.setAdapter(new GooglePlacesAutocompleteAdapter(mContext, R.layout.item_list_place_autocomplete));
         autoCompView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                mTvLocation.setText("Mendapatkan alamat lokasi..");
                 GooglePlace selectedPlace = (GooglePlace) parent.getItemAtPosition(position);
                 final String fullPlaceDesc = selectedPlace.getName() + ", " + selectedPlace.getAddress().trim();
                 autoCompView.setText(fullPlaceDesc);
@@ -227,23 +263,12 @@ public class SearchTutorSelectLocationFragment extends Fragment
             }
         });
 
-        mMapView = (MapView) view.findViewById(R.id.mapView);
-        mMapView.onCreate(savedInstanceState);
-        mMapView.onResume(); // needed to get the map to display immediately
-        try {
-            MapsInitializer.initialize(getActivity().getApplicationContext());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        mMapView.getMapAsync(new OnMapReadyCallback() {
+        mBtnCurrentLoc = (Button) view.findViewById(R.id.btn_set_current_location);
+        mBtnCurrentLoc.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onMapReady(GoogleMap mMap) {
-                googleMap = mMap;
-
-                /*checkLocationPermission();
-                googleMap.setMyLocationEnabled(true);*/
-
+            public void onClick(View v) {
                 fetchLastLocation();
+                btnClear.performClick();
             }
         });
 
@@ -309,33 +334,33 @@ public class SearchTutorSelectLocationFragment extends Fragment
     }
 
     private void updateMapMarker(String locationText) {
+        mTvLocation.setText("Mendapatkan alamat lokasi..");
         if(mSelectedLocation != null){
-            googleMap.clear();
+            mGoogleMap.clear();
             // For dropping a marker at a point on the Map
-            LatLng sydney = new LatLng(mSelectedLocation.getLatitude(), mSelectedLocation.getLongitude());
-            googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
+            LatLng place = new LatLng(mSelectedLocation.getLatitude(), mSelectedLocation.getLongitude());
+            mGoogleMap.addMarker(new MarkerOptions().position(place).title("Marker Title").snippet("Marker Description"));
 
             // For zooming automatically to the location of the marker
-            CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
-            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            CameraPosition cameraPosition = new CameraPosition.Builder().target(place).zoom(12).build();
+            mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
+            mSelectedLocationTxt = locationText;
             mTvLocation.setText(locationText);
-            // Transfer val to activity
-            ((MainActivity)mContext).mSearchTutorLocation = mSelectedLocation;
-            ((MainActivity)mContext).mSearchTutorLocationTxt = locationText;
         }
     }
 
     private void updateMapMarker() {
+        mTvLocation.setText("Mendapatkan alamat lokasi..");
         if(mSelectedLocation != null){
-            googleMap.clear();
+            mGoogleMap.clear();
             // For dropping a marker at a point on the Map
             LatLng sydney = new LatLng(mSelectedLocation.getLatitude(), mSelectedLocation.getLongitude());
-            googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
+            mGoogleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
 
             // For zooming automatically to the location of the marker
             CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
-            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
             fetchAddressLocation(mSelectedLocation, ACTION_PRINT_ADDRESS_TO_TEXT);
         }
@@ -356,10 +381,8 @@ public class SearchTutorSelectLocationFragment extends Fragment
                             if (resultCode == Constants.SUCCESS_RESULT) {
                                 final String address = resultData.getString(Constants.RESULT_DATA_KEY);
                                 if(actionCode == ACTION_PRINT_ADDRESS_TO_TEXT){
+                                    mSelectedLocationTxt = address;
                                     mTvLocation.setText(address);
-                                    // Transfer val to activity
-                                    ((MainActivity)mContext).mSearchTutorLocation = mSelectedLocation;
-                                    ((MainActivity)mContext).mSearchTutorLocationTxt = address;
                                 }
                             } else {
                                 mTvLocation.setText("Lokasi anda tidak terdeteksi");
@@ -431,5 +454,11 @@ public class SearchTutorSelectLocationFragment extends Fragment
     @Override
     public void onLocationChanged(Location location) {
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        App.hideSoftKeyboard(mContext);
     }
 }

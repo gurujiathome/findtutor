@@ -18,9 +18,38 @@
         <item
             android:id="@+id/nav_fave_tutor"
             android:icon="@drawable/ic_star_black_24dp"
-            android:title="@string/menu_fave_tutor"/>
+            android:title="@string/menu_fave_tutor"
+            android:visible="false"/>
     </group>
+    <item android:title="@string/menu_preferences">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_set_basic_profile"
+                    android:icon="@drawable/ic_person_black_24dp"
+                    android:title="@string/basic_profile"/>
+                <item
+                    android:id="@+id/nav_set_account"
+                    android:icon="@drawable/ic_account_box_black_24dp"
+                    android:title="@string/account"
+                    android:visible="false"/>
+            </group>
+        </menu>
+    </item>
     <group android:checkableBehavior="single"
+           android:id="@+id/group_nav_second">
+        <!--<item
+            android:id="@+id/nav_preferences"
+            android:title="@string/menu_preferences"/>-->
+        <item
+            android:id="@+id/nav_help"
+            android:icon="@drawable/ic_help_black_24dp"
+            android:title="@string/menu_help"/>
+        <item
+            android:id="@+id/nav_logout"
+            android:title="Logout"/>
+    </group>
+    <!--<group android:checkableBehavior="single"
            android:id="@+id/group_nav_second">
         <item
             android:id="@+id/nav_preferences"
@@ -30,6 +59,6 @@
             android:id="@+id/nav_help"
             android:title="@string/menu_help"
             android:icon="@drawable/ic_help_black_24dp"/>
-    </group>
+    </group>-->
 
 </menu>

@@ -9,54 +9,186 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
+        android:paddingBottom="10dp"
         android:paddingLeft="@dimen/window_to_content_padding"
         android:paddingRight="@dimen/window_to_content_padding"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp">
-
-        <ImageView
-            android:id="@+id/imgvUserPhoto"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:src="@android:drawable/sym_def_app_icon"/>
+        android:paddingTop="10dp">
+        <!-- Informasi yg ditmpilkan: Foto, nama, Pendidikan, Price Rate, Km/Distance, Subjek, Rating -->
 
         <ImageView
             android:id="@+id/imgvIconNext"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_gravity="center_vertical"
             app:srcCompat="@drawable/ic_navigate_next_black_24dp"/>
 
         <LinearLayout
-            android:layout_toLeftOf="@id/imgvIconNext"
-            android:layout_toRightOf="@id/imgvUserPhoto"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp">
-            <TextView
-                android:id="@+id/tvName"
-                android:text="Widia Rifkianti"
-                android:layout_width="wrap_content"
+            android:layout_toLeftOf="@id/imgvIconNext"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/textPrimary"
-                android:textSize="16dp"/>
-            <TextView
-                android:id="@+id/tvDistance"
-                android:layout_width="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imgvUserPhoto"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@android:drawable/sym_def_app_icon"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="Widia Rifkianti"
+                        android:textColor="@color/textPrimary"
+                        android:textSize="16sp"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="8dp"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            style="@style/textIcon"
+                            app:srcCompat="@drawable/ic_library_books_black_24dp"
+                            android:layout_gravity="top"/>
+
+                        <TextView
+                            android:id="@+id/tvSubject"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Fisika"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/education"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            style="@style/textIcon"
+                            app:srcCompat="@drawable/ic_school_black_24dp"
+                            android:layout_gravity="top"/>
+
+                        <TextView
+                            android:id="@+id/tvEducation"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Univ Indonesia, Hukum"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_marginTop="12dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="5 km away"
-                android:textColor="@color/textLabel"
-                android:textStyle="italic"/>
+                android:gravity="center_vertical">
+
+                <LinearLayout
+                    android:id="@+id/distance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        style="@style/textIcon"
+                        app:srcCompat="@drawable/ic_place_black_24dp"/>
+
+                    <TextView
+                        android:id="@+id/tvDistance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="5 km away"
+                        android:textColor="@color/textPrimary"
+                        android:textStyle="italic"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_toRightOf="@id/distance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="6dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        style="@style/textIcon"
+                        app:srcCompat="@drawable/ic_attach_money_black_24dp"/>
+
+                    <TextView
+                        android:id="@+id/tvPriceRate"
+                        android:textColor="@color/textPrimary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rp 20000/Jam"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <RatingBar
+                        android:id="@+id/tutorRate"
+                        style="@style/Base.Widget.AppCompat.RatingBar.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:rating="1.75"
+                        android:stepSize="0.01"/>
+
+                    <TextView
+                        android:visibility="gone"
+                        android:id="@+id/tvTutorRate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="3dp"
+                        android:text="3.5"/>
+                </LinearLayout>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/sessionInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tvSessionInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sudah memiliki 5 sesi untuk hari ini"
+                    android:textStyle="italic"/>
+            </LinearLayout>
         </LinearLayout>
 
     </RelativeLayout>
+
+    <View style="@style/horizontalLineSeparator"/>
 
 </LinearLayout>

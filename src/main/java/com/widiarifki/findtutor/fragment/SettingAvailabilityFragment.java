@@ -128,14 +128,17 @@ public class SettingAvailabilityFragment extends Fragment {
         if(isAvailable == Constants.TUTOR_AVAILABLE){
             selectedRadio = (RadioButton) mAvailabilityOpt.findViewById(R.id.radio_opt_available);
             mListView.setBackgroundColor(getResources().getColor(R.color.listviewBgDisable));
+            mListView.setEnabled(false);
         }
         else if(isAvailable == Constants.TUTOR_UNAVAILABLE){
             selectedRadio = (RadioButton) mAvailabilityOpt.findViewById(R.id.radio_opt_unavailable);
             mListView.setBackgroundColor(getResources().getColor(R.color.listviewBgDisable));
+            mListView.setEnabled(false);
         }
         else if(isAvailable == Constants.TUTOR_AVAILABLE_BY_SCHEDULE){
             selectedRadio = (RadioButton) mAvailabilityOpt.findViewById(R.id.radio_opt_scheduled);
             mListView.setBackgroundColor(getResources().getColor(R.color.listviewBgDefault));
+            mListView.setEnabled(true);
         }
         selectedRadio.setChecked(true);
     }

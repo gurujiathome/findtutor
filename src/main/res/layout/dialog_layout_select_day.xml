@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:padding="@dimen/window_to_content_padding">
+    <CheckBox android:id="@+id/cbox1"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="Senin"/>
+    <CheckBox android:id="@+id/cbox2"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="Selasa"/>
+    <CheckBox android:id="@+id/cbox3"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="Rabu"/>
+    <CheckBox android:id="@+id/cbox4"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="Kamis"/>
+    <CheckBox android:id="@+id/cbox5"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="Jumat"/>
+    <CheckBox android:id="@+id/cbox6"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="Sabtu"/>
+    <CheckBox android:id="@+id/cbox7"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="Minggu"/>
+</LinearLayout>

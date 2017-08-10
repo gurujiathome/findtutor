@@ -31,15 +31,16 @@ public class AvailabilityAdapter extends ArrayAdapter<Day> {
     SessionManager mSessionManager;
     User mUserLogin;
     HashMap<String, List<Integer>> mUserTimeslots;
+    int mLayout = 0;
     //HashMap<String, List<AvailabilityPerDay>> mUserAvailability;
 
-    public AvailabilityAdapter(@NonNull Context context, @NonNull List<Day> objects) {
-        super(context, 0, objects);
+    public AvailabilityAdapter(@NonNull Context context, @NonNull List<Day> days) {
+        super(context, 0, days);
         mContext = context;
         mSessionManager = new SessionManager(mContext);
-        mDays = objects;
+        mDays = days;
         mUserLogin = mSessionManager.getUserDetail();
-        if(mUserLogin.getTimeslots() != null){
+        if (mUserLogin.getTimeslots() != null) {
             mUserTimeslots = mUserLogin.getTimeslots();
         }
         /*if(mUserLogin.getAvailabilities() != null){
@@ -47,11 +48,23 @@ public class AvailabilityAdapter extends ArrayAdapter<Day> {
         }*/
     }
 
+    public AvailabilityAdapter(@NonNull Context context, @NonNull List<Day> days, @NonNull HashMap<String, List<Integer>> timeslots) {
+        super(context, 0, days);
+        mContext = context;
+        mSessionManager = new SessionManager(mContext);
+        mDays = days;
+        mUserTimeslots = timeslots;
+        mLayout = R.layout.item_list_tutor_availability_info;
+    }
+
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_list_tutor_availability, null);
+            if(mLayout == 0)
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_list_tutor_availability, null);
+            else
+                convertView = LayoutInflater.from(getContext()).inflate(mLayout, null);
         }
 
         TextView tvDay = (TextView) convertView.findViewById(R.id.text_day);

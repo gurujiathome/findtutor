@@ -53,9 +53,25 @@
             android:textSize="16sp"/>
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rvHourPicker"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingLeft="@dimen/window_to_content_padding"
+        android:paddingRight="@dimen/window_to_content_padding"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp">
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvHourPicker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
 
 </LinearLayout>

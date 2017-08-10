@@ -1,5 +1,6 @@
 package com.widiarifki.findtutor.fragment;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -7,19 +8,23 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -29,7 +34,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -40,9 +47,9 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import com.widiarifki.findtutor.R;
 import com.widiarifki.findtutor.adapter.EducationListAdapter;
 import com.widiarifki.findtutor.app.App;
+import com.widiarifki.findtutor.app.SessionManager;
 import com.widiarifki.findtutor.helper.CircleTransform;
 import com.widiarifki.findtutor.helper.RunnableDialogMessage;
-import com.widiarifki.findtutor.app.SessionManager;
 import com.widiarifki.findtutor.model.Education;
 import com.widiarifki.findtutor.model.SubjectTopic;
 import com.widiarifki.findtutor.model.User;
@@ -94,7 +101,8 @@ public class SettingProfileFragment extends Fragment {
     Button mBtnSave;
     Button mBtnAddEdu;
     Button mBtnChooseSubject;
-
+    private RelativeLayout mFieldBio;
+    private RelativeLayout mFieldEducation;
     ProgressDialog mProgressDialog;
 
     int mSchoolLevelListLn;
@@ -136,23 +144,36 @@ public class SettingProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mContext = container.getContext();
+        mContextActivity = (Activity)mContext;
         View view = inflater.inflate(R.layout.fragment_setting_profile, container, false);
 
         mSession = new SessionManager(mContext);
         mUserLogin = mSession.getUserDetail();
 
         mProgressDialog = new ProgressDialog(mContext);
-        mProgressDialog.setCancelable(true);
-        settleRefData();
+        if(mUserLogin.getIsTutor() == 1)
+            fetchRefData();
 
         // Bind UI comp.
         mFormLayout = (LinearLayout) view.findViewById(R.id.form_layout);
+        mFieldBio = (RelativeLayout) view.findViewById(R.id.fieldBio);
+        mFieldEducation = (RelativeLayout) view.findViewById(R.id.fieldEducation);
         mImgUserPhoto = (ImageView) view.findViewById(R.id.imgv_profile_photo);
         mInputName = (EditText) view.findViewById(R.id.input_name);
         mRgrupGender = (RadioGroup) view.findViewById(R.id.rgrup_gender);
         //mInputEmail = (EditText) view.findViewById(R.id.input_email);
         mInputPhone = (EditText) view.findViewById(R.id.input_phone);
         mInputBio = (EditText) view.findViewById(R.id.input_bio);
+        mInputBio.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    // Do whatever you want here
+                    return true;
+                }
+                return false;
+            }
+        });
         mBtnTakePhoto = (Button) view.findViewById(R.id.btn_take_photo);
         mBtnTakePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,7 +185,7 @@ public class SettingProfileFragment extends Fragment {
         mBtnPickPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                pickPicture();
             }
         });
         mEducations = new ArrayList<Education>();
@@ -181,7 +202,6 @@ public class SettingProfileFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         String selectedAction = actions[which];
                         if(selectedAction == "Edit"){
-                            //mFormLayout.requestFocus();
                             actionUpdateEducation(false, position);
                         }
                         else if(selectedAction == "Hapus"){
@@ -227,7 +247,6 @@ public class SettingProfileFragment extends Fragment {
         mBtnAddEdu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //mFormLayout.requestFocus();
                 actionUpdateEducation(true, 0);
             }
         });
@@ -242,9 +261,24 @@ public class SettingProfileFragment extends Fragment {
         });
         mSavedSubject = ((MainActivity)getActivity()).getSelectedSubject();*/
 
+        adjustWithUserType();
         bindInitialData();
 
         return view;
+    }
+
+    void pickPicture(){
+        CropImage.startPickImageActivity(mContext, this);
+    }
+
+    private void adjustWithUserType() {
+        if(mUserLogin.getIsTutor() == 0){
+            mFieldBio.setVisibility(View.GONE);
+            mFieldEducation.setVisibility(View.GONE);
+        }else{
+            mFieldBio.setVisibility(View.VISIBLE);
+            mFieldEducation.setVisibility(View.VISIBLE);
+        }
     }
 
     void bindInitialData(){
@@ -283,7 +317,7 @@ public class SettingProfileFragment extends Fragment {
         super.onResume();
     }
 
-    private void settleRefData() {
+    private void fetchRefData() {
         mProgressDialog.setMessage("Tunggu sebentar...");
         if(!mProgressDialog.isShowing()) mProgressDialog.show();
 
@@ -295,7 +329,7 @@ public class SettingProfileFragment extends Fragment {
         httpCall.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-
+                new RunnableDialogMessage(mContext, "Gagal mendapatkan data tingkat pendidikan", e.getMessage(), mProgressDialog);
             }
 
             @Override
@@ -313,17 +347,17 @@ public class SettingProfileFragment extends Fragment {
                             mSchoolLevelMap.put(i, dataObj.getString("REF_CODE"));
                         }
                         /** Hide progress bae **/
-                        getActivity().runOnUiThread(new Runnable() {
+                        mContextActivity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 if(mProgressDialog.isShowing()) mProgressDialog.dismiss();
                             }
                         });
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        new RunnableDialogMessage(mContext, "Gagal mendapatkan data tingkat pendidikan", e.getMessage(), mProgressDialog);
                     }
                 }else{
-
+                    new RunnableDialogMessage(mContext, "Gagal mendapatkan data tingkat pendidikan", response.message(), mProgressDialog);
                 }
             }
         });
@@ -372,6 +406,7 @@ public class SettingProfileFragment extends Fragment {
         return image;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             // start picker to get image for cropping and then use the image in cropping activity
@@ -382,6 +417,25 @@ public class SettingProfileFragment extends Fragment {
                     .setAllowFlipping(false)
                     .setActivityTitle("Tampilan Foto")
                     .start(getContext(), this);
+        }
+
+        else if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            Uri imageUri = CropImage.getPickImageResultUri(mContext, data);
+            mPhotoUri = imageUri;
+            // For API >= 23 we need to check specifically that we have permissions to read external storage.
+            if (CropImage.isReadExternalStoragePermissionsRequired(mContext, imageUri)) {
+                // request permissions and handle the result in onRequestPermissionsResult()
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, CropImage.PICK_IMAGE_PERMISSIONS_REQUEST_CODE);
+            } else {
+                // no permissions required or already grunted, can start crop image activity
+                CropImage.activity(mPhotoUri)
+                        .setGuidelines(CropImageView.Guidelines.OFF)
+                        .setCropShape(CropImageView.CropShape.OVAL)
+                        .setFixAspectRatio(true)
+                        .setAllowFlipping(false)
+                        .setActivityTitle("Tampilan Foto")
+                        .start(getContext(), this);
+            }
         }
 
         else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
@@ -400,13 +454,8 @@ public class SettingProfileFragment extends Fragment {
     private void actionUpdateEducation(final boolean isNewData, final int editedItemPos){
         View currentFocus = getActivity().getCurrentFocus();
         if (currentFocus != null) currentFocus.clearFocus();
-        //getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);*/
 
-        /*InputMethodManager inputManager = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputManager.hideSoftInputFromWindow(currentFocus.getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);*/
         App.hideSoftKeyboard(mContext);
-
-        //mBtnAddEdu.requestFocus();
 
         final View dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialog_layout_add_edu, null);
         final EditText inputYear = (EditText) dialogView.findViewById(R.id.input_year);
@@ -456,18 +505,16 @@ public class SettingProfileFragment extends Fragment {
                     mEduListAdapter.notifyDataSetChanged();
                 }
 
-                //View currentFocus = getActivity().getCurrentFocus();
-                //if (currentFocus != null) currentFocus.clearFocus();
-                //dialogView.requestFocus();
-                mFormLayout.requestFocus();
+                /*mFormLayout.requestFocus();
                 View currentFocus = getActivity().getCurrentFocus();
-                if (currentFocus != null) currentFocus.clearFocus();
+                if (currentFocus != null) currentFocus.clearFocus();*/
+                mListviewEducation.requestFocus();
                 //getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);*/
 
                 /*InputMethodManager inputManager = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputManager.hideSoftInputFromWindow(currentFocus.getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);*/
                 App.hideSoftKeyboard(mContext);
-                //dialog.dismiss();
+                //mDialog.dismiss();
             }
         });
         AlertDialog alertDialog = dialogBuilder.create();

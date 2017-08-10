@@ -4,8 +4,11 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +19,9 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
+import com.widiarifki.findtutor.MainActivity;
 import com.widiarifki.findtutor.R;
+import com.widiarifki.findtutor.RateTutorActivity;
 import com.widiarifki.findtutor.app.App;
 import com.widiarifki.findtutor.app.Constants;
 import com.widiarifki.findtutor.helper.CircleTransform;
@@ -27,6 +32,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.List;
 
 import okhttp3.Call;
@@ -67,13 +73,16 @@ public class SessionAcceptedAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         final Session dataItem = mSessionList.get(position);
         final int idSession = dataItem.getId();
         final String name = dataItem.getUser().getName();
         String subject = dataItem.getSubject();
-        String schedule = dataItem.getScheduleDate() + " " + dataItem.getStartHour() + " " + dataItem.getEndHour();
-        String location = dataItem.getLocationAddress() + " (" + dataItem.getDistanceBetween() + " km)";
+        String displayDate = App.convertDateFormat("yyyy-MM-dd", "EEE, d MMM yyyy", dataItem.getScheduleDate());
+        final String schedule = displayDate;
+        String time = TextUtils.substring(dataItem.getStartHour(), 0, 5) + " - " + TextUtils.substring(dataItem.getEndHour(), 0, 5);
+        DecimalFormat df = new DecimalFormat("#.#");
+        String location = dataItem.getLocationAddress() + " (" + df.format(dataItem.getDistanceBetween()) + " km)";
         int status = dataItem.getStatus();
         String photoUrl = App.URL_PATH_PHOTO + dataItem.getUser().getPhotoUrl();
         RequestCreator photoRequest = Picasso.with(mContext).load(photoUrl)
@@ -86,17 +95,13 @@ public class SessionAcceptedAdapter extends RecyclerView.Adapter {
         viewHolder.tvName.setText(name);
         viewHolder.tvSubjectName.setText(subject);
         viewHolder.tvSchedule.setText(schedule);
+        viewHolder.tvTime.setText(time);
         viewHolder.tvLocation.setText(location);
-        if(mUserContextAs == Constants.SESSION_CONTEXT_AS_TUTOR){
-            viewHolder.btnStart.setVisibility(View.GONE);
-        }else{
-            viewHolder.btnStart.setVisibility(View.VISIBLE);
-        }
-        viewHolder.btnStart.setOnClickListener(new View.OnClickListener() {
+        viewHolder.btnCancelSession.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mContext)
-                        .setMessage(mContext.getString(R.string.confirm_message_start_session) + " " + name + "?")
+                        .setMessage("Anda yakin akan membatalkan jadwal sesi ini?")
                         .setNegativeButton(mContext.getString(R.string.action_cancel), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -106,23 +111,79 @@ public class SessionAcceptedAdapter extends RecyclerView.Adapter {
                         .setPositiveButton(mContext.getString(R.string.action_yes), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                startSession(idSession, viewHolder);
+                                cancelSession(dataItem, viewHolder, position);
                             }
                         });
                 AlertDialog dialog = dialogBuilder.create();
                 dialog.show();
             }
         });
-        viewHolder.btnCancel.setOnClickListener(new View.OnClickListener() {
+        viewHolder.btnStartSession.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mContext)
+                        .setMessage(mContext.getString(R.string.confirm_message_start_session))
+                        .setNegativeButton(mContext.getString(R.string.action_cancel), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
 
+                            }
+                        })
+                        .setPositiveButton(mContext.getString(R.string.action_yes), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                startSession(dataItem, viewHolder);
+                            }
+                        });
+                AlertDialog dialog = dialogBuilder.create();
+                dialog.show();
+            }
+        });
+        viewHolder.btnEndSession.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mContext)
+                        .setMessage(mContext.getString(R.string.confirm_message_end_session))
+                        .setNegativeButton(mContext.getString(R.string.action_cancel), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .setPositiveButton(mContext.getString(R.string.action_yes), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                endSession(dataItem);
+                            }
+                        });
+                AlertDialog dialog = dialogBuilder.create();
+                dialog.show();
             }
         });
 
         if(status == Constants.SESSION_STARTED){
             viewHolder.layoutBtn.setVisibility(View.GONE);
-            viewHolder.layoutInfoStarted.setVisibility(View.VISIBLE);
+            viewHolder.layoutStartedStatus.setVisibility(View.VISIBLE);
+            viewHolder.textStartedStatus.setVisibility(View.VISIBLE);
+            if(mUserContextAs == Constants.SESSION_CONTEXT_AS_STUDENT){
+                viewHolder.textStartedStatus.setText("Sesi belajar telah dimulai. Tap tombol \""+mContext.getString(R.string.action_end_session)+"\" saat sesi telah berakhir");
+                viewHolder.btnStartSession.setVisibility(View.GONE);
+                viewHolder.btnEndSession.setVisibility(View.VISIBLE);
+            }else{
+                viewHolder.textStartedStatus.setText("Sesi belajar telah dimulai.");
+                viewHolder.btnStartSession.setVisibility(View.GONE);
+                viewHolder.btnEndSession.setVisibility(View.GONE);
+            }
+        }else{
+            viewHolder.layoutBtn.setVisibility(View.VISIBLE);
+            if(mUserContextAs == Constants.SESSION_CONTEXT_AS_STUDENT){
+                viewHolder.layoutStartedStatus.setVisibility(View.VISIBLE);
+                viewHolder.textStartedStatus.setText("Tap tombol \""+mContext.getString(R.string.action_start_session)+"\" saat sesi belajar akan dimulai");
+                viewHolder.btnStartSession.setVisibility(View.VISIBLE);
+                viewHolder.btnEndSession.setVisibility(View.GONE);
+            }else{
+                viewHolder.layoutStartedStatus.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -136,11 +197,14 @@ public class SessionAcceptedAdapter extends RecyclerView.Adapter {
         public TextView tvName;
         public TextView tvSubjectName;
         public TextView tvSchedule;
+        private final TextView tvTime;
         public TextView tvLocation;
-        public Button btnStart;
-        public Button btnCancel;
+        public Button btnStartSession;
+        public Button btnCancelSession;
+        public Button btnEndSession;
         public LinearLayout layoutBtn;
-        public LinearLayout layoutInfoStarted;
+        public LinearLayout layoutStartedStatus;
+        public TextView textStartedStatus;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -148,18 +212,21 @@ public class SessionAcceptedAdapter extends RecyclerView.Adapter {
             tvName = (TextView) itemView.findViewById(R.id.tvName);
             tvSubjectName = (TextView) itemView.findViewById(R.id.tvSubjectName);
             tvSchedule = (TextView) itemView.findViewById(R.id.tvSchedule);
+            tvTime = (TextView) itemView.findViewById(R.id.tvTime);
             tvLocation = (TextView) itemView.findViewById(R.id.tvLocation);
-            btnStart = (Button) itemView.findViewById(R.id.btnStart);
-            btnCancel = (Button) itemView.findViewById(R.id.btnCancel);
+            btnStartSession = (Button) itemView.findViewById(R.id.btnStartSession);
+            btnCancelSession = (Button) itemView.findViewById(R.id.btnCancelSession);
+            btnEndSession = (Button) itemView.findViewById(R.id.btnEndSession);
             layoutBtn = (LinearLayout) itemView.findViewById(R.id.layoutBtn);
-            layoutInfoStarted = (LinearLayout) itemView.findViewById(R.id.layoutInfoStarted);
+            layoutStartedStatus = (LinearLayout) itemView.findViewById(R.id.layoutStartedStatus);
+            textStartedStatus = (TextView) itemView.findViewById(R.id.textStartedStatus);
         }
     }
 
-    private void startSession(int idSession, final MyViewHolder viewHolder) {
+    private void startSession(final Session dataItem, final MyViewHolder viewHolder) {
         OkHttpClient httpClient = new OkHttpClient();
         FormBody formBody = new FormBody.Builder()
-                .add("id_session", idSession+"")
+                .add("id_session", dataItem.getId() + "")
                 .build();
         Request httpRequest = new Request.Builder()
                 .url(App.URL_POST_SESSION_START)
@@ -179,29 +246,158 @@ public class SessionAcceptedAdapter extends RecyclerView.Adapter {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful() && response.code() == 200) {
+                    String json = response.body().string();
+                    JSONObject jsonObject = null;
+                    try {
+                        jsonObject = new JSONObject(json);
+                        int success = jsonObject.getInt("success");
+                        if(success == 1){
+                            JSONObject dataReturn = jsonObject.getJSONObject("data");
+                            String dateHeld = dataReturn.getString("date_held");
+                            String startHourHeld = dataReturn.getString("start_hour_held");
+                            dataItem.setDateHeld(dateHeld);
+                            dataItem.setStartHourHeld(startHourHeld);
+                            ((Activity) mContext).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mProgressDialog.dismiss();
+                                    viewHolder.layoutBtn.setVisibility(View.GONE);
+                                    viewHolder.layoutStartedStatus.setVisibility(View.VISIBLE);
+                                    viewHolder.textStartedStatus.setText("Sesi belajar telah dimulai. Tap tombol \""+mContext.getString(R.string.action_end_session)+"\" untuk mengakhiri sesi");
+                                    viewHolder.btnStartSession.setVisibility(View.GONE);
+                                    viewHolder.btnEndSession.setVisibility(View.VISIBLE);
+                                }
+                            });
+                        }else{
+                            String message = jsonObject.getString("message");
+                            new RunnableDialogMessage(mContext, "", message, mProgressDialog);
+                        }
+                    } catch (JSONException e) {
+                        new RunnableDialogMessage(mContext, "", e.getMessage(), mProgressDialog);
+                    }
+                } else {
+                    new RunnableDialogMessage(mContext, "", response.message(), mProgressDialog);
+                }
+            }
+        });
+    }
+
+    private void endSession(final Session dataSession) {
+        OkHttpClient httpClient = new OkHttpClient();
+        FormBody formBody = new FormBody.Builder()
+                .add("id_session", dataSession.getId()+"")
+                .build();
+        Request httpRequest = new Request.Builder()
+                .url(App.URL_POST_SESSION_END)
+                .post(formBody)
+                .build();
+        Call httpCall = httpClient.newCall(httpRequest);
+
+        mProgressDialog.setMessage("Mengakhiri sesi...");
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.show();
+
+        httpCall.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
                 if(response.isSuccessful() && response.code() == 200){
                     String json = response.body().string();
                     JSONObject jsonObject = null;
                     try {
                         jsonObject = new JSONObject(json);
-                        final int success = jsonObject.getInt("success");
-                        final String message = jsonObject.getString("message");
-                        ((Activity)mContext).runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if(success == 1){
+                        int success = jsonObject.getInt("success");
+                        if(success == 1){
+                            JSONObject dataReturn = jsonObject.getJSONObject("data");
+                            String endHourHeld = dataReturn.getString("end_hour_held");
+                            dataSession.setEndHourHeld(endHourHeld);
+                            ((Activity)mContext).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
                                     mProgressDialog.dismiss();
-                                    viewHolder.layoutBtn.setVisibility(View.GONE);
-                                    viewHolder.layoutInfoStarted.setVisibility(View.VISIBLE);
-                                }else{
-                                    new RunnableDialogMessage(mContext, "", message, mProgressDialog);
+
+                                    Bundle params = new Bundle();
+                                    params.putInt("id_session", dataSession.getId());
+                                    params.putString(Constants.PARAM_KEY_NAME, dataSession.getUser().getName());
+                                    params.putString(Constants.PARAM_KEY_PHOTO_URL, dataSession.getUser().getPhotoUrl());
+                                    params.putString(Constants.PARAM_KEY_SUBJECT_NAME, dataSession.getSubject());
+                                    params.putString("date_held", dataSession.getDateHeld());
+                                    params.putString("start_hour_held", dataSession.getStartHourHeld());
+                                    params.putString("end_hour_held", dataSession.getEndHourHeld());
+
+                                    Intent rateIntent = new Intent(mContext, RateTutorActivity.class);
+                                    rateIntent.putExtras(params);
+
+                                    mContext.startActivity(rateIntent);
+                                    ((MainActivity)mContext).finish();
                                 }
-                            }
-                        });
+                            });
+                        }else{
+                            String message = jsonObject.getString("message");
+                            new RunnableDialogMessage(mContext, "", message, mProgressDialog);
+                        }
+                        final String message = jsonObject.getString("message");
                     } catch (JSONException e) {
                         new RunnableDialogMessage(mContext, "", e.getMessage(), mProgressDialog);
                     }
                 }else{
+                    new RunnableDialogMessage(mContext, "", response.message(), mProgressDialog);
+                }
+            }
+        });
+    }
+
+    private void cancelSession(final Session dataItem, MyViewHolder viewHolder, final int dataIndex) {
+        OkHttpClient httpClient = new OkHttpClient();
+        FormBody formBody = new FormBody.Builder()
+                .add("id_session", dataItem.getId() + "")
+                .add("user_context", mUserContextAs + "")
+                .build();
+        Request httpRequest = new Request.Builder()
+                .url(App.URL_POST_SESSION_CANCEL)
+                .post(formBody)
+                .build();
+        Call httpCall = httpClient.newCall(httpRequest);
+
+        mProgressDialog.setMessage("Membatalkan sesi...");
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.show();
+
+        httpCall.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful() && response.code() == 200) {
+                    String json = response.body().string();
+                    JSONObject jsonObject = null;
+                    try {
+                        jsonObject = new JSONObject(json);
+                        int success = jsonObject.getInt("success");
+                        if(success == 1){
+                            ((Activity) mContext).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mProgressDialog.dismiss();
+                                    String dialogTitle = "Jadwal sesi berhasil dibatalkan";
+                                    App.showSimpleDialog(mContext, dialogTitle);
+                                    mSessionList.remove(dataIndex);
+                                    notifyDataSetChanged();
+                                }
+                            });
+                        }
+                    } catch (JSONException e) {
+                        new RunnableDialogMessage(mContext, "", e.getMessage(), mProgressDialog);
+                    }
+                } else {
                     new RunnableDialogMessage(mContext, "", response.message(), mProgressDialog);
                 }
             }

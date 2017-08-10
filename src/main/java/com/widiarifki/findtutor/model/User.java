@@ -30,6 +30,11 @@ public class User {
     private String mLongitude;
     private String mLocationAddress;
     private double mDistanceFromRequestor;
+    private String mLastSchool;
+    private String mLastSchoolDept;
+    private String mSubjectStr;
+    private int mHasBookedOnDate;
+    private double mAvgRateOverall;
 
     public int getId() {
         return mId;
@@ -201,5 +206,45 @@ public class User {
 
     public void setDistanceFromRequestor(double distanceFromRequestor) {
         mDistanceFromRequestor = distanceFromRequestor;
+    }
+
+    public String getLastSchool() {
+        return mLastSchool;
+    }
+
+    public void setLastSchool(String lastSchool) {
+        mLastSchool = lastSchool;
+    }
+
+    public String getLastSchoolDept() {
+        return mLastSchoolDept;
+    }
+
+    public void setLastSchoolDept(String lastSchoolDept) {
+        mLastSchoolDept = lastSchoolDept;
+    }
+
+    public String getSubjectStr() {
+        return mSubjectStr;
+    }
+
+    public void setSubjectStr(String subjectStr) {
+        mSubjectStr = subjectStr;
+    }
+
+    public int getHasBookedOnDate() {
+        return mHasBookedOnDate;
+    }
+
+    public void setHasBookedOnDate(int hasBookedOnDate) {
+        mHasBookedOnDate = hasBookedOnDate;
+    }
+
+    public double getAvgRateOverall() {
+        return mAvgRateOverall;
+    }
+
+    public void setAvgRateOverall(double avgRateOverall) {
+        mAvgRateOverall = avgRateOverall;
     }
 }

@@ -18,6 +18,11 @@ import com.widiarifki.findtutor.CompleteProfileActivity;
 import com.widiarifki.findtutor.MainActivity;
 import com.widiarifki.findtutor.model.User;
 
+import org.joda.time.LocalDate;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -39,11 +44,23 @@ public class App {
     public static String URL_GET_SUBJECT_LIST = "http://app-widiarifki.rhcloud.com/api/get-list-subject";
     public static String URL_REQUEST_TUTOR = "http://app-widiarifki.rhcloud.com/api/post-request-tutor";
     public static String URL_GET_TUTOR_INFO = "http://app-widiarifki.rhcloud.com/api/get-tutor-info";
+    public static String URL_GET_TUTOR_TIMESLOT = "http://app-widiarifki.rhcloud.com/api/get-tutor-timeslot";
     public static String URL_GET_TUTOR_TIME = "http://app-widiarifki.rhcloud.com/api/get-tutor-available-time";
     public static String URL_BOOK_TUTOR = "http://app-widiarifki.rhcloud.com/api/post-book-tutor";
     public static String URL_GET_SESSION = "http://app-widiarifki.rhcloud.com/api/get-session";
+    public static String URL_GET_SESSION_PENDING = "http://app-widiarifki.rhcloud.com/api/get-session-pending";
+    public static String URL_GET_SESSION_ACCEPTED = "http://app-widiarifki.rhcloud.com/api/get-session-accepted";
     public static String URL_POST_SESSION_APPROVAL = "http://app-widiarifki.rhcloud.com/api/post-session-approval";
+    public static String URL_POST_SESSION_APPROVAL_REGULAR = "http://app-widiarifki.rhcloud.com/api/post-session-approval-reg";
     public static String URL_POST_SESSION_START = "http://app-widiarifki.rhcloud.com/api/post-session-start";
+    public static String URL_POST_SESSION_END = "http://app-widiarifki.rhcloud.com/api/post-session-end";
+    public static String URL_POST_STUDENT_FEEDBACK = "http://app-widiarifki.rhcloud.com/api/post-student-feedback";
+    public static String URL_GET_SESSION_OVERVIEW = "http://app-widiarifki.rhcloud.com/api/get-session-overview";
+    public static String URL_POST_USER_COMPLAIN = "http://app-widiarifki.rhcloud.com/api/post-user-complain";
+    public static String URL_POST_TUTOR_FEEDBACK = "http://app-widiarifki.rhcloud.com/api/post-tutor-feedback";
+    public static String URL_GET_USER_COMPLAIN = "http://app-widiarifki.rhcloud.com/api/get-user-complain";
+    public static String URL_POST_SESSION_CANCEL = "http://app-widiarifki.rhcloud.com/api/post-session-cancel";
+    public static String URL_POST_BOOK_REGULAR = "http://app-widiarifki.rhcloud.com/api/book-regular";
 
     public static String URL_PATH_PHOTO = "http://app-widiarifki.rhcloud.com/uploads/user/photo/";
 
@@ -133,5 +150,25 @@ public class App {
         InputMethodManager inputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         if(((AppCompatActivity) context).getCurrentFocus() != null)
             inputManager.hideSoftInputFromWindow(((AppCompatActivity) context).getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+    public static String convertDateFormat(String formatX, String formatY, String dateStr){
+        SimpleDateFormat fromFormat = new SimpleDateFormat(formatX);
+        fromFormat.setLenient(false);
+        SimpleDateFormat toFormat = new SimpleDateFormat(formatY);
+        toFormat.setLenient(false);
+        Date date = null;
+        try {
+            date = fromFormat.parse(dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        String returnStr = toFormat.format(date);
+        if(formatY.indexOf("EEE") >= 0){
+            LocalDate localDate = new LocalDate(date);
+            String dayInIna = Constants.DAY_INA[localDate.getDayOfWeek() - 1];
+            returnStr = returnStr.replace(returnStr.substring(0,3), dayInIna);
+        }
+        return returnStr;
     }
 }

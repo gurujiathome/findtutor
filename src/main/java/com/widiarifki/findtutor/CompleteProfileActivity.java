@@ -1,5 +1,6 @@
 package com.widiarifki.findtutor;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -7,10 +8,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.IdRes;
+import android.support.annotation.RequiresApi;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -31,9 +34,9 @@ import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 import com.widiarifki.findtutor.app.App;
+import com.widiarifki.findtutor.app.SessionManager;
 import com.widiarifki.findtutor.helper.CircleTransform;
 import com.widiarifki.findtutor.helper.RunnableDialogMessage;
-import com.widiarifki.findtutor.app.SessionManager;
 import com.widiarifki.findtutor.model.User;
 
 import org.json.JSONException;
@@ -82,6 +85,7 @@ public class CompleteProfileActivity extends AppCompatActivity implements Vertic
     Uri mSavedPhotoUri;
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
+    static final int REQUEST_IMAGE_GALLERY = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -383,9 +387,10 @@ public class CompleteProfileActivity extends AppCompatActivity implements Vertic
     }
 
     void pickPicture(){
-
+        CropImage.startPickImageActivity(CompleteProfileActivity.this);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             // start picker to get image for cropping and then use the image in cropping activity
@@ -396,6 +401,25 @@ public class CompleteProfileActivity extends AppCompatActivity implements Vertic
                     .setAllowFlipping(false)
                     .setActivityTitle("Tampilan Foto")
                     .start(this);
+        }
+
+        else if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == RESULT_OK) {
+            Uri imageUri = CropImage.getPickImageResultUri(this, data);
+            mPhotoUri = imageUri;
+            // For API >= 23 we need to check specifically that we have permissions to read external storage.
+            if (CropImage.isReadExternalStoragePermissionsRequired(this, imageUri)) {
+                // request permissions and handle the result in onRequestPermissionsResult()
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, CropImage.PICK_IMAGE_PERMISSIONS_REQUEST_CODE);
+            } else {
+                // no permissions required or already grunted, can start crop image activity
+                CropImage.activity(mPhotoUri)
+                        .setGuidelines(CropImageView.Guidelines.OFF)
+                        .setCropShape(CropImageView.CropShape.OVAL)
+                        .setFixAspectRatio(true)
+                        .setAllowFlipping(false)
+                        .setActivityTitle("Tampilan Foto")
+                        .start(this);
+            }
         }
 
         else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {

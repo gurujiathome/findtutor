@@ -87,6 +87,7 @@ public class SettingTutorPrefFragment extends Fragment implements LocationListen
 
     private Context mContext;
     private Activity mContextActivity;
+    MainActivity mParentActivity;
     private String dialogTitle = "Submit Data Gagal";
 
     SessionManager mSession;
@@ -113,8 +114,6 @@ public class SettingTutorPrefFragment extends Fragment implements LocationListen
     int REQUEST_PLACE_PICKER = 1;
     int ACTION_PRINT_ADDRESS_TO_TEXT = 1;
     int ACTION_SHOW_ADDRESS_TO_DIALOG = 2;
-
-    MainActivity mParentActivity;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -144,15 +143,16 @@ public class SettingTutorPrefFragment extends Fragment implements LocationListen
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mContext = container.getContext();
         mContextActivity = (Activity) mContext;
-        mParentActivity = (MainActivity) getActivity();
+        mParentActivity = (MainActivity) mContext;
+
         buildGoogleApi();
+
         final View view = inflater.inflate(R.layout.fragment_setting_tutor_pref, container, false);
 
         mSession = new SessionManager(mContext);
         mUserLogin = mSession.getUserDetail();
 
         mProgressDialog = new ProgressDialog(mContext);
-        mProgressDialog.setCancelable(true);
 
         // Bind UI comp.
         mFormLayout = (LinearLayout) view.findViewById(R.id.form_layout);
@@ -237,7 +237,7 @@ public class SettingTutorPrefFragment extends Fragment implements LocationListen
             @Override
             public void onClick(View v) {
                 Fragment fragment = new SettingSelectSubjectFragment();
-                ((MainActivity) mContext).addStackedFragment(fragment, getString(R.string.action_select_subject), getString(R.string.set_tutor_preference));
+                mParentActivity.addStackedFragment(fragment, getString(R.string.action_select_subject), getString(R.string.set_tutor_preference));
             }
         });
 
@@ -315,7 +315,9 @@ public class SettingTutorPrefFragment extends Fragment implements LocationListen
         }*/
         if (mUserLogin.getMaxTravelDistance() == 0)
             mSeekBarMaxDistance.setProgress(App.SETTING_TRAVEL_DISTANCE_MAX_DEFAULT);
-        else mSeekBarMaxDistance.setProgress(mUserLogin.getMaxTravelDistance());
+        else
+            mSeekBarMaxDistance.setProgress(mUserLogin.getMaxTravelDistance());
+
         mSeekBarMinPrice.setProgress(mUserLogin.getMinPriceRate());
         /*if(mUserLogin.getSubjects()==null){
             mSavedSubject = ((MainActivity)getActivity()).getSelectedSubject();
@@ -330,7 +332,7 @@ public class SettingTutorPrefFragment extends Fragment implements LocationListen
     }
 
     private void fetchCurrentLocation() {
-        // Show dialog
+        // Show mDialog
         mProgressDialog.setMessage("Mendapatkan lokasi...");
         mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
@@ -526,7 +528,7 @@ public class SettingTutorPrefFragment extends Fragment implements LocationListen
                 int idParent = object.getCategoryId();
                 HashMap<String, SubjectTopic> topicList = object.getTopicList();
                 if (topicList.get(idParent + "") == null) {
-                    /** If user not checked 'Semua' **/
+                    /** If user not mCheckedSubjectPos 'Semua' **/
                     for (SubjectTopic topic : topicList.values()) {
                         mSavedSubjectTopic.add(topic.getId() + "");
                     }

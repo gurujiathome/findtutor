@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,6 +15,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
 
 import com.google.gson.Gson;
 import com.rits.cloning.Cloner;
@@ -24,6 +29,7 @@ import com.widiarifki.findtutor.app.App;
 import com.widiarifki.findtutor.app.Constants;
 import com.widiarifki.findtutor.app.SessionManager;
 import com.widiarifki.findtutor.helper.RunnableDialogMessage;
+import com.widiarifki.findtutor.model.Day;
 import com.widiarifki.findtutor.model.User;
 
 import org.json.JSONException;
@@ -58,6 +64,7 @@ public class SettingAvailabilityTimeFragment extends Fragment {
     private HashMap<String, List<Integer>> mUserTimeslots;
     private ProgressDialog mProgressDialog;
     private int mIdDay;
+    AlertDialog mDialog;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -105,9 +112,62 @@ public class SettingAvailabilityTimeFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_setting_availability_time, container, false);
 
-        RecyclerView rv = (RecyclerView) view.findViewById(R.id.recyclerView);
+        final RecyclerView rv = (RecyclerView) view.findViewById(R.id.recyclerView);
         rv.setAdapter(new SelectHourAdapter(mContext, this, mSelectedTimes));
         rv.setLayoutManager(new GridLayoutManager(mContext, 3));
+        Button btnCopyTime = (Button) view.findViewById(R.id.btnCopyTime);
+        btnCopyTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<Day> days = new ArrayList<Day>();
+                final ArrayList<Day> displayedDays = new ArrayList<Day>();
+                days.add(new Day(0, "Senin"));
+                days.add(new Day(1, "Selasa"));
+                days.add(new Day(2, "Rabu"));
+                days.add(new Day(3, "Kamis"));
+                days.add(new Day(4, "Jumat"));
+                days.add(new Day(5, "Sabtu"));
+                days.add(new Day(6, "Minggu"));
+                String[] stringArray = new String[days.size() - 1];
+                int i = 0;
+                for (Day day : days){
+                    if(day.getId() != mIdDay) {
+                        stringArray[i] = day.getName();
+                        displayedDays.add(day);
+                        i++;
+                    }
+                }
+                ArrayAdapter<String> modeAdapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_list_item_1, android.R.id.text1, stringArray);
+
+                ListView modeList = new ListView(mContext);
+                modeList.setAdapter(modeAdapter);
+                modeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Day day = displayedDays.get(position);
+                        if(mUserLogin.getTimeslots() != null){
+                            mUserTimeslots = mUserLogin.getTimeslots();
+                            if(mUserTimeslots.containsKey(day.getId()+"")){
+                                List<Integer> mSelectedTimesFromDay = mUserTimeslots.get(day.getId() + "");
+                                if(!mSelectedTimesFromDay.equals(mSelectedTimes)) {
+                                    mSelectedTimes.clear();
+                                    mSelectedTimes.addAll(mSelectedTimesFromDay);
+                                    rv.swapAdapter(new SelectHourAdapter(mContext, mThisFragment, mSelectedTimes), false);
+                                }
+                            }
+                        }
+                        mDialog.dismiss();
+                    }
+                });
+
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mContext)
+                        .setTitle("Pilih Hari")
+                        .setView(modeList);
+                mDialog = dialogBuilder.create();
+                mDialog.show();
+
+            }
+        });
 
         mProgressDialog = new ProgressDialog(mContext);
 

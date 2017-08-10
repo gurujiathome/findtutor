@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -52,6 +53,7 @@ public class SessionAcceptedFragment extends Fragment {
     ProgressBar mProgressBar;
     TextView mEmptyText;
     RecyclerView mRecyclerView;
+    private SwipeRefreshLayout mRvSwipeLayout;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,6 +73,13 @@ public class SessionAcceptedFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_session_accepted, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        mRvSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.rvSwipeLayout);
+        mRvSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fetchData();
+            }
+        });
         mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         mEmptyText = (TextView) view.findViewById(R.id.emptyText);
 
@@ -91,7 +100,7 @@ public class SessionAcceptedFragment extends Fragment {
                 .build();
         OkHttpClient httpClient = new OkHttpClient();
         Request httpRequest = new Request.Builder()
-                .url(App.URL_GET_SESSION)
+                .url(App.URL_GET_SESSION_ACCEPTED)
                 .post(formBody)
                 .build();
         Call httpCall = httpClient.newCall(httpRequest);
@@ -116,7 +125,7 @@ public class SessionAcceptedFragment extends Fragment {
                                 dataSession.setScheduleDate(dataObj.getString("schedule_date"));
                                 dataSession.setStartHour(dataObj.getString("start_hour"));
                                 dataSession.setEndHour(dataObj.getString("end_hour"));
-                                dataSession.setIsScheduleAccepted(dataObj.getInt("is_accepted"));
+                                //dataSession.setIsScheduleAccepted(dataObj.getInt("is_accepted"));
                                 dataSession.setStatus(dataObj.getInt("status"));
                                 dataSession.setLatitude(dataObj.getString("latitude"));
                                 dataSession.setLongitude(dataObj.getString("longitude"));
@@ -149,6 +158,10 @@ public class SessionAcceptedFragment extends Fragment {
                                     }else{
                                         mRecyclerView.swapAdapter(adapter, false);
                                     }
+
+                                    if(mRvSwipeLayout.isRefreshing()){
+                                        mRvSwipeLayout.setRefreshing(false);
+                                    };
                                 }
                             });
                         }else{

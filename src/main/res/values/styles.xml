@@ -89,5 +89,18 @@
         <item name="android:textColor">@color/whiteSemiTransparent</item>
         <item name="textAllCaps">true</item>
     </style>
+    <style name="CustomRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/ratingbar</item>
+        <item name="android:minHeight">28dp</item>
+        <item name="android:maxHeight">28dp</item>
+        <item name="android:layout_marginLeft">4dp</item>
+        <item name="android:layout_marginRight">4dp</item>
+    </style>
 
+    <!-- IMAGE/ICON -->
+    <style name="textIcon">
+        <item name="android:layout_width">16dp</item>
+        <item name="android:layout_height">16dp</item>
+        <item name="android:layout_marginRight">3dp</item>
+    </style>
 </resources>

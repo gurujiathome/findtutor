@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.widiarifki.findtutor.view.CheckableLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingTop="@dimen/list_item_vpadding"
+    android:paddingBottom="@dimen/list_item_vpadding"
+    android:paddingLeft="@dimen/list_checkbox_hpadding"
+    android:paddingRight="@dimen/list_checkbox_hpadding">
+
+    <CheckedTextView
+        android:id="@+id/rbtn_subject"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="2"
+        android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+        android:ellipsize="marquee"
+        android:gravity="center_vertical"
+        android:padding="4dp"
+        android:singleLine="true" />
+
+</com.widiarifki.findtutor.view.CheckableLinearLayout>

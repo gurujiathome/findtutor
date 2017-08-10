@@ -11,6 +11,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.widiarifki.findtutor.MainActivity;
@@ -55,7 +57,9 @@ public class SearchTutorResultFragment extends Fragment {
     Fragment mThisFragment;
     Bundle mParams;
 
-    RecyclerView rvTutorList;
+    ProgressBar mProgressBar;
+    TextView mEmptyText;
+    RecyclerView mRecyclerView;
     String mRequestedDate;
 
     @Nullable
@@ -71,13 +75,19 @@ public class SearchTutorResultFragment extends Fragment {
         mParams = getArguments();
 
         View view = inflater.inflate(R.layout.fragment_search_tutor_result, container, false);
-        rvTutorList = (RecyclerView) view.findViewById(R.id.rvTutorList);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.rvTutorList);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        mEmptyText = (TextView) view.findViewById(R.id.emptyText);
 
         fetchResult();
         return view;
     }
 
     private void fetchResult() {
+        if(mProgressBar.getVisibility() == View.GONE) mProgressBar.setVisibility(View.VISIBLE);
+        if(mEmptyText.getVisibility() == View.VISIBLE) mEmptyText.setVisibility(View.GONE);
+        if(mRecyclerView.getVisibility() == View.VISIBLE) mRecyclerView.setVisibility(View.GONE);
+
         Location location = mParentActivity.mSearchTutorLocation;
         final LocalDate date = mParentActivity.mSearchTutorDate;
         HashMap<String, SavedSubject> subjects = mParentActivity.getSearchTutorSubject();
@@ -98,7 +108,7 @@ public class SearchTutorResultFragment extends Fragment {
         RequestBody formBody = new FormBody.Builder()
                 .add(Constants.PARAM_KEY_ID_USER, mUser.getId()+"")
                 .add("subjects", jsonSubjectList)
-                .add(Constants.PARAM_KEY_SCHEDULE_DATE, date.toString())
+                .add(Constants.PARAM_KEY_SCHEDULE_DATE, date != null ? date.toString() : "")
                 .add(Constants.PARAM_KEY_LATITUDE, location.getLatitude()+"")
                 .add(Constants.PARAM_KEY_LONGITUDE, location.getLongitude()+"")
                 .add(Constants.PARAM_KEY_GENDER, mParams.getInt(Constants.PARAM_KEY_GENDER, 0)+"")
@@ -123,28 +133,53 @@ public class SearchTutorResultFragment extends Fragment {
                     final List<User> tutors = new ArrayList<User>();
                     try {
                         JSONArray jsonArray = new JSONArray(json);
-                        for(int i = 0; i < jsonArray.length(); i++){
-                            JSONObject data = jsonArray.getJSONObject(i);
-                            User newUser = new User();
-                            newUser.setId(data.getInt(Constants.PARAM_KEY_ID_USER));
-                            newUser.setPhotoUrl(data.getString(Constants.PARAM_KEY_PHOTO_URL));
-                            newUser.setName(data.getString(Constants.PARAM_KEY_NAME));
-                            newUser.setDistanceFromRequestor(data.getDouble(Constants.PARAM_KEY_DISTANCE));
-                            newUser.setLatitude(data.getString(Constants.PARAM_KEY_LATITUDE));
-                            newUser.setLongitude(data.getString(Constants.PARAM_KEY_LONGITUDE));
-                            newUser.setLocationAddress(data.getString(Constants.PARAM_KEY_LOCATION_ADDRESS));
-                            tutors.add(newUser);
-                        }
-
-                        mContextActivity.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                /** Bind search result to list **/
-                                SearchTutorResultAdapter adapter = new SearchTutorResultAdapter(mContext, tutors, mThisFragment);
-                                rvTutorList.setAdapter(adapter);
-                                rvTutorList.setLayoutManager(new LinearLayoutManager(mContext));
+                        if(jsonArray.length() > 0) {
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject data = jsonArray.getJSONObject(i);
+                                User newUser = new User();
+                                newUser.setId(data.getInt(Constants.PARAM_KEY_ID_USER));
+                                newUser.setPhotoUrl(data.getString(Constants.PARAM_KEY_PHOTO_URL));
+                                newUser.setName(data.getString(Constants.PARAM_KEY_NAME));
+                                newUser.setMinPriceRate(data.getInt(Constants.PARAM_KEY_MIN_PRICE));
+                                newUser.setDistanceFromRequestor(data.getDouble(Constants.PARAM_KEY_DISTANCE));
+                                newUser.setLatitude(data.getString(Constants.PARAM_KEY_LATITUDE));
+                                newUser.setLongitude(data.getString(Constants.PARAM_KEY_LONGITUDE));
+                                newUser.setLocationAddress(data.getString(Constants.PARAM_KEY_LOCATION_ADDRESS));
+                                newUser.setLastSchool(data.getString("last_school"));
+                                newUser.setLastSchoolDept(data.getString("last_school_dept"));
+                                newUser.setSubjectStr(data.getString("subject_str"));
+                                newUser.setHasBookedOnDate(data.getInt("has_booked"));
+                                newUser.setAvgRateOverall(Double.parseDouble(
+                                        data.getString("avg_overall_rate") == "null" ? "0" : data.getString("avg_overall_rate")
+                                ));
+                                tutors.add(newUser);
                             }
-                        });
+
+                            mContextActivity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (mProgressBar.getVisibility() == View.VISIBLE)
+                                        mProgressBar.setVisibility(View.GONE);
+                                    if (mEmptyText.getVisibility() == View.VISIBLE)
+                                        mEmptyText.setVisibility(View.GONE);
+                                    if (mRecyclerView.getVisibility() == View.GONE)
+                                        mRecyclerView.setVisibility(View.VISIBLE);
+                                    /** Bind search result to list **/
+                                    SearchTutorResultAdapter adapter = new SearchTutorResultAdapter(mContext, tutors, mThisFragment);
+                                    mRecyclerView.setAdapter(adapter);
+                                    mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+                                }
+                            });
+                        }else {
+                            mContextActivity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if(mProgressBar.getVisibility() == View.VISIBLE) mProgressBar.setVisibility(View.GONE);
+                                    if(mEmptyText.getVisibility() == View.GONE) mEmptyText.setVisibility(View.VISIBLE);
+                                    if(mRecyclerView.getVisibility() == View.VISIBLE) mRecyclerView.setVisibility(View.GONE);
+                                }
+                            });
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

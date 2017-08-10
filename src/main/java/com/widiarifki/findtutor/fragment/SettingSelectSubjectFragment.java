@@ -6,13 +6,17 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ListView;
 
+import com.widiarifki.findtutor.MainActivity;
 import com.widiarifki.findtutor.R;
-import com.widiarifki.findtutor.adapter.SelectSubjectAdapter;
+import com.widiarifki.findtutor.adapter.SubjectTutorSettingAdapter;
 import com.widiarifki.findtutor.app.App;
 import com.widiarifki.findtutor.model.Subject;
 import com.widiarifki.findtutor.model.SubjectCategory;
@@ -39,29 +43,57 @@ public class SettingSelectSubjectFragment extends Fragment {
 
     private Context mContext;
     private Activity mContextActivity;
+    private MainActivity mParentActivity;
     ArrayList<Subject> mSubjects;
 
+    EditText mSearchInput;
     private ListView mListViewSubject;
     ProgressDialog mProgressDialog;
+    private SubjectTutorSettingAdapter mAdapter;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mContext = container.getContext();
         mContextActivity = (Activity)mContext;
+        mParentActivity = (MainActivity)mContext;
         mSubjects = new ArrayList<Subject>();
 
-        View view = inflater.inflate(R.layout.fragment_setting_select_subject, container, false);
+        /*if(mParentActivity.getSelectedSubject() == null){
+            mParentActivity.setSelectedSubject(new HashMap<String, SavedSubject>());
+        }*/
 
+        View view = inflater.inflate(R.layout.fragment_setting_select_subject, container, false);
         mListViewSubject = (ListView) view.findViewById(R.id.lvSubject);
+        mSearchInput = (EditText) view.findViewById(R.id.searchInput);
+        mSearchInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
+                // When user changed the Text
+                mAdapter.getFilter().filter(cs);
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable arg0) {
+                // TODO Auto-generated method stub
+            }
+        });
+
         mProgressDialog = new ProgressDialog(mContext);
         mProgressDialog.setCancelable(true);
-        settleRefData();
+
+        fetchRefData();
 
         return view;
     }
 
-    private void settleRefData() {
+    private void fetchRefData() {
         mProgressDialog.setMessage("Tunggu sebentar...");
         if(!mProgressDialog.isShowing()) mProgressDialog.show();
 
@@ -89,7 +121,7 @@ public class SettingSelectSubjectFragment extends Fragment {
                             String name = dataObj.getString("SUBJECT_NAME");
                             if(idCategory == 0){
                                 mSubjects.add(new SubjectCategory(id, name));
-                                mSubjects.add(new SubjectTopic(idCategory, id, "Semua topik di " + name));
+                                mSubjects.add(new SubjectTopic(idCategory, id, name));
                             }else{
                                 mSubjects.add(new SubjectTopic(idCategory, id, name));
                             }
@@ -98,8 +130,8 @@ public class SettingSelectSubjectFragment extends Fragment {
                         mContextActivity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                SelectSubjectAdapter adapter = new SelectSubjectAdapter(mContext, mSubjects);
-                                mListViewSubject.setAdapter(adapter);
+                                mAdapter = new SubjectTutorSettingAdapter(mContext, mSubjects);
+                                mListViewSubject.setAdapter(mAdapter);
                                 if(mProgressDialog.isShowing()) mProgressDialog.dismiss();
                             }
                         });
@@ -111,5 +143,11 @@ public class SettingSelectSubjectFragment extends Fragment {
                 }
             }
         });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        App.hideSoftKeyboard(mContext);
     }
 }

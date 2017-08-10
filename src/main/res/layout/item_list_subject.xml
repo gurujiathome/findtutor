@@ -2,17 +2,23 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="@dimen/label_left_margin">
 
     <TextView
         android:id="@+id/text_subject_parent"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:text="Fisika"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="16sp"
+        android:layout_marginBottom="3sp"/>
 
     <TextView
         android:layout_below="@id/text_subject_parent"
         android:id="@+id/text_subject_topic"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:text="Hukum Gravitasi, Newton"/>
 
 </RelativeLayout>

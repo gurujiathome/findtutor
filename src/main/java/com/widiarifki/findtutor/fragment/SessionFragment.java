@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import com.widiarifki.findtutor.R;
 import com.widiarifki.findtutor.adapter.TabsPagerAdapter;
 import com.widiarifki.findtutor.app.Constants;
+import com.widiarifki.findtutor.app.SessionManager;
+import com.widiarifki.findtutor.model.User;
 
 /**
  * Created by widiarifki on 26/06/2017.
@@ -22,6 +24,9 @@ public class SessionFragment extends Fragment implements TabLayout.OnTabSelected
 
     Context mContext;
     Fragment mThisFragment;
+    SessionManager mSession;
+    User mUserLogin;
+
     TabsPagerAdapter mTabsPagerAdapter;
     ViewPager mViewPager;
     TabLayout mTabLayout;
@@ -31,13 +36,20 @@ public class SessionFragment extends Fragment implements TabLayout.OnTabSelected
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mThisFragment = this;
         mContext = container.getContext();
+        mSession = new SessionManager(mContext);
+        mUserLogin = mSession.getUserDetail();
 
         View view = inflater.inflate(R.layout.fragment_session, container, false);
 
         TabLayout topTabs = (TabLayout) view.findViewById(R.id.topTabs);
-        topTabs.addTab(topTabs.newTab().setText("Sebagai Tutor"));
-        topTabs.addTab(topTabs.newTab().setText("Sebagai Siswa"));
-        topTabs.setOnTabSelectedListener(this);
+        if(mUserLogin.getIsStudent() == 1 && mUserLogin.getIsTutor() == 1) {
+            topTabs.addTab(topTabs.newTab().setText("Sebagai Tutor"));
+            topTabs.addTab(topTabs.newTab().setText("Sebagai Siswa"));
+            topTabs.setOnTabSelectedListener(this);
+        }
+        else {
+            topTabs.setVisibility(View.GONE);
+        }
 
         /*final FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -52,7 +64,15 @@ public class SessionFragment extends Fragment implements TabLayout.OnTabSelected
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        setupTabs(Constants.SESSION_CONTEXT_AS_TUTOR);
+        if(mUserLogin.getIsStudent() == 1 && mUserLogin.getIsTutor() == 1) {
+            setupTabs(Constants.SESSION_CONTEXT_AS_TUTOR);
+        }
+        else if (mUserLogin.getIsTutor() == 1 && mUserLogin.getIsStudent() == 0){
+            setupTabs(Constants.SESSION_CONTEXT_AS_TUTOR);
+        }
+        else if (mUserLogin.getIsStudent() == 1 && mUserLogin.getIsTutor() == 0){
+            setupTabs(Constants.SESSION_CONTEXT_AS_STUDENT);
+        }
     }
 
     @Override

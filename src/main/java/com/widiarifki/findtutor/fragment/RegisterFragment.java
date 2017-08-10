@@ -208,6 +208,7 @@ public class RegisterFragment extends Fragment {
                                 getActivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
+                                        App.hideSoftKeyboard(mContext);
                                         Toast.makeText(mContext, "Registrasi Berhasil", Toast.LENGTH_SHORT).show();
                                         Intent intent = new Intent(mContext, CompleteProfileActivity.class);
                                         startActivity(intent);

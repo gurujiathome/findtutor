@@ -1,6 +1,7 @@
 package com.widiarifki.findtutor;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -15,6 +16,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -34,15 +36,17 @@ import com.google.android.gms.location.LocationServices;
 import com.rits.cloning.Cloner;
 import com.squareup.picasso.Picasso;
 import com.widiarifki.findtutor.app.App;
-import com.widiarifki.findtutor.fragment.HomeFragment;
-import com.widiarifki.findtutor.fragment.SessionFragment;
-import com.widiarifki.findtutor.fragment.NotificationFragment;
-import com.widiarifki.findtutor.fragment.SearchTutorFragment;
-import com.widiarifki.findtutor.fragment.SessionPreviousFragment;
-import com.widiarifki.findtutor.fragment.SettingAvailabilityFragment;
-import com.widiarifki.findtutor.fragment.SettingFragment;
-import com.widiarifki.findtutor.helper.CircleTransform;
 import com.widiarifki.findtutor.app.SessionManager;
+import com.widiarifki.findtutor.fragment.HelpFragment;
+import com.widiarifki.findtutor.fragment.HomeFragment;
+import com.widiarifki.findtutor.fragment.SearchTutorFragment;
+import com.widiarifki.findtutor.fragment.SessionFragment;
+import com.widiarifki.findtutor.fragment.SessionPreviousFragment;
+import com.widiarifki.findtutor.fragment.SettingAccountFragment;
+import com.widiarifki.findtutor.fragment.SettingAvailabilityFragment;
+import com.widiarifki.findtutor.fragment.SettingProfileFragment;
+import com.widiarifki.findtutor.fragment.SettingTutorPrefFragment;
+import com.widiarifki.findtutor.helper.CircleTransform;
 import com.widiarifki.findtutor.model.SavedSubject;
 import com.widiarifki.findtutor.model.User;
 
@@ -64,40 +68,47 @@ public class MainActivity extends AppCompatActivity
 
     // UI Component
     Toolbar mToolbar;
-    ActionBarDrawerToggle mToggle;
     DrawerLayout mDrawer;
+    ActionBarDrawerToggle mDrawerToggle;
     int mDrawerMenuLayout;
+    NavigationView mNavigationView;
+
     private FusedLocationProviderApi mFusedLocationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mSession = new SessionManager(getApplicationContext());
+        mUserLogin = mSession.getUserDetail();
+
         //buildGoogleApiClient();
 
         setContentView(R.layout.activity_main);
-
-        mSession = new SessionManager(getApplicationContext());
-        mUserLogin = mSession.getUserDetail();
-        int isUserStudent = mUserLogin.getIsStudent();
-        int isUserTutor = mUserLogin.getIsTutor();
-
-        // adjust layout menu depend to user type
-        if (isUserStudent == 1 && isUserTutor == 0)
-            mDrawerMenuLayout = R.menu.drawer_menu_student;
-        else if (isUserStudent == 0 && isUserTutor == 1)
-            mDrawerMenuLayout = R.menu.drawer_menu_tutor;
-        else mDrawerMenuLayout = R.menu.drawer_menu_all;
 
         // Toolbar/Action Bar
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
+        int isUserStudent = mUserLogin.getIsStudent();
+        int isUserTutor = mUserLogin.getIsTutor();
+        // adjust layout menu depend to user type
+        if (isUserStudent == 1 && isUserTutor == 0)
+            mDrawerMenuLayout = R.menu.drawer_menu_student;
+        else if (isUserStudent == 0 && isUserTutor == 1)
+            mDrawerMenuLayout = R.menu.drawer_menu_tutor;
+        else
+            mDrawerMenuLayout = R.menu.drawer_menu_all;
+
+        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        mNavigationView.setNavigationItemSelectedListener(this);
+        mNavigationView.inflateMenu(mDrawerMenuLayout);
+
         // Find our drawer view
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mToggle = new ActionBarDrawerToggle(this, mDrawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        mDrawer.setDrawerListener(mToggle);
-        mToggle.syncState();
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawer.setDrawerListener(mDrawerToggle);
+        mDrawerToggle.syncState();
 
         // treatment for fragment manager
         mFragmentManager = getSupportFragmentManager();
@@ -115,7 +126,7 @@ public class MainActivity extends AppCompatActivity
                 } else {
                     //show hamburger
                     getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-                    mToggle.syncState();
+                    mDrawerToggle.syncState();
                     mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -127,18 +138,22 @@ public class MainActivity extends AppCompatActivity
         });
 
         // Navigation view instance
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        navigationView.inflateMenu(mDrawerMenuLayout);
+        /*NavigationView mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        mNavigationView.setNavigationItemSelectedListener(this);
+        mNavigationView.inflateMenu(mDrawerMenuLayout);*/
         // Initially select first menu
-        selectDrawerItem(navigationView.getMenu().getItem(0));
+        //selectDrawerItem(mNavigationView.getMenu().getItem(0));
+        // Initially select first menu
+        selectDrawerItem(mNavigationView.getMenu().getItem(0));
 
         // Navigation header instance
-        View navViewHeader = navigationView.getHeaderView(0);
+        View navViewHeader = mNavigationView.getHeaderView(0);
 
         // Bind Nav header Component with Data
         TextView tvUserName = (TextView) navViewHeader.findViewById(R.id.text_user_name);
         TextView tvUserEmail = (TextView) navViewHeader.findViewById(R.id.text_user_email);
+        TextView tvUserType = (TextView) navViewHeader.findViewById(R.id.text_user_type);
+
         ImageView imgUserPhoto = (ImageView) navViewHeader.findViewById(R.id.imgv_user_photo);
         /*ImageView btnEditProfile = (ImageView) navViewHeader.findViewById(R.id.btn_edit_profile);
         btnEditProfile.setOnClickListener(new View.OnClickListener() {
@@ -156,6 +171,17 @@ public class MainActivity extends AppCompatActivity
                 .into(imgUserPhoto);
         tvUserName.setText(mUserLogin.getName());
         tvUserEmail.setText(mUserLogin.getEmail());
+        String userType = "";
+        if(mUserLogin.getIsTutor() == 0 && mUserLogin.getIsStudent() == 1){
+            userType = "Siswa";
+        }
+        else if(mUserLogin.getIsTutor() == 1 && mUserLogin.getIsStudent() == 0){
+            userType = "Tutor";
+        }
+        else if(mUserLogin.getIsTutor() == 1 && mUserLogin.getIsStudent() == 1){
+            userType = "Tutor & Siswa";
+        }
+        tvUserType.setText(userType);
     }
 
     private void buildGoogleApiClient() {
@@ -198,15 +224,25 @@ public class MainActivity extends AppCompatActivity
         int itemId = menuItem.getItemId();
 
         if (itemId == R.id.nav_logout) {
-            Intent welcomeIntent = new Intent(MainActivity.this, WelcomeActivity.class);
-            startActivity(welcomeIntent);
-            finish();
-            mSession.logout();
+            new AlertDialog.Builder(MainActivity.this)
+                    .setMessage("Anda yakin akan logout dari akun anda?")
+                    .setNegativeButton(android.R.string.no, null)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface arg0, int arg1) {
+                            Intent welcomeIntent = new Intent(MainActivity.this, WelcomeActivity.class);
+                            startActivity(welcomeIntent);
+                            finish();
+                            mSession.logout();
+                        }
+                    }).create().show();
         } else {
             switch (menuItem.getItemId()) {
-                case R.id.nav_notification:
+                /*case R.id.nav_notification:
                     fragment = new NotificationFragment();
                     break;
+                case R.id.nav_preferences:
+                    fragment = new SettingFragment();
+                    break;*/
                 case R.id.nav_search_tutor:
                     fragment = new SearchTutorFragment();
                     break;
@@ -219,10 +255,7 @@ public class MainActivity extends AppCompatActivity
                 case R.id.nav_availibility:
                     fragment = new SettingAvailabilityFragment();
                     break;
-                case R.id.nav_preferences:
-                    fragment = new SettingFragment();
-                    break;
-                /*case R.id.nav_set_basic_profile:
+                case R.id.nav_set_basic_profile:
                     fragment = new SettingProfileFragment();
                     break;
                 case R.id.nav_set_tutor_pref:
@@ -230,7 +263,10 @@ public class MainActivity extends AppCompatActivity
                     break;
                 case R.id.nav_set_account:
                     fragment = new SettingAccountFragment();
-                    break;*/
+                    break;
+                case R.id.nav_help:
+                    fragment = new HelpFragment();
+                    break;
                 default:
                     fragmentClass = HomeFragment.class;
             }
@@ -252,6 +288,19 @@ public class MainActivity extends AppCompatActivity
             setTitle(menuItem.getTitle());
             // Close the drawer
             mDrawer.closeDrawers();
+
+            if (menuItem.getItemId() == R.id.nav_set_tutor_pref) {
+                mUserLogin = mSession.getUserDetail();
+                if (mUserLogin.getSubjects() != null) {
+                    setSelectedSubject(mUserLogin.getSubjects());
+                }else{
+                    setSelectedSubject(new HashMap<String, SavedSubject>());
+                }
+            }else{
+                mTempSavedLocation = null;
+                mTempSavedLocationAddress = null;
+                setSelectedSubject(null);
+            }
         }
     }
 
@@ -367,6 +416,18 @@ public class MainActivity extends AppCompatActivity
                 setTitle(fragmentTag);
             }
         }
+    }
+
+    public void popAllFragment(){
+        FragmentManager fm = mFragmentManager;
+        for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+            fm.popBackStack();
+        }
+    }
+
+    public void switchMenu(int id){
+        MenuItem itemMenu = mNavigationView.getMenu().findItem(id);
+        selectDrawerItem(itemMenu);
     }
 
     /** Passing value between edit tutor profile and choose subject **/

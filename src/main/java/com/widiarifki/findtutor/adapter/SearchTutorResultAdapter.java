@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -19,6 +21,7 @@ import com.widiarifki.findtutor.fragment.TutorInfoFragment;
 import com.widiarifki.findtutor.helper.CircleTransform;
 import com.widiarifki.findtutor.model.User;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -85,25 +88,55 @@ public class SearchTutorResultAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         User dataItem = mUsers.get(position);
         MyViewHolder viewHolder = (MyViewHolder) holder;
-        viewHolder.tvName.setText(dataItem.getName());
-        viewHolder.tvDistance.setText(dataItem.getDistanceFromRequestor()+"");
         Picasso.with(mContext).load(App.URL_PATH_PHOTO + dataItem.getPhotoUrl())
                 .transform(new CircleTransform())
                 .placeholder(R.drawable.ic_person_black_24dp)
                 .error(R.drawable.ic_broken_image_black_24dp)
                 .into(viewHolder.imgvUserPhoto);
+        viewHolder.tvName.setText(dataItem.getName());
+        if(!dataItem.getLastSchool().isEmpty() && !dataItem.getLastSchool().equals("null"))
+            viewHolder.tvEducation.setText(dataItem.getLastSchool()
+                + (!dataItem.getLastSchoolDept().isEmpty() ? " - " + dataItem.getLastSchoolDept() : ""));
+        else
+            viewHolder.education.setVisibility(View.GONE);
+        viewHolder.tvSubject.setText(dataItem.getSubjectStr());
+        DecimalFormat df = new DecimalFormat("#.#");
+        viewHolder.tvDistance.setText(df.format(dataItem.getDistanceFromRequestor()) + " km away");
+        viewHolder.tvPriceRate.setText(dataItem.getMinPriceRate() + "/Jam");
+        viewHolder.tutorRate.setRating((float) dataItem.getAvgRateOverall());
+        viewHolder.tvTutorRate.setText(((float)dataItem.getAvgRateOverall())+"");
+        if(dataItem.getHasBookedOnDate() > 0){
+            viewHolder.sessionInfo.setVisibility(View.VISIBLE);
+            viewHolder.tvSessionInfo.setText("Sudah memiliki " +dataItem.getHasBookedOnDate()+ " sesi pada hari ini");
+        }
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView tvName;
-        public TextView tvDistance;
         public ImageView imgvUserPhoto;
+        public TextView tvName;
+        public LinearLayout education;
+        public TextView tvEducation;
+        public TextView tvSubject;
+        public TextView tvDistance;
+        public TextView tvPriceRate;
+        public RatingBar tutorRate;
+        public TextView tvTutorRate;
+        public LinearLayout sessionInfo;
+        public TextView tvSessionInfo;
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            tvName = (TextView) itemView.findViewById(R.id.tvName);
-            tvDistance = (TextView) itemView.findViewById(R.id.tvDistance);
             imgvUserPhoto = (ImageView) itemView.findViewById(R.id.imgvUserPhoto);
+            tvName = (TextView) itemView.findViewById(R.id.tvName);
+            education = (LinearLayout) itemView.findViewById(R.id.education);
+            tvEducation = (TextView) itemView.findViewById(R.id.tvEducation);
+            tvSubject = (TextView) itemView.findViewById(R.id.tvSubject);
+            tvPriceRate = (TextView) itemView.findViewById(R.id.tvPriceRate);
+            tvDistance = (TextView) itemView.findViewById(R.id.tvDistance);
+            tutorRate = (RatingBar) itemView.findViewById(R.id.tutorRate);
+            tvTutorRate = (TextView) itemView.findViewById(R.id.tvTutorRate);
+            sessionInfo = (LinearLayout) itemView.findViewById(R.id.sessionInfo);
+            tvSessionInfo = (TextView) itemView.findViewById(R.id.tvSessionInfo);
         }
     }
 

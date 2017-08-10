@@ -9,39 +9,54 @@
         <item
             android:id="@+id/nav_my_session"
             android:icon="@drawable/ic_assignment_black_24dp"
-            android:title="@string/menu_my_session"/>
-        <item
-            android:id="@+id/nav_find_tutor"
-            android:title="@string/menu_find_tutor"/>
+            android:title="@string/menu_session_n_request"/>
         <item
             android:id="@+id/nav_session_history"
             android:icon="@drawable/ic_history_black_24dp"
             android:title="@string/menu_session_history"/>
         <item
             android:id="@+id/nav_fave_tutor"
-            android:title="@string/menu_fave_tutor"/>
+            android:icon="@drawable/ic_star_black_24dp"
+            android:title="@string/menu_fave_tutor"
+            android:visible="false"/>
+        <item
+            android:id="@+id/nav_income"
+            android:icon="@drawable/ic_attach_money_black_24dp"
+            android:title="@string/menu_income"
+            android:visible="false"/>
     </group>
-    <item android:title="Menu Tutor">
+    <item android:title="@string/menu_preferences">
         <menu>
-            <item
-                android:id="@+id/nav_income"
-                android:title="@string/menu_income"/>
-            <item
-                android:id="@+id/nav_availibility"
-                android:title="@string/menu_availibility"/>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_set_basic_profile"
+                    android:icon="@drawable/ic_person_black_24dp"
+                    android:title="@string/basic_profile"/>
+                <item
+                    android:id="@+id/nav_set_tutor_pref"
+                    android:icon="@drawable/ic_library_books_black_24dp"
+                    android:title="@string/tutor_preference"/>
+                <item
+                    android:id="@+id/nav_availibility"
+                    android:icon="@drawable/ic_schedule_black_24dp"
+                    android:title="@string/menu_availibility"/>
+                <item
+                    android:id="@+id/nav_set_account"
+                    android:icon="@drawable/ic_account_box_black_24dp"
+                    android:title="@string/account"
+                    android:visible="false"/>
+            </group>
         </menu>
     </item>
     <group android:checkableBehavior="single"
-           android:id="@+id/group_nav_third">
-        <item
+           android:id="@+id/group_nav_second">
+        <!--<item
             android:id="@+id/nav_preferences"
-            android:title="@string/menu_preferences"/>
+            android:title="@string/menu_preferences"/>-->
         <item
             android:id="@+id/nav_help"
+            android:icon="@drawable/ic_help_black_24dp"
             android:title="@string/menu_help"/>
-    </group>
-    <group android:checkableBehavior="single"
-           android:id="@+id/group_nav_fourth">
         <item
             android:id="@+id/nav_logout"
             android:title="Logout"/>

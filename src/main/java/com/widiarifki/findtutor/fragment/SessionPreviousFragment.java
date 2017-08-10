@@ -4,12 +4,16 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.widiarifki.findtutor.R;
 import com.widiarifki.findtutor.adapter.SessionPreviousAdapter;
@@ -39,15 +43,20 @@ import okhttp3.Response;
  * Created by widiarifki on 09/07/2017.
  */
 
-public class SessionPreviousFragment extends Fragment {
+public class SessionPreviousFragment extends Fragment implements TabLayout.OnTabSelectedListener {
 
+    Fragment mThis;
     private Context mContext;
     private Activity mContextActivity;
     private int mContextUser;
     private SessionManager mSession;
     private User mUserLogin;
+    Call mHttpCall;
 
+    ProgressBar mProgressBar;
+    TextView mEmptyText;
     RecyclerView mRecyclerView;
+    private SwipeRefreshLayout mRvSwipeLayout;
 
     @Nullable
     @Override
@@ -56,17 +65,57 @@ public class SessionPreviousFragment extends Fragment {
         mContextActivity = (Activity)mContext;
         mSession = new SessionManager(mContext);
         mUserLogin = mSession.getUserDetail();
+        mThis = this;
 
         View view = inflater.inflate(R.layout.fragment_session_previous, container, false);
+
+        TabLayout topTabs = (TabLayout) view.findViewById(R.id.topTabs);
+        if(mUserLogin.getIsStudent() == 1 && mUserLogin.getIsTutor() == 1) {
+            topTabs.addTab(topTabs.newTab().setText("Sebagai Tutor"));
+            topTabs.addTab(topTabs.newTab().setText("Sebagai Siswa"));
+            topTabs.setOnTabSelectedListener(this);
+        }else{
+            topTabs.setVisibility(View.GONE);
+        }
+
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        fetchData();
+        mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        mEmptyText = (TextView) view.findViewById(R.id.emptyText);
+
+        if(mUserLogin.getIsStudent() == 1 && mUserLogin.getIsTutor() == 1) {
+            mContextUser = Constants.SESSION_CONTEXT_AS_TUTOR;
+        }
+        else if (mUserLogin.getIsTutor() == 1 && mUserLogin.getIsStudent() == 0){
+            mContextUser = Constants.SESSION_CONTEXT_AS_TUTOR;
+        }
+        else if (mUserLogin.getIsStudent() == 1 && mUserLogin.getIsTutor() == 0){
+            mContextUser = Constants.SESSION_CONTEXT_AS_STUDENT;
+        }
+        mRvSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.rvSwipeLayout);
+        mRvSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fetchData(mContextUser);
+            }
+        });
+        fetchData(mContextUser);
+
         return view;
     }
 
-    void fetchData(){
+    void fetchData(int contextUser){
+        if(mProgressBar.getVisibility() == View.GONE) mProgressBar.setVisibility(View.VISIBLE);
+        if(mEmptyText.getVisibility() == View.VISIBLE) mEmptyText.setVisibility(View.GONE);
+        if(mRecyclerView.getVisibility() == View.VISIBLE) mRecyclerView.setVisibility(View.GONE);
+
+        // If it has executed, cancel it
+        if(mHttpCall != null && mHttpCall.isExecuted()){
+            mHttpCall.cancel();
+        }
+
         RequestBody formBody = new FormBody.Builder()
                 .add(Constants.PARAM_KEY_ID_USER, mUserLogin.getId()+"")
-                .add(Constants.PARAM_KEY_USER_CONTEXT, Constants.SESSION_CONTEXT_AS_TUTOR +"")
+                .add(Constants.PARAM_KEY_USER_CONTEXT, contextUser +"")
                 .add(Constants.PARAM_KEY_SESSION_STATE, Constants.SESSION_FINISHED+"")
                 .build();
         OkHttpClient httpClient = new OkHttpClient();
@@ -74,8 +123,8 @@ public class SessionPreviousFragment extends Fragment {
                 .url(App.URL_GET_SESSION)
                 .post(formBody)
                 .build();
-        Call httpCall = httpClient.newCall(httpRequest);
-        httpCall.enqueue(new Callback() {
+        mHttpCall = httpClient.newCall(httpRequest);
+        mHttpCall.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
 
@@ -103,6 +152,10 @@ public class SessionPreviousFragment extends Fragment {
                                 dataSession.setLocationAddress(dataObj.getString("location_address"));
                                 dataSession.setDistanceBetween(Double.parseDouble(dataObj.getString("distance")));
                                 dataSession.setSubject(dataObj.getString("subject_name"));
+                                dataSession.setDateHeld(dataObj.getString("date_held"));
+                                dataSession.setStartHourHeld(dataObj.getString("start_hour_held"));
+                                dataSession.setEndHourHeld(dataObj.getString("end_hour_held"));
+                                dataSession.setTutorFee(dataObj.getString("tutor_fee"));
                                 User dataUser = new User();
                                 dataUser.setName(dataObj.getString("name"));
                                 dataUser.setPhotoUrl(dataObj.getString("photo_url"));
@@ -113,10 +166,30 @@ public class SessionPreviousFragment extends Fragment {
                             mContextActivity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    if(mProgressBar.getVisibility() == View.VISIBLE) mProgressBar.setVisibility(View.GONE);
+                                    if(mEmptyText.getVisibility() == View.VISIBLE) mEmptyText.setVisibility(View.GONE);
+                                    if(mRecyclerView.getVisibility() == View.GONE) mRecyclerView.setVisibility(View.VISIBLE);
+
+                                    SessionPreviousAdapter adapter = new SessionPreviousAdapter(mContext, listSession, mThis, mContextUser);
                                     if(mRecyclerView.getAdapter() == null){
-                                        mRecyclerView.setAdapter(new SessionPreviousAdapter(mContext, listSession));
+                                        mRecyclerView.setAdapter(adapter);
                                         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+                                    }else{
+                                        mRecyclerView.swapAdapter(adapter, false);
                                     }
+
+                                    if(mRvSwipeLayout.isRefreshing()){
+                                        mRvSwipeLayout.setRefreshing(false);
+                                    };
+                                }
+                            });
+                        }else{
+                            mContextActivity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if(mProgressBar.getVisibility() == View.VISIBLE) mProgressBar.setVisibility(View.GONE);
+                                    if(mEmptyText.getVisibility() == View.GONE) mEmptyText.setVisibility(View.VISIBLE);
+                                    if(mRecyclerView.getVisibility() == View.VISIBLE) mRecyclerView.setVisibility(View.GONE);
                                 }
                             });
                         }
@@ -128,5 +201,25 @@ public class SessionPreviousFragment extends Fragment {
                 }
             }
         });
+    }
+
+    @Override
+    public void onTabSelected(TabLayout.Tab tab) {
+        if(tab.getPosition() == 0){
+            fetchData(Constants.SESSION_CONTEXT_AS_TUTOR);
+        }
+        else if(tab.getPosition() == 1){
+            fetchData(Constants.SESSION_CONTEXT_AS_STUDENT);
+        }
+    }
+
+    @Override
+    public void onTabUnselected(TabLayout.Tab tab) {
+
+    }
+
+    @Override
+    public void onTabReselected(TabLayout.Tab tab) {
+
     }
 }

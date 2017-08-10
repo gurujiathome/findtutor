@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -52,6 +53,7 @@ public class SessionPendingFragment extends Fragment {
     ProgressBar mProgressBar;
     TextView mEmptyText;
     RecyclerView mRecyclerView;
+    private SwipeRefreshLayout mRvSwipeLayout;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,6 +73,13 @@ public class SessionPendingFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_session_pending, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        mRvSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.rvSwipeLayout);
+        mRvSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fetchData();
+            }
+        });
         mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         mEmptyText = (TextView) view.findViewById(R.id.emptyText);
 
@@ -91,7 +100,8 @@ public class SessionPendingFragment extends Fragment {
                 .build();
         OkHttpClient httpClient = new OkHttpClient();
         Request httpRequest = new Request.Builder()
-                .url(App.URL_GET_SESSION)
+                //.url(App.URL_GET_SESSION)
+                .url(App.URL_GET_SESSION_PENDING)
                 .post(formBody)
                 .build();
         Call httpCall = httpClient.newCall(httpRequest);
@@ -112,17 +122,20 @@ public class SessionPendingFragment extends Fragment {
                             for (int i = 0; i < jsonArr.length(); i++){
                                 JSONObject dataObj = jsonArr.getJSONObject(i);
                                 Session dataSession = new Session();
-                                dataSession.setId(dataObj.getInt("id_session"));
+                                //dataSession.setId(dataObj.getInt("id_session"));
+                                dataSession.setId(dataObj.getInt("id"));
                                 dataSession.setScheduleDate(dataObj.getString("schedule_date"));
+                                dataSession.setEndDate(dataObj.getString("end_date"));
                                 dataSession.setStartHour(dataObj.getString("start_hour"));
                                 dataSession.setEndHour(dataObj.getString("end_hour"));
-                                dataSession.setIsScheduleAccepted(dataObj.getInt("is_accepted"));
+                                //dataSession.setIsScheduleAccepted(dataObj.getInt("is_accepted"));
                                 dataSession.setStatus(dataObj.getInt("status"));
                                 dataSession.setLatitude(dataObj.getString("latitude"));
                                 dataSession.setLongitude(dataObj.getString("longitude"));
                                 dataSession.setLocationAddress(dataObj.getString("location_address"));
                                 dataSession.setDistanceBetween(Double.parseDouble(dataObj.getString("distance")));
                                 dataSession.setSubject(dataObj.getString("subject_name"));
+                                dataSession.setFrequenceType(dataObj.getInt("frequence_type"));
                                 User dataUser = new User();
                                 dataUser.setName(dataObj.getString("name"));
                                 dataUser.setPhotoUrl(dataObj.getString("photo_url"));
@@ -138,9 +151,13 @@ public class SessionPendingFragment extends Fragment {
                                     if(mRecyclerView.getVisibility() == View.GONE) mRecyclerView.setVisibility(View.VISIBLE);
 
                                     if(mRecyclerView.getAdapter() == null){
-                                        mRecyclerView.setAdapter(new SessionPendingAdapter(mContext, listSession));
+                                        mRecyclerView.setAdapter(new SessionPendingAdapter(mContext, listSession, mContextUser));
                                         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
                                     }
+
+                                    if(mRvSwipeLayout.isRefreshing()){
+                                        mRvSwipeLayout.setRefreshing(false);
+                                    };
                                 }
                             });
                         }else{
@@ -214,7 +231,7 @@ public class SessionPendingFragment extends Fragment {
                                 @Override
                                 public void run() {
                                     if(mRecyclerView.getAdapter() == null){
-                                        mRecyclerView.setAdapter(new SessionPendingAdapter(mContext, listSession));
+                                        mRecyclerView.setAdapter(new SessionPendingAdapter(mContext, listSession, mContextUser));
                                         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
                                     }
                                 }

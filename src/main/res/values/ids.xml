@@ -9,4 +9,6 @@
     <item name="radio_opt_available" type="id"/>
     <item name="radio_opt_unavailable" type="id"/>
     <item name="radio_opt_scheduled" type="id"/>
+    <item name="radio_opt_daily" type="id">1</item>
+    <item name="radio_opt_weekly" type="id">2</item>
 </resources>
