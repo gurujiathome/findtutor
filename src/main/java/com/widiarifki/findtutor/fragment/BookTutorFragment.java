@@ -191,6 +191,7 @@ public class BookTutorFragment extends Fragment {
     }
 
     private void getAvailableTime() {
+        mSelectedTimes.clear();
         mHourPicker.setAlpha(0);
         mProgressBar.setVisibility(View.VISIBLE);
 
