@@ -57,11 +57,7 @@ public class SettingSelectSubjectFragment extends Fragment {
         mContext = container.getContext();
         mContextActivity = (Activity)mContext;
         mParentActivity = (MainActivity)mContext;
-        mSubjects = new ArrayList<Subject>();
-
-        /*if(mParentActivity.getSelectedSubject() == null){
-            mParentActivity.setSelectedSubject(new HashMap<String, SavedSubject>());
-        }*/
+        mSubjects = new ArrayList<>();
 
         View view = inflater.inflate(R.layout.fragment_setting_select_subject, container, false);
         mListViewSubject = (ListView) view.findViewById(R.id.lvSubject);
@@ -104,9 +100,7 @@ public class SettingSelectSubjectFragment extends Fragment {
         Call httpCall = client.newCall(httpRequest);
         httpCall.enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
-
-            }
+            public void onFailure(Call call, IOException e) {}
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
@@ -138,8 +132,6 @@ public class SettingSelectSubjectFragment extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                }else{
-
                 }
             }
         });

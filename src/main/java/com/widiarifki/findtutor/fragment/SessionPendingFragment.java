@@ -240,8 +240,6 @@ public class SessionPendingFragment extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                }else{
-
                 }
             }
         });

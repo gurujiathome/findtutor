@@ -73,11 +73,10 @@ public class SearchTutorFragment extends Fragment {
         mBtnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //mParentActivity.addStackedFragment(new SearchTutorResultFragment(), getString(R.string.title_search_tutor_result), getString(R.string.title_search_tutor));
                 Bundle params = new Bundle();
                 params.putInt(Constants.PARAM_KEY_GENDER, mSelectedGender);
                 Fragment fragment = new SearchTutorResultFragment();
-                //Fragment fragment = new TestSlideFragment();
+
                 fragment.setArguments(params);
                 mParentActivity.addStackedFragment(mThisFragment, fragment, getString(R.string.title_search_tutor_result), getString(R.string.title_search_tutor));
             }
@@ -88,7 +87,6 @@ public class SearchTutorFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 mParentActivity.addStackedFragment(new SearchTutorSelectSubjectFragment(), getString(R.string.title_search_select_subject), getString(R.string.title_search_tutor));
-                //mParentActivity.addStackedFragment(mThisFragment, new SearchTutorSelectSubjectFragment(), getString(R.string.title_search_select_subject), getString(R.string.title_search_tutor));
             }
         });
 
@@ -97,7 +95,6 @@ public class SearchTutorFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 mParentActivity.addStackedFragment(new SearchTutorSelectLocationFragment(), getString(R.string.title_search_select_location), getString(R.string.title_search_tutor));
-                //mParentActivity.addStackedFragment(mThisFragment, new SearchTutorSelectLocationFragment(), getString(R.string.title_search_select_location), getString(R.string.title_search_tutor));
             }
         });
 

@@ -159,14 +159,10 @@ public class SettingTutorPrefFragment extends Fragment implements LocationListen
         mTvLocation = (TextView) view.findViewById(R.id.text_location);
         mTvLocation.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -200,14 +196,10 @@ public class SettingTutorPrefFragment extends Fragment implements LocationListen
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStartTrackingTouch(SeekBar seekBar) {}
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStopTrackingTouch(SeekBar seekBar) {}
         });
         mSeekBarMinPrice = (SeekBar) view.findViewById(R.id.seekbar_min_price_rate);
         mSeekBarMinPrice.setMax(App.SEEKBAR_PRICE_RATE_MAX);
@@ -221,14 +213,10 @@ public class SettingTutorPrefFragment extends Fragment implements LocationListen
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStartTrackingTouch(SeekBar seekBar) {}
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStopTrackingTouch(SeekBar seekBar) {}
         });
 
         mListViewSubject = (ListView) view.findViewById(R.id.list_subject);
@@ -241,15 +229,7 @@ public class SettingTutorPrefFragment extends Fragment implements LocationListen
             }
         });
 
-        /*mSavedSubject = ((MainActivity)getActivity()).getSelectedSubject();
-        mSubjectListAdapter = new SubjectListAdapter(mContext, mSavedSubject);
-        mListViewSubject = (ListView) view.findViewById(R.id.list_subject);
-        mListViewSubject.setAdapter(mSubjectListAdapter);
-        mSubjectListAdapter.notifyDataSetChanged();
-        App.setListViewHeightBasedOnChildren(mListViewSubject);*/
-
         bindInitialData();
-        //fetchDetectedLocationAddress();
 
         return view;
     }
@@ -279,9 +259,6 @@ public class SettingTutorPrefFragment extends Fragment implements LocationListen
             String userLongitude = mUserLogin.getLongitude();
             if ((userLatitude != null && !userLatitude.isEmpty()) && (userLongitude != null && !userLongitude.isEmpty())) {
                 // instantiate location
-                /*mLocation = new Location("");
-                mLocation.setLatitude(Double.parseDouble(mUserLogin.getLatitude()));
-                mLocation.setLongitude(Double.parseDouble(mUserLogin.getLongitude()));*/
                 Location location = new Location("");
                 location.setLatitude(Double.parseDouble(mUserLogin.getLatitude()));
                 location.setLongitude(Double.parseDouble(mUserLogin.getLongitude()));
@@ -291,39 +268,22 @@ public class SettingTutorPrefFragment extends Fragment implements LocationListen
                     // fetch the address
                     mProgressDialog.setMessage("Memuat lokasi...");
                     if (!mProgressDialog.isShowing()) mProgressDialog.show();
-                    //fetchDetectedLocationAddress(mLocation, ACTION_PRINT_ADDRESS_TO_TEXT);
                     fetchDetectedLocationAddress(location, ACTION_PRINT_ADDRESS_TO_TEXT);
                 }
             }
         }else{
             // this case usually when fragment is RE-loaded
-            //mLocation = mParentActivity.mTempSavedLocation;
             if(mParentActivity.mTempSavedLocationAddress != null){
                 mTvLocation.setText(mParentActivity.mTempSavedLocationAddress);
             }
         }
 
-        /*String userLatitude = mUserLogin.getLatitude();
-        String userLongitude = mUserLogin.getLongitude();
-        if ((userLatitude != null && !userLatitude.isEmpty()) && (userLongitude != null && !userLongitude.isEmpty())) {
-            mLocation = new Location("");
-            mLocation.setLatitude(Double.parseDouble(mUserLogin.getLatitude()));
-            mLocation.setLongitude(Double.parseDouble(mUserLogin.getLongitude()));
-            mProgressDialog.setMessage("Memuat lokasi...");
-            if (!mProgressDialog.isShowing()) mProgressDialog.show();
-            fetchDetectedLocationAddress(mLocation, ACTION_PRINT_ADDRESS_TO_TEXT);
-        }*/
         if (mUserLogin.getMaxTravelDistance() == 0)
             mSeekBarMaxDistance.setProgress(App.SETTING_TRAVEL_DISTANCE_MAX_DEFAULT);
         else
             mSeekBarMaxDistance.setProgress(mUserLogin.getMaxTravelDistance());
 
         mSeekBarMinPrice.setProgress(mUserLogin.getMinPriceRate());
-        /*if(mUserLogin.getSubjects()==null){
-            mSavedSubject = ((MainActivity)getActivity()).getSelectedSubject();
-        }else{
-            mSavedSubject = mUserLogin.getSubjects();
-        }*/
         mSavedSubject = mParentActivity.getSelectedSubject();
         mSubjectListAdapter = new SubjectListAdapter(mContext, mSavedSubject);
         mListViewSubject.setAdapter(mSubjectListAdapter);
@@ -388,14 +348,12 @@ public class SettingTutorPrefFragment extends Fragment implements LocationListen
                 location.setLongitude(placeLatLng.longitude);
                 location.setLatitude(placeLatLng.latitude);
                 updateSelectedLocation(location, address);
-                //fetchDetectedLocationAddress(mLocation, ACTION_PRINT_ADDRESS_TO_TEXT);
             }
         }
     }
 
     void buildGoogleApi() {
         mGoogleApiClient = new GoogleApiClient.Builder(mContext)
-                //.enableAutoManage(mContext, 0, null)
                 .addApi(Places.GEO_DATA_API)
                 .addApi(Places.PLACE_DETECTION_API)
                 .addApi(LocationServices.API)
@@ -478,7 +436,6 @@ public class SettingTutorPrefFragment extends Fragment implements LocationListen
     }
 
     void updateSelectedLocation(Location location, String address){
-        //mParentActivity.mTempSavedLocation = mLocation = location;
         mParentActivity.mTempSavedLocation = location;
         mParentActivity.mTempSavedLocationAddress = address;
         mTvLocation.setText(address);
@@ -487,13 +444,6 @@ public class SettingTutorPrefFragment extends Fragment implements LocationListen
     private void checkLocationPermission() {
         if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return;
         }
     }
@@ -503,10 +453,7 @@ public class SettingTutorPrefFragment extends Fragment implements LocationListen
         String latitude = "";
         String longitude = "";
         String locationAddress = "";
-        /*if(mLocation != null){
-            latitude = mLocation.getLatitude()+"";
-            longitude = mLocation.getLongitude()+"";
-        }*/
+
         if(mParentActivity.mTempSavedLocation != null){
             Location location = mParentActivity.mTempSavedLocation;
             latitude = location.getLatitude()+"";
@@ -624,26 +571,9 @@ public class SettingTutorPrefFragment extends Fragment implements LocationListen
         });
     }
 
-    /*private LocationCallback mLocationCallbackPlacePicker = new LocationCallback() {
-        @Override
-        public void onLocationResult(LocationResult locationResult) {
-            if (locationResult != null) {
-                List<Location> locationList = locationResult.getLocations();
-                if (locationList != null) {
-                    if (locationList.size() > 0) {
-                        //fetchDetectedLocationAddress(locationList.get(0));
-                        mTvLocation.setText(fetchDetectedLocationAddress(locationList.get(0)));
-                        mFusedLocationClient.removeLocationUpdates(mGoogleApiClient, mLocationCallbackPlacePicker);
-                    }
-                }
-            }
-        };
-    };*/
-
     private void stopLocationUpdates() {
         if(mFusedLocationClient != null)
             mFusedLocationClient.removeLocationUpdates(mGoogleApiClient, mLocationCallback);
-        //mGoogleApiClient.disconnect();
     }
 
     @Override
@@ -652,18 +582,12 @@ public class SettingTutorPrefFragment extends Fragment implements LocationListen
     }
 
     @Override
-    public void onConnectionSuspended(int i) {
-
-    }
+    public void onConnectionSuspended(int i) {    }
 
     @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {    }
 
     @Override
-    public void onLocationChanged(Location location) {
-
-    }
+    public void onLocationChanged(Location location) {    }
 }
 

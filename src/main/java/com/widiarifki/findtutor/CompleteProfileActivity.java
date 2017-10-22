@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -42,7 +41,6 @@ import com.widiarifki.findtutor.model.User;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -85,7 +83,6 @@ public class CompleteProfileActivity extends AppCompatActivity implements Vertic
     Uri mSavedPhotoUri;
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
-    static final int REQUEST_IMAGE_GALLERY = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -436,13 +433,6 @@ public class CompleteProfileActivity extends AppCompatActivity implements Vertic
         }
     }
 
-    public Uri getImageUri(Context inContext, Bitmap inImage) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
-        return Uri.parse(path);
-    }
-
     @Override
     public void sendData() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mContext);
@@ -596,33 +586,5 @@ public class CompleteProfileActivity extends AppCompatActivity implements Vertic
                 }
             }
         });
-    }
-
-    void uploadPhoto(){
-        MediaType MEDIA_TYPE_JPG = MediaType.parse("image/jpg");
-        OkHttpClient client = new OkHttpClient();
-        RequestBody req = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("id_user", mUserLogin.getId()+"")
-                .addFormDataPart("image", mUserLogin.getId()+".jpg", RequestBody.create(MEDIA_TYPE_JPG, new File(mSavedPhotoUri.getPath())) )
-                .build();
-        Request request = new Request.Builder()
-                .url(App.urlUserUploadPhoto)
-                .post(req)
-                .build();
-        Call httpCall = client.newCall(request);
-        httpCall.enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                //System.out.println(response.body().string());
-            }
-        });
-
-        return;
     }
 }

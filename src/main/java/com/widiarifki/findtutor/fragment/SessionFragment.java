@@ -51,13 +51,6 @@ public class SessionFragment extends Fragment implements TabLayout.OnTabSelected
             topTabs.setVisibility(View.GONE);
         }
 
-        /*final FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((MainActivity)mContext).addStackedFragment(new SearchTutorSelectSubjectFragment(), getString(R.string.title_search_select_subject), getString(R.string.menu_my_session));
-            }
-        });*/
         return view;
     }
 

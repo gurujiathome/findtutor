@@ -1,15 +1,10 @@
 package com.widiarifki.findtutor;
 
-import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -25,14 +20,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderApi;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
 import com.rits.cloning.Cloner;
 import com.squareup.picasso.Picasso;
 import com.widiarifki.findtutor.app.App;
@@ -53,13 +42,9 @@ import com.widiarifki.findtutor.model.User;
 import org.joda.time.LocalDate;
 
 import java.util.HashMap;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,
-        LocationListener,
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     SessionManager mSession;
     User mUserLogin;
@@ -81,8 +66,6 @@ public class MainActivity extends AppCompatActivity
 
         mSession = new SessionManager(getApplicationContext());
         mUserLogin = mSession.getUserDetail();
-
-        //buildGoogleApiClient();
 
         setContentView(R.layout.activity_main);
 
@@ -137,13 +120,6 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        // Navigation view instance
-        /*NavigationView mNavigationView = (NavigationView) findViewById(R.id.nav_view);
-        mNavigationView.setNavigationItemSelectedListener(this);
-        mNavigationView.inflateMenu(mDrawerMenuLayout);*/
-        // Initially select first menu
-        //selectDrawerItem(mNavigationView.getMenu().getItem(0));
-        // Initially select first menu
         selectDrawerItem(mNavigationView.getMenu().getItem(0));
 
         // Navigation header instance
@@ -155,14 +131,6 @@ public class MainActivity extends AppCompatActivity
         TextView tvUserType = (TextView) navViewHeader.findViewById(R.id.text_user_type);
 
         ImageView imgUserPhoto = (ImageView) navViewHeader.findViewById(R.id.imgv_user_photo);
-        /*ImageView btnEditProfile = (ImageView) navViewHeader.findViewById(R.id.btn_edit_profile);
-        btnEditProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(MainActivity.this, UserProfileActivity.class);
-                startActivity(i);
-            }
-        });*/
 
         Picasso.with(this).load(App.URL_PATH_PHOTO + mUserLogin.getPhotoUrl())
                 .transform(new CircleTransform())
@@ -182,31 +150,6 @@ public class MainActivity extends AppCompatActivity
             userType = "Tutor & Siswa";
         }
         tvUserType.setText(userType);
-    }
-
-    private void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if(mGoogleApiClient != null)
-            mGoogleApiClient.connect();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if(mGoogleApiClient != null) {
-            if (mGoogleApiClient.isConnected()) {
-                mGoogleApiClient.disconnect();
-            }
-        }
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -237,12 +180,6 @@ public class MainActivity extends AppCompatActivity
                     }).create().show();
         } else {
             switch (menuItem.getItemId()) {
-                /*case R.id.nav_notification:
-                    fragment = new NotificationFragment();
-                    break;
-                case R.id.nav_preferences:
-                    fragment = new SettingFragment();
-                    break;*/
                 case R.id.nav_search_tutor:
                     fragment = new SearchTutorFragment();
                     break;
@@ -339,31 +276,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        /*if (id == R.id.action_settings) {
-            return true;
-        }*/
-
         return super.onOptionsItemSelected(item);
-    }
-
-    // dipanggil dari class lain utk mereplace fragment
-    public void switchContent(Fragment fragment) {
-        mFragmentManager.beginTransaction().replace(R.id.content_layout, fragment)
-                .commit();
-    }
-
-    public void switchContent(Fragment fragment, String title) {
-        mFragmentManager.beginTransaction()
-                .replace(R.id.content_layout, fragment, title)
-                .commit();
-
-        if (title != null) setTitle(title);
     }
 
     public void addStackedFragment(Fragment fragment, String title, String stackedFragment) {
@@ -466,62 +379,4 @@ public class MainActivity extends AppCompatActivity
         }
     }
     /** END - Variable for saerch tutor **/
-
-    private LocationCallback mLocationCallback = new LocationCallback() {
-        @Override
-        public void onLocationResult(LocationResult locationResult) {
-            if(locationResult != null) {
-                List<Location> locationList = locationResult.getLocations();
-                if (locationList != null){
-                    if(locationList.size() > 0){
-                        App.detectedDeviceLocations = locationList;
-                        App.detectedDeviceLocation = locationList.get(0);
-                        stopLocationUpdates();
-                    }
-                }
-            }
-        };
-    };
-
-    private void stopLocationUpdates() {
-        mFusedLocationClient.removeLocationUpdates(mGoogleApiClient, mLocationCallback);
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        LocationRequest mLocationRequest = LocationRequest.create();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setInterval(1000); // Update location every second
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        mFusedLocationClient = LocationServices.FusedLocationApi;
-        mFusedLocationClient.requestLocationUpdates(mGoogleApiClient, mLocationRequest, mLocationCallback, null);
-        /*mFusedLocationClient
-                .requestLocationUpdates(mGoogleApiClient, mLocationRequest, mLocationCallback, null);*/
-                //.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-
-    }
 }

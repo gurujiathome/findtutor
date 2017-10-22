@@ -27,31 +27,23 @@ import java.util.List;
  */
 
 public class TutorInfoProfileFragment extends Fragment {
-
     private Context mContext;
-
-    String mBio;
     List<Education> mEducations;
     HashMap<String, SavedSubject> mSavedSubject;
     EducationListAdapter mEduListAdapter;
     SubjectListAdapter mSubjectListAdapter;
-
     TextView mTvBio;
     TextView mTvPhone;
     TextView mTvEmail;
     ListView mLvSubject;
     ListView mLvEdu;
 
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         mContext = getContext();
-
         mEducations = new ArrayList<Education>();
         mEduListAdapter = new EducationListAdapter(mContext, mEducations);
-
         mSavedSubject = new HashMap<String, SavedSubject>();
-
         super.onCreate(savedInstanceState);
     }
 
@@ -59,17 +51,13 @@ public class TutorInfoProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tutor_info_profile, container, false);
-
         mTvBio = (TextView) view.findViewById(R.id.tvBio);
         mTvPhone = (TextView) view.findViewById(R.id.tvPhone);
         mTvEmail = (TextView) view.findViewById(R.id.tvBio);
-
         mLvSubject = (ListView) view.findViewById(R.id.lvSubject);
         mLvSubject.setAdapter(mSubjectListAdapter);
-
         mLvEdu = (ListView) view.findViewById(R.id.lvEdu);
         mLvEdu.setAdapter(mEduListAdapter);
-
         return view;
     }
 

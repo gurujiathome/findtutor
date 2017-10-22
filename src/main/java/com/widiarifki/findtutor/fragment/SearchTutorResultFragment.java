@@ -183,8 +183,6 @@ public class SearchTutorResultFragment extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                }else{
-
                 }
             }
         });

@@ -182,14 +182,10 @@ public class SettingAvailabilityFragment extends Fragment {
                                     if(mProgressDialog.isShowing()) mProgressDialog.dismiss();
                                 }
                             });
-                        }else{
-
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                }else{
-
                 }
             }
         });

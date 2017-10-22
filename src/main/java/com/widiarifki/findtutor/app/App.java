@@ -31,36 +31,38 @@ import java.util.List;
 
 public class App {
 
-    public static String URL_REGISTER = "http://app-widiarifki.rhcloud.com/api/post-user-register";
-    public static String URL_LOGIN = "http://app-widiarifki.rhcloud.com/api/post-user-login";
-    public static String URL_SAVE_PROFILE = "http://app-widiarifki.rhcloud.com/api/post-user-profile";
-    public static String URL_EDIT_PROFILE = "http://app-widiarifki.rhcloud.com/api/post-edit-profile";
-    public static String URL_EDIT_TUTOR_PREF = "http://app-widiarifki.rhcloud.com/api/post-edit-tutor-pref";
-    public static String URL_SET_AVAILABILITY = "http://app-widiarifki.rhcloud.com/api/post-set-availability";
-    public static String URL_SAVE_TUTOR_TIMESLOT = "http://app-widiarifki.rhcloud.com/api/post-tutor-timeslot";
-    public static String URL_ADD_AVAILABILITY = "http://app-widiarifki.rhcloud.com/api/post-add-availability";
-    public static String URL_RMV_AVAILABILITY = "http://app-widiarifki.rhcloud.com/api/remove-availability";
-    public static String URL_GET_SCHOOL_LEVEL = "http://app-widiarifki.rhcloud.com/api/get-list-school-level";
-    public static String URL_GET_SUBJECT_LIST = "http://app-widiarifki.rhcloud.com/api/get-list-subject";
-    public static String URL_REQUEST_TUTOR = "http://app-widiarifki.rhcloud.com/api/post-request-tutor";
-    public static String URL_GET_TUTOR_INFO = "http://app-widiarifki.rhcloud.com/api/get-tutor-info";
-    public static String URL_GET_TUTOR_TIMESLOT = "http://app-widiarifki.rhcloud.com/api/get-tutor-timeslot";
-    public static String URL_GET_TUTOR_TIME = "http://app-widiarifki.rhcloud.com/api/get-tutor-available-time";
-    public static String URL_BOOK_TUTOR = "http://app-widiarifki.rhcloud.com/api/post-book-tutor";
-    public static String URL_GET_SESSION = "http://app-widiarifki.rhcloud.com/api/get-session";
-    public static String URL_GET_SESSION_PENDING = "http://app-widiarifki.rhcloud.com/api/get-session-pending";
-    public static String URL_GET_SESSION_ACCEPTED = "http://app-widiarifki.rhcloud.com/api/get-session-accepted";
-    public static String URL_POST_SESSION_APPROVAL = "http://app-widiarifki.rhcloud.com/api/post-session-approval";
-    public static String URL_POST_SESSION_APPROVAL_REGULAR = "http://app-widiarifki.rhcloud.com/api/post-session-approval-reg";
-    public static String URL_POST_SESSION_START = "http://app-widiarifki.rhcloud.com/api/post-session-start";
-    public static String URL_POST_SESSION_END = "http://app-widiarifki.rhcloud.com/api/post-session-end";
-    public static String URL_POST_STUDENT_FEEDBACK = "http://app-widiarifki.rhcloud.com/api/post-student-feedback";
-    public static String URL_GET_SESSION_OVERVIEW = "http://app-widiarifki.rhcloud.com/api/get-session-overview";
-    public static String URL_POST_USER_COMPLAIN = "http://app-widiarifki.rhcloud.com/api/post-user-complain";
-    public static String URL_POST_TUTOR_FEEDBACK = "http://app-widiarifki.rhcloud.com/api/post-tutor-feedback";
-    public static String URL_GET_USER_COMPLAIN = "http://app-widiarifki.rhcloud.com/api/get-user-complain";
-    public static String URL_POST_SESSION_CANCEL = "http://app-widiarifki.rhcloud.com/api/post-session-cancel";
-    public static String URL_POST_BOOK_REGULAR = "http://app-widiarifki.rhcloud.com/api/book-regular";
+    //public static String API_ROOT = "http://app-widiarifki.rhcloud.com/api/";
+    public static String API_ROOT = "http://widiarif.heliohost.org/web/api/";
+    public static String URL_REGISTER = API_ROOT +"post-user-register";
+    public static String URL_LOGIN = API_ROOT +"post-user-login";
+    public static String URL_SAVE_PROFILE = API_ROOT +"post-user-profile";
+    public static String URL_EDIT_PROFILE = API_ROOT +"post-edit-profile";
+    public static String URL_EDIT_TUTOR_PREF = API_ROOT +"post-edit-tutor-pref";
+    public static String URL_SET_AVAILABILITY = API_ROOT +"post-set-availability";
+    public static String URL_SAVE_TUTOR_TIMESLOT = API_ROOT +"post-tutor-timeslot";
+    public static String URL_ADD_AVAILABILITY = API_ROOT +"post-add-availability";
+    public static String URL_RMV_AVAILABILITY = API_ROOT +"remove-availability";
+    public static String URL_GET_SCHOOL_LEVEL = API_ROOT +"get-list-school-level";
+    public static String URL_GET_SUBJECT_LIST = API_ROOT +"get-list-subject";
+    public static String URL_REQUEST_TUTOR = API_ROOT +"post-request-tutor";
+    public static String URL_GET_TUTOR_INFO = API_ROOT +"get-tutor-info";
+    public static String URL_GET_TUTOR_TIMESLOT = API_ROOT +"get-tutor-timeslot";
+    public static String URL_GET_TUTOR_TIME = API_ROOT +"get-tutor-available-time";
+    public static String URL_BOOK_TUTOR = API_ROOT +"post-book-tutor";
+    public static String URL_GET_SESSION = API_ROOT +"get-session";
+    public static String URL_GET_SESSION_PENDING = API_ROOT +"get-session-pending";
+    public static String URL_GET_SESSION_ACCEPTED = API_ROOT +"get-session-accepted";
+    public static String URL_POST_SESSION_APPROVAL = API_ROOT +"post-session-approval";
+    public static String URL_POST_SESSION_APPROVAL_REGULAR = API_ROOT +"post-session-approval-reg";
+    public static String URL_POST_SESSION_START = API_ROOT +"post-session-start";
+    public static String URL_POST_SESSION_END = API_ROOT +"post-session-end";
+    public static String URL_POST_STUDENT_FEEDBACK = API_ROOT +"post-student-feedback";
+    public static String URL_GET_SESSION_OVERVIEW = API_ROOT +"get-session-overview";
+    public static String URL_POST_USER_COMPLAIN = API_ROOT +"post-user-complain";
+    public static String URL_POST_TUTOR_FEEDBACK = API_ROOT +"post-tutor-feedback";
+    public static String URL_GET_USER_COMPLAIN = API_ROOT +"get-user-complain";
+    public static String URL_POST_SESSION_CANCEL = API_ROOT +"post-session-cancel";
+    public static String URL_POST_BOOK_REGULAR = API_ROOT +"book-regular";
 
     public static String URL_PATH_PHOTO = "http://app-widiarifki.rhcloud.com/uploads/user/photo/";
 
@@ -78,9 +80,9 @@ public class App {
     public static Location detectedDeviceLocation;
 
     /** UNUSED **/
-    public static String urlUserUploadPhoto = "http://app-widiarifki.rhcloud.com/api/upload-photo";
-    public static String urlUserCompleteForm1 = "http://app-widiarifki.rhcloud.com/api/user-identity-1";
-    public static String urlUserCompleteForm2 = "http://app-widiarifki.rhcloud.com/api/user-identity-2";
+    public static String urlUserUploadPhoto = API_ROOT +"upload-photo";
+    public static String urlUserCompleteForm1 = API_ROOT +"user-identity-1";
+    public static String urlUserCompleteForm2 = API_ROOT +"user-identity-2";
 
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

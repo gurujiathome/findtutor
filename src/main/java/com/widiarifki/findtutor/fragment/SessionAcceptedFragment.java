@@ -177,8 +177,6 @@ public class SessionAcceptedFragment extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                }else{
-
                 }
             }
         });

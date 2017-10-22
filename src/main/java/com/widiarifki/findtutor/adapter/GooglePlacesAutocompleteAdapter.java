@@ -106,62 +106,6 @@ public class GooglePlacesAutocompleteAdapter extends ArrayAdapter implements Fil
 
     public static ArrayList autocomplete(String input) {
         String apiKey = mContext.getString(R.string.api_key);
-        /*final ArrayList[] resultList = {null};
-
-        String encodedInput = "";
-        try {
-            encodedInput = URLEncoder.encode(input, "utf8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        OkHttpClient client = new OkHttpClient();
-        Request httpRequest = new Request.Builder()
-                .url(PLACES_API_BASE + TYPE_AUTOCOMPLETE + OUT_JSON + "?" +
-                        "key=" + apiKey +
-                        "&components=country:id" +
-                        "&language=id" +
-                        "&input=" + encodedInput)
-                .build();
-        Call httpCall = client.newCall(httpRequest);
-        httpCall.enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT);
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if(response.code() == 200 && response.isSuccessful()){
-                    String json = response.body().string();
-                    // Create a JSON object hierarchy from the results
-                    JSONObject jsonObj = null;
-                    try {
-                        jsonObj = new JSONObject(json);
-                        JSONArray predsJsonArray = jsonObj.getJSONArray("predictions");
-
-                        // Extract the Place descriptions from the results
-                        resultList[0] = new ArrayList(predsJsonArray.length());
-                        for (int i = 0; i < predsJsonArray.length(); i++) {
-                            //System.out.println(predsJsonArray.getJSONObject(i).getString("description"));
-                            //System.out.println("============================================================");
-                            //resultList.add(predsJsonArray.getJSONObject(i).getString("description"));
-                            JSONObject prediction = predsJsonArray.getJSONObject(i);
-                            JSONObject structuredFormatting = prediction.getJSONObject("structured_formatting");
-                            GooglePlace newPlace = new GooglePlace();
-                            newPlace.setName(structuredFormatting.getString("main_text"));
-                            newPlace.setAddress(structuredFormatting.getString("secondary_text"));
-                            newPlace.setPlaceId(prediction.getString("place_id"));
-                            resultList[0].add(newPlace);
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }else{
-                    Toast.makeText(mContext, response.message(), Toast.LENGTH_SHORT);
-                }
-            }
-        });*/
 
         ArrayList resultList = null;
 
@@ -185,10 +129,8 @@ public class GooglePlacesAutocompleteAdapter extends ArrayAdapter implements Fil
                 jsonResults.append(buff, 0, read);
             }
         } catch (MalformedURLException e) {
-            //Log.e(LOG_TAG, "Error processing", e);
             return resultList;
         } catch (IOException e) {
-            //Log.e(LOG_TAG, "Error connecting", e);
             return resultList;
         } finally {
             if (conn != null) {
@@ -204,9 +146,6 @@ public class GooglePlacesAutocompleteAdapter extends ArrayAdapter implements Fil
             // Extract the Place descriptions from the results
             resultList = new ArrayList(predsJsonArray.length());
             for (int i = 0; i < predsJsonArray.length(); i++) {
-                //System.out.println(predsJsonArray.getJSONObject(i).getString("description"));
-                //System.out.println("============================================================");
-                //resultList.add(predsJsonArray.getJSONObject(i).getString("description"));
                 JSONObject prediction = predsJsonArray.getJSONObject(i);
                 JSONObject structuredFormatting = prediction.getJSONObject("structured_formatting");
                 GooglePlace newPlace = new GooglePlace();
@@ -219,7 +158,6 @@ public class GooglePlacesAutocompleteAdapter extends ArrayAdapter implements Fil
             //Log.e(LOG_TAG, "Cannot process JSON results", e);
         }
 
-        //return resultList[0];
         return resultList;
     }
 }

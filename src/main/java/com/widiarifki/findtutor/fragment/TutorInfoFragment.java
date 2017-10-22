@@ -27,7 +27,6 @@ import com.widiarifki.findtutor.app.Constants;
 import com.widiarifki.findtutor.helper.RoundedCornersTransform;
 import com.widiarifki.findtutor.model.Education;
 import com.widiarifki.findtutor.model.SavedSubject;
-import com.widiarifki.findtutor.model.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -230,9 +229,5 @@ public class TutorInfoFragment extends Fragment {
                 }
             }
         });
-    }
-
-    public interface Updateable {
-        public void update(User data);
     }
 }

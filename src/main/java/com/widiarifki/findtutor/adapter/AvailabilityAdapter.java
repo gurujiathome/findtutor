@@ -32,7 +32,6 @@ public class AvailabilityAdapter extends ArrayAdapter<Day> {
     User mUserLogin;
     HashMap<String, List<Integer>> mUserTimeslots;
     int mLayout = 0;
-    //HashMap<String, List<AvailabilityPerDay>> mUserAvailability;
 
     public AvailabilityAdapter(@NonNull Context context, @NonNull List<Day> days) {
         super(context, 0, days);
@@ -43,9 +42,6 @@ public class AvailabilityAdapter extends ArrayAdapter<Day> {
         if (mUserLogin.getTimeslots() != null) {
             mUserTimeslots = mUserLogin.getTimeslots();
         }
-        /*if(mUserLogin.getAvailabilities() != null){
-            mUserAvailability = mUserLogin.getAvailabilities();
-        }*/
     }
 
     public AvailabilityAdapter(@NonNull Context context, @NonNull List<Day> days, @NonNull HashMap<String, List<Integer>> timeslots) {
@@ -76,21 +72,7 @@ public class AvailabilityAdapter extends ArrayAdapter<Day> {
         }
 
         tvTime.setText("Tidak ada jadwal");
-        /*if(mUserAvailability != null) {
-            int dayId = day.getId();
-            if (mUserAvailability.get(dayId + "") != null) {
-                List<AvailabilityPerDay> times = mUserAvailability.get(dayId + "");
-                if(times.size() > 0) {
-                    String[] displayTime = new String[times.size()];
-                    int i = 0;
-                    for (AvailabilityPerDay time : times) {
-                        displayTime[i] = time.getStartHour() + "-" + time.getEndHour();
-                        i++;
-                    }
-                    tvTime.setText(TextUtils.join(", ", displayTime));
-                }
-            }
-        }*/
+
         if(mUserTimeslots != null) {
             int dayId = day.getId();
             if (mUserTimeslots.get(dayId + "") != null) {

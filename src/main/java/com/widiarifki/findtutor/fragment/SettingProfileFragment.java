@@ -236,13 +236,6 @@ public class SettingProfileFragment extends Fragment {
             }
         });
 
-        /*mBtnSave = (Button) view.findViewById(R.id.btn_save);
-        mBtnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveChanges();
-            }
-        });*/
         mBtnAddEdu = (Button) view.findViewById(R.id.btn_add_edu);
         mBtnAddEdu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -250,16 +243,6 @@ public class SettingProfileFragment extends Fragment {
                 actionUpdateEducation(true, 0);
             }
         });
-
-        /*mBtnChooseSubject = (Button) view.findViewById(R.id.btn_choose_subject);
-        mBtnChooseSubject.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fragment fragment = new SettingSelectSubjectFragment();
-                ((MainActivity)mContext).addStackedFragment(fragment, getString(R.string.action_select_subject), getString(R.string.title_activity_edit_profile));
-            }
-        });
-        mSavedSubject = ((MainActivity)getActivity()).getSelectedSubject();*/
 
         adjustWithUserType();
         bindInitialData();
@@ -505,16 +488,9 @@ public class SettingProfileFragment extends Fragment {
                     mEduListAdapter.notifyDataSetChanged();
                 }
 
-                /*mFormLayout.requestFocus();
-                View currentFocus = getActivity().getCurrentFocus();
-                if (currentFocus != null) currentFocus.clearFocus();*/
                 mListviewEducation.requestFocus();
-                //getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);*/
 
-                /*InputMethodManager inputManager = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputManager.hideSoftInputFromWindow(currentFocus.getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);*/
                 App.hideSoftKeyboard(mContext);
-                //mDialog.dismiss();
             }
         });
         AlertDialog alertDialog = dialogBuilder.create();

@@ -175,10 +175,6 @@ public class HelpFragment extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
-
-                }else{
-
                 }
             }
         });

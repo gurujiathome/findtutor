@@ -90,9 +90,8 @@ public class SearchTutorSelectSubjectFragment extends Fragment {
         else if(id == R.id.action_save){
             if(mSavedSubjectMap != null){
                 mSavedSubjectMap.clear();
-            }else{
-
             }
+
             mSavedSubjectMap.putAll(mSavedSubjectMapTemp);
             ((MainActivity)mContext).removeFragmentFromStack(this);
         }

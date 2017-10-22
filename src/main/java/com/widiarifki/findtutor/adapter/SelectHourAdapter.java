@@ -144,23 +144,8 @@ public class SelectHourAdapter extends RecyclerView.Adapter {
                 else if(mFragment instanceof BookTutorFragment){
                     BookTutorFragment fragment = (BookTutorFragment) mFragment;
                     if(isChecked) {
-                        /** Set start time #1 **/
-                        /*if(fragment.getStartTime() == 0 && fragment.getEndTime() == 0){
-                            fragment.setStartTime(position);
-                            fragment.setEndTime(position);
-                        }
-                        else{
-                            fragment.setEndTime(position);
-                        }*/
                         fragment.addTime(position);
                     }else{
-                        /** If removed start time **/
-                        /*if(position == fragment.getStartTime()){
-                            fragment.setStartTime(0);
-                            fragment.setEndTime(0);
-                        }else{
-                            fragment.setEndTime();
-                        }*/
                         fragment.removeTime(position);
                     }
                 }

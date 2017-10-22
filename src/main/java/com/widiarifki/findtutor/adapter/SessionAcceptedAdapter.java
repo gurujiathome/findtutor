@@ -53,12 +53,6 @@ public class SessionAcceptedAdapter extends RecyclerView.Adapter {
     int mUserContextAs;
     ProgressDialog mProgressDialog;
 
-    public SessionAcceptedAdapter(Context context, List<Session> sessionList) {
-        mContext = context;
-        mSessionList = sessionList;
-        mProgressDialog = new ProgressDialog(mContext);
-    }
-
     public SessionAcceptedAdapter(Context context, List<Session> sessionList, int userContextAs) {
         mContext = context;
         mSessionList = sessionList;

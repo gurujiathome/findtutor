@@ -58,8 +58,6 @@ import okhttp3.Response;
  */
 
 public class BookRegularFragment extends Fragment {
-
-
     Context mContext;
     private MainActivity mParentActivity;
 

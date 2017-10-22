@@ -156,14 +156,11 @@ public class BookTutorFragment extends Fragment {
         mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
 
         final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        //mTextDate = (TextView) view.findViewById(R.id.tvDate);
         HorizontalPicker datePicker = (HorizontalPicker) view.findViewById(R.id.datePicker);
         // Dont call at first time
         datePicker.setListener(new DatePickerListener() {
             @Override
             public void onDateSelected(DateTime dateSelected) {
-                //String dateStr = DateTimeFormat.forPattern("dd MM yyyy").print(dateSelected);
-                //mTextDate.setText(dateStr);
                 mSelectedDate = DateTimeFormat.forPattern("yyyy-MM-dd").print(dateSelected);
                 try {
                     mSelectedDateD = sdf.parse(mSelectedDate);
@@ -182,9 +179,8 @@ public class BookTutorFragment extends Fragment {
                 e.printStackTrace();
             }
             datePicker.setDate(DateTimeFormat.forPattern("yyyy-MM-dd").parseDateTime(mSelectedDate));
-            //mTextDate.setText(DateTimeFormat.forPattern("dd MM yyyy").print(date));
         }
-        //getAvailableTime();
+
         mProgressDialog = new ProgressDialog(mContext);
 
         return view;

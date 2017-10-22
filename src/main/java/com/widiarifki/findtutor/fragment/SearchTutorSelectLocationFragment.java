@@ -98,18 +98,13 @@ public class SearchTutorSelectLocationFragment extends Fragment
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.appbar_menu, menu);
-        //menu.findItem(R.id.action_next).setVisible(true);
         menu.findItem(R.id.action_save).setVisible(true);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_next) {
-            /*((MainActivity)mContext).addStackedFragment(new SearchTutorDateFragment(), getString(R.string.title_search_select_date), getString(R.string.title_search_select_location));
-            MainActivity.mSearchTutorLocation = mSelectedLocation;*/
-        }
-        else if(id == R.id.action_save)
+        if(id == R.id.action_save)
         {
             // Transfer val to activity
             if(mSelectedLocation != null)
@@ -144,9 +139,6 @@ public class SearchTutorSelectLocationFragment extends Fragment
             @Override
             public void onMapReady(GoogleMap mMap) {
                 mGoogleMap = mMap;
-                /*checkLocationPermission();
-                mGoogleMap.setMyLocationEnabled(true);*/
-
                 if(((MainActivity)mContext).mSearchTutorLocation != null && ((MainActivity)mContext).mSearchTutorLocationTxt != null){
                     mSelectedLocation = ((MainActivity)mContext).mSearchTutorLocation;
                     updateMapMarker(((MainActivity)mContext).mSearchTutorLocationTxt);
@@ -170,9 +162,6 @@ public class SearchTutorSelectLocationFragment extends Fragment
                 btnClear.setVisibility(View.VISIBLE);
                 autoCompView.setKeyListener(null);
                 App.hideSoftKeyboard(mContext);
-                /*InputMethodManager inputManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-                if(((AppCompatActivity) mContext).getCurrentFocus() != null)
-                    inputManager.hideSoftInputFromWindow(((AppCompatActivity) mContext).getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);*/
 
                 String placeId = (String) view.getTag();
                 String apiKey = mContext.getString(R.string.api_key);

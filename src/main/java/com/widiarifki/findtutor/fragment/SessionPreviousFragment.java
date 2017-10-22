@@ -126,8 +126,16 @@ public class SessionPreviousFragment extends Fragment implements TabLayout.OnTab
         mHttpCall = httpClient.newCall(httpRequest);
         mHttpCall.enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
-
+            public void onFailure(Call call, final IOException e) {
+                mContextActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(mProgressBar.getVisibility() == View.VISIBLE) mProgressBar.setVisibility(View.GONE);
+                        if(mEmptyText.getVisibility() == View.GONE) mEmptyText.setVisibility(View.VISIBLE);
+                        mEmptyText.setText(e.getMessage());
+                        if(mRecyclerView.getVisibility() == View.VISIBLE) mRecyclerView.setVisibility(View.GONE);
+                    }
+                });
             }
 
             @Override
@@ -193,11 +201,17 @@ public class SessionPreviousFragment extends Fragment implements TabLayout.OnTab
                                 }
                             });
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                    } catch (final JSONException e) {
+                        mContextActivity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(mProgressBar.getVisibility() == View.VISIBLE) mProgressBar.setVisibility(View.GONE);
+                                if(mEmptyText.getVisibility() == View.GONE) mEmptyText.setVisibility(View.VISIBLE);
+                                mEmptyText.setText(e.getMessage());
+                                if(mRecyclerView.getVisibility() == View.VISIBLE) mRecyclerView.setVisibility(View.GONE);
+                            }
+                        });
                     }
-                }else{
-
                 }
             }
         });
@@ -214,12 +228,8 @@ public class SessionPreviousFragment extends Fragment implements TabLayout.OnTab
     }
 
     @Override
-    public void onTabUnselected(TabLayout.Tab tab) {
-
-    }
+    public void onTabUnselected(TabLayout.Tab tab) {}
 
     @Override
-    public void onTabReselected(TabLayout.Tab tab) {
-
-    }
+    public void onTabReselected(TabLayout.Tab tab) {}
 }

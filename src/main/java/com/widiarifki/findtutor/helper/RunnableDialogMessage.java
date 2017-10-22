@@ -2,6 +2,7 @@ package com.widiarifki.findtutor.helper;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.support.annotation.Nullable;
 
 import com.widiarifki.findtutor.app.App;
 
@@ -15,13 +16,13 @@ public class RunnableDialogMessage implements Runnable {
     String mMessage;
     ProgressDialog mProgressDialog;
 
-    public RunnableDialogMessage(Context context, String title, String message) {
+    public RunnableDialogMessage(Context context, @Nullable String title, String message) {
         mContext = context;
         mTitle = title;
         mMessage = message;
     }
 
-    public RunnableDialogMessage(Context context, String title, String message, ProgressDialog progressDialog) {
+    public RunnableDialogMessage(Context context, @Nullable String title, String message, @Nullable ProgressDialog progressDialog) {
         mContext = context;
         mTitle = title;
         mMessage = message;
@@ -33,7 +34,7 @@ public class RunnableDialogMessage implements Runnable {
             if(mProgressDialog.isShowing()) mProgressDialog.dismiss();
         }
 
-        if(mTitle.isEmpty()){
+        if(mTitle != null && mTitle.isEmpty()){
             App.showSimpleDialog(mContext, mMessage);
         }else{
             App.showSimpleDialog(mContext, mTitle, mMessage);

@@ -130,5 +130,4 @@ public class TutorInfoAvailableFragment extends Fragment {
         }
         mTvAvailability.setText(text);
     }
-
 }

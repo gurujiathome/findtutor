@@ -150,14 +150,10 @@ public class RateTutorActivity extends AppCompatActivity {
                                     dialog.show();
                                 }
                             });
-                        }else{
-
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                }else{
-
                 }
             }
         });

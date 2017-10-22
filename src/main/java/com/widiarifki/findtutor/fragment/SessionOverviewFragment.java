@@ -170,14 +170,10 @@ public class SessionOverviewFragment extends Fragment {
                                                     dialog.show();
                                                 }
                                             });
-                                        }else{
-
                                         }
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
-                                }else{
-
                                 }
                             }
                         });
@@ -256,14 +252,10 @@ public class SessionOverviewFragment extends Fragment {
                                                     dialog.show();
                                                 }
                                             });
-                                        }else{
-
                                         }
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
-                                }else{
-
                                 }
                             }
                         });
@@ -343,8 +335,6 @@ public class SessionOverviewFragment extends Fragment {
                                     }
                                 }
                             });
-                        }else{
-
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

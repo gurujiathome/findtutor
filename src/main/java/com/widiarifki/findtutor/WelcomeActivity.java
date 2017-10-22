@@ -31,5 +31,4 @@ public class WelcomeActivity extends AppCompatActivity {
 
         tabs.setupWithViewPager(pager);
     }
-
 }

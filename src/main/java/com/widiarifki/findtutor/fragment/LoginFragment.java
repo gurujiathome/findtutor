@@ -223,15 +223,6 @@ public class LoginFragment extends Fragment {
                                             user.setTimeslots(new HashMap<String, List<Integer>>(timeslotMap));
                                         }
                                     }
-
-                                    /*if(objUserData.getString(mSession.KEY_AVAILABILITIES) != null) {
-                                        Type availabilityType = new TypeToken<Map<String, List<AvailabilityPerDay>>>() {}.getType();
-                                        Map<String, List<AvailabilityPerDay>> availabilityMap = new Gson().fromJson(objUserData.getString(mSession.KEY_AVAILABILITIES), availabilityType);
-                                        if (availabilityMap != null) {
-                                            HashMap<String, List<AvailabilityPerDay>> availabilityHashmap = new HashMap<String, List<AvailabilityPerDay>>(availabilityMap); // cast process
-                                            user.setAvailabilities(availabilityHashmap);
-                                        }
-                                    }*/
                                 }
                                 mSession.updateSession(user);
 
