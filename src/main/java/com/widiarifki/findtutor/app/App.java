@@ -32,7 +32,8 @@ import java.util.List;
 public class App {
 
     //public static String API_ROOT = "http://app-widiarifki.rhcloud.com/api/";
-    public static String API_ROOT = "http://widiarif.heliohost.org/web/api/";
+    //public static String API_ROOT = "http://widiarif.heliohost.org/web/api/";
+    public static String API_ROOT = "http://18.220.128.11/findtutor/web/api/";
     public static String URL_REGISTER = API_ROOT +"post-user-register";
     public static String URL_LOGIN = API_ROOT +"post-user-login";
     public static String URL_SAVE_PROFILE = API_ROOT +"post-user-profile";
