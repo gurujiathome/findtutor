@@ -33,7 +33,8 @@ public class App {
 
     //public static String API_ROOT = "http://app-widiarifki.rhcloud.com/api/";
     //public static String API_ROOT = "http://widiarif.heliohost.org/web/api/";
-    public static String API_ROOT = "http://18.220.128.11/findtutor/web/api/";
+    private static String BASE_URL = "http://18.220.128.11/findtutor/web/";
+    private static String API_ROOT = BASE_URL+"api/";
     public static String URL_REGISTER = API_ROOT +"post-user-register";
     public static String URL_LOGIN = API_ROOT +"post-user-login";
     public static String URL_SAVE_PROFILE = API_ROOT +"post-user-profile";
@@ -65,7 +66,7 @@ public class App {
     public static String URL_POST_SESSION_CANCEL = API_ROOT +"post-session-cancel";
     public static String URL_POST_BOOK_REGULAR = API_ROOT +"book-regular";
 
-    public static String URL_PATH_PHOTO = "http://app-widiarifki.rhcloud.com/uploads/user/photo/";
+    public static String URL_PATH_PHOTO = BASE_URL+"uploads/user/photo/";
 
     public static Class<?> HOME_ACTIVITY = MainActivity.class;
     public static Class<?> COMPLETE_PROFILE_ACTIVITY = CompleteProfileActivity.class;
